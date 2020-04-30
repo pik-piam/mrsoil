@@ -1,0 +1,28 @@
+Package: mrSOCbudget
+Type: Package
+Title: Calculates historical Soil Organic Carbon Budget for Cropland
+Version: 0.2.0
+Date: 2020-04-30
+Author: Kristine Karstens
+Maintainer: Kristine Karstens <karstens@pik-potsdam.de>
+Description: This packages provides functions for soil organic carbon budget for mineral soils using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories.
+Depends:
+    R(>= 2.10.0),
+    magclass(>= 3.17),
+    madrat(>= 1.30),
+    moinput(>= 0.1)
+Imports:
+    magpiesets,
+    readxl,
+    lpjclass,
+    utils,
+    xml2
+License: LGPL-3 | file LICENSE
+Encoding: UTF-8
+LazyData: no
+RoxygenNote: 7.1.0
+Suggests: knitr,
+          rmarkdown,
+	        ggplot2
+VignetteBuilder: knitr
+ValidationKey: 367640
