@@ -16,7 +16,7 @@
 
 fullCarbonBudget <- function(rev=0.1){
 
-  ### from moinput
+  ### from mrcommons
   calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, file="ResiduesAg_FieldBalance.rds")
   calcOutput("ResBiomass", cellular=TRUE, aggregate=FALSE, file="Residue_Biomass.rds")
   calcOutput("Production", products="kcr", cellular=TRUE, calibrated=TRUE, attributes="c", aggregate=FALSE, file="Crop_Harvest.rds")

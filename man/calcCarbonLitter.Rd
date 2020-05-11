@@ -12,6 +12,12 @@ List of magpie object with results on cellular level, weight on cellular level, 
 \description{
 Calculates Carbon Input from litter
 }
+\examples{
+
+\dontrun{
+  calcOutput("CarbonLitter")
+}
+}
 \author{
 Kristine Karstens
 }

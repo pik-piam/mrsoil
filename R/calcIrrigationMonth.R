@@ -9,6 +9,7 @@
 #'
 #' @import madrat
 #' @import magclass
+#' @import mrcommons
 
 calcIrrigationMonth <- function() {
 

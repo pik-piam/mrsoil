@@ -12,7 +12,7 @@
 #'
 #' @import madrat
 #' @import magclass
-#' @import moinput
+#' @import mrcommons
 #' @importFrom magpiesets findset
 
 calcCarbonInput <- function(landtype="crop") {

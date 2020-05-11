@@ -15,7 +15,6 @@
 calcCarbonLitter <- function(){
 
   litfallc <- readSource("LPJmL", subtype="LPJmL4:CRU_4.alitterfallc", convert="onlycorrect")[,findset("past_all"),]
-  #litfalln <- readSource("LPJmL5", subtype="alitfalln", convert="onlycorrect")[,findset("past_all"),]
 
   attributes   <- c("c","LC","NC")
   names        <- as.vector(outer("litfall", attributes, paste, sep="."))
@@ -27,8 +26,9 @@ calcCarbonLitter <- function(){
   out[,,"c"]  <- litfallc
 
   out <- toolConditionalReplace(out, conditions = c("is.na()","<0", "is.infinite()"), replaceby = 0)
-  # Cut high input values at 95%-percentil
-  out[,,"NC"] <- toolConditionalReplace(out[,,"NC"], conditions = '> quantile(x, probs=0.95)', replaceby=eval(quantile(out[,,"NC"], probs=0.95)))
+
+  ## Cut high input values at 95%-percentil
+  #out[,,"NC"] <- toolConditionalReplace(out[,,"NC"], conditions = '> quantile(x, probs=0.95)', replaceby=eval(quantile(out[,,"NC"], probs=0.95)))
 
 
   return(list(x=out,

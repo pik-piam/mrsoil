@@ -5,13 +5,14 @@
 #' @author Kristine Karstens
 #'
 #'@seealso
-#' \code{\link{readSoilGrids}}
+#' \code{\link[mrcommons]{readSoilGrids}}
 #'
 #' @examples
 #' \dontrun{ calcOutput("SandFrac", aggregate = FALSE) }
 #'
 #' @import madrat
 #' @import magclass
+#' @import mrcommons
 
 calcSandFrac <- function() {
 

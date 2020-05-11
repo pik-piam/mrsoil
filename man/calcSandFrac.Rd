@@ -17,7 +17,7 @@ This function calculates the fraction of 0-30cm soil mass that is sand (0.050 - 
 
 }
 \seealso{
-\code{\link{readSoilGrids}}
+\code{\link[mrcommons]{readSoilGrids}}
 }
 \author{
 Kristine Karstens

@@ -12,6 +12,11 @@ fullCarbonBudget(rev = 0.1)
 \description{
 Function that produces the complete cellular data set of the SOC budget
 }
+\examples{
+\dontrun{
+  fullCarbonBudget revision 41, mainfolder="pathtowhereallfilesarestored")
+}
+}
 \seealso{
 \code{\link{readSource}},\code{\link{getCalculations}},\code{\link{calcOutput}},\code{\link{setConfig}}
 }

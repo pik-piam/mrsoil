@@ -13,6 +13,7 @@
 #'
 #' @import madrat
 #' @import magclass
+#' @import mrcommons
 #' @importFrom magpiesets findset
 
 calcWaterEffectDecomposition <- function(irrigation="mixed") {
