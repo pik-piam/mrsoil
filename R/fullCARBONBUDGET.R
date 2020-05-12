@@ -1,4 +1,4 @@
-#' @title fullCarbonBudget
+#' @title fullCARBONBUDGET
 #' @description Function that produces the complete cellular data set of the SOC budget
 #'
 #' @param rev data revision which should be used as input (positive numeric).
@@ -9,12 +9,12 @@
 #'
 #' @examples
 #' \dontrun{
-#'   fullCarbonBudget revision 41, mainfolder="pathtowhereallfilesarestored")
+#'   retrieveData("CARBONBUDGET", rev=0, mainfolder="pathtowhereallfilesarestored")
 #' }
 #' @importFrom magclass setNames
 #' @importFrom magpiesets findset
 
-fullCarbonBudget <- function(rev=0.1){
+fullCARBONBUDGET <- function(rev=0.1){
 
   ### from mrcommons
   calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, file="ResiduesAg_FieldBalance.rds")

@@ -23,8 +23,8 @@ Read CRU content
 
 }
 \seealso{
-\code{\link{readLPJmL}},
-\code{\link{read.LPJ_input}}
+\code{\link[mrcommons]{readLPJmL}},
+\code{\link[lpjclass]{read.LPJ_input}}
 }
 \author{
 Kristine Karstens

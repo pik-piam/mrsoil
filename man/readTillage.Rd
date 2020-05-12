@@ -20,8 +20,8 @@ Read historical tillage data set based on (https://www.earth-syst-sci-data.net/1
 
 }
 \seealso{
-\code{\link{readLPJmL}},
-\code{\link{read.LPJ_input}}
+\code{\link[mrcommons]{readLPJmL}},
+\code{\link[lpjclass]{read.LPJ_input}}
 }
 \author{
 Kristine Karstens

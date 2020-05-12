@@ -1,10 +1,10 @@
-# R mrSOCbudget package
-Package contains soil organic carbon cycling model based on IPCC Guidelines 2019 for data prepared in the madrat universe. 
-[![Travis build status](https://travis-ci.com/pik-piam/mrcommons.svg?branch=master)](https://travis-ci.com/pik-piam/mrcommons)
+# Calculates historical Soil Organic Carbon Budget for Cropland
+#### R package **mrSOCbudget**, version **0.3.2**
+ 
 
 ## Purpose and Functionality
 
-MadRat SOC budget package contains soil organic carbon (SOC) cycling model based on IPCC Guidelines 2019 for data prepared in the MadRat universe. 
+This packages provides functions for soil organic carbon budget for mineral soils using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories.
 
 
 ## Installation
@@ -34,4 +34,19 @@ In case of questions / problems please contact Kristine Karstens <karstens@pik-p
 
 ## Citation
 
-citation("mrSOCbudget")
+To cite package **mrSOCbudget** in publications use:
+
+Karstens K (2020). _mrSOCbudget: Calculates historical Soil Organic Carbon Budget for Cropland_. R package
+version 0.3.2.
+
+A BibTeX entry for LaTeX users is
+
+ ```latex
+@Manual{,
+  title = {mrSOCbudget: Calculates historical Soil Organic Carbon Budget for Cropland},
+  author = {Kristine Karstens},
+  year = {2020},
+  note = {R package version 0.3.2},
+}
+```
+
