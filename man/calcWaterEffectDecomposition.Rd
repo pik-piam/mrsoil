@@ -4,10 +4,10 @@
 \alias{calcWaterEffectDecomposition}
 \title{calcWaterEffectDecomposition}
 \usage{
-calcWaterEffectDecomposition(irrigation = "mixed")
+calcWaterEffectDecomposition(irrigation = "mixedirrig")
 }
 \arguments{
-\item{irrigation}{irrigation type to de considered. Default (mixed) is historic irrigation area shares
+\item{irrigation}{irrigation type to de considered. Default (mixedirrig) is historic irrigation area shares
 to calculate area weighted mean over rainfed and irrigated factors. Other options: rainfed, irrigated}
 }
 \value{

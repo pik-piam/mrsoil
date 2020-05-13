@@ -6,7 +6,7 @@
 #' @return magpie object in cellular resolution
 #' @author Kristine Karstens
 #'
-#' @param irrigation irrigation type to de considered. Default (mixed) is historic irrigation area shares
+#' @param irrigation irrigation type to de considered. Default (mixedirrig) is historic irrigation area shares
 #'                   to calculate area weighted mean over rainfed and irrigated factors. Other options: rainfed, irrigated
 #' @examples
 #' \dontrun{ calcOutput("WaterEffectDecomposition", aggregate = FALSE) }
@@ -16,7 +16,7 @@
 #' @import mrcommons
 #' @importFrom magpiesets findset
 
-calcWaterEffectDecomposition <- function(irrigation="mixed") {
+calcWaterEffectDecomposition <- function(irrigation="mixedirrig") {
 
   if(irrigation=="rainfed"){
 
@@ -51,7 +51,7 @@ calcWaterEffectDecomposition <- function(irrigation="mixed") {
 
     cell.w_Factor       <- 1.5 * dimSums(cell.w_monthFactor, dim=3.2)/12
 
-  } else if(irrigation=="mixed") {
+  } else if(irrigation=="mixedirrig") {
 
     cell.ir_areaShr    <- readSource("LUH2v2", subtype="irrigation", convert="onlycorrect")[,sort(findset("past_all")),]
     cell.ir_areaShr    <- dimSums(cell.ir_areaShr, dim=3)
@@ -62,7 +62,7 @@ calcWaterEffectDecomposition <- function(irrigation="mixed") {
     cell.w_Factor      <- setNames(cell.w_Factor[,,"irrigated"] * cell.ir_areaShr, "mixed") +
                           setNames(cell.w_Factor[,,"rainfed"] * (1 - cell.ir_areaShr), "mixed")
 
-  } else {stop("Irrigation setting is unknown. Please use: 'mixed','rainfed' or 'irrigated'.")}
+  } else {stop("Irrigation setting is unknown. Please use: 'mixedirrig','rainfed' or 'irrigated'.")}
 
   return(list(
     x=cell.w_Factor,
