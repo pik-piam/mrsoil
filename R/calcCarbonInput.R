@@ -36,7 +36,7 @@ calcCarbonInput <- function(landtype="crop") {
 
   # Calculate metabolic dead organic carbon input
   cell.LC2NC       <- collapseNames(toolConditionalReplace(cell.input[,,"LC"]/cell.input[,,"NC"], c("is.na()","is.infinite()"), 0))
-  cell.metabDOC    <- collapseNames(cell.input[,," "] * (param.metabfrac_intercept - param.metabfrac_slope * cell.LC2NC))
+  cell.metabDOC    <- collapseNames(cell.input[,,"c"] * (param.metabfrac_intercept - param.metabfrac_slope * cell.LC2NC))
 
   # Calculate structural dead organic carbon input
   cell.strucDOC    <- collapseNames( cell.input[,,"c"] * (1 - cell.input[,,"LC"]) - cell.metabDOC )
