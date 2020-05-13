@@ -19,7 +19,7 @@ calcCarbonResidues <- function(){
   ResidueRecycling    <- ResidueRecyclingBg + ResidueRecyclingAg
   Cropland            <- dimSums(calcOutput("Croparea", cellular=TRUE, aggregate=FALSE), dim=3)
   ResidueRecycling    <- ResidueRecycling/Cropland
-  ResidueRecycling    <- toolConditionalReplace(ResidueRecycling, conditions = c("is.na()","<0"), replaceby = 0)
+  ResidueRecycling    <- toolConditionalReplace(ResidueRecycling, conditions = c("is.na()","<0","is.infinite()"), replaceby = 0)
 
   ## Cut high input values at 95%-percentil
   #ResidueRecycling    <- toolConditionalReplace(ResidueRecycling, conditions = "> quantile(x, probs=0.95)", replaceby=eval(quantile(ResidueRecycling, probs=0.95)))

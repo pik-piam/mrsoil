@@ -35,7 +35,7 @@ calcCarbonInput <- function(landtype="crop") {
   param.metabfrac_slope     <- setYears(param[,,"sp2"], NULL) # empirical parameter to estimate metabolic fraction of residue input (slope
 
   # Calculate metabolic dead organic carbon input
-  cell.LC2NC       <- collapseNames(toolConditionalReplace(cell.input[,,"LC"]/cell.input[,,"NC"], c("is na()","is infinite()"), 0))
+  cell.LC2NC       <- collapseNames(toolConditionalReplace(cell.input[,,"LC"]/cell.input[,,"NC"], c("is.na()","is.infinite()"), 0))
   cell.metabDOC    <- collapseNames(cell.input[,," "] * (param.metabfrac_intercept - param.metabfrac_slope * cell.LC2NC))
 
   # Calculate structural dead organic carbon input
