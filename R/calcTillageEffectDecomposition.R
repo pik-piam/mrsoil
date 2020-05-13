@@ -52,7 +52,7 @@ calcTillageEffectDecomposition <- function(tillage="mixedtill") {
 
     mapping            <- as.data.frame(list(crop2tillage, names(crop2tillage)), col.names =  c("crop","tillage"))
     cell.till_areaShr  <- toolAggregate(Cropland, rel=mapping, from="crop", to="tillage", partrel=TRUE, dim=3)/dimSums(Cropland, dim=3)
-    cell.till_areaShr  <- toolConditionalReplace(cell.till_areaShr, conditions = c("is na()"), replaceby = 0)
+    cell.till_areaShr  <- toolConditionalReplace(cell.till_areaShr, conditions = c("is.na()"), replaceby = 0)
 
     if(length(missingTillage <- setdiff(getItems(param.till, dim=3), getItems(cell.till_areaShr, dim=3))) != 0){
       cell.till_areaShr <- add_columns(cell.till_areaShr, addnm=missingTillage, dim=3)
