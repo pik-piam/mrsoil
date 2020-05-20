@@ -101,14 +101,14 @@ calcSoilCarbon <- function(init="lu", output="full"){
   for(year_x in years[years!=years[1]]){
 
     # Calculate carbon transfer between landuse types
-    SoilCarbonTransfer[,year_x,] <- (setYears(mbind(add_dimension(collapseNames(SoilCarbon[,year_x ,"crop"]),    nm="natveg"),
-                                                     add_dimension(collapseNames(SoilCarbon[,year_x  ,"natveg"]), nm="crop")), year_x) *
+    SoilCarbonTransfer[,year_x,] <- (setYears(mbind(add_dimension(collapseNames(SoilCarbon[,year_x-1 ,"crop"]),  nm="natveg"),
+                                                    add_dimension(collapseNames(SoilCarbon[,year_x-1,"natveg"]), nm="crop")), year_x) *
                                      LanduseChange[,year_x,"expansion"]
-                                   - setYears(SoilCarbon[,year_x,], year_x) * LanduseChange[,year_x,"reduction"])
+                                   - setYears(SoilCarbon[,year_x-1,], year_x) * LanduseChange[,year_x,"reduction"])
 
 
     # Calculate the carbon density after landuse change
-    SoilCarbonInter[,year_x,]    <- (setYears(SoilCarbon[,year_x,], year_x) * setYears(Landuse[,year_x,], year_x)
+    SoilCarbonInter[,year_x,]    <- (setYears(SoilCarbon[,year_x-1,], year_x) * setYears(Landuse[,year_x-1,], year_x)
                                     + SoilCarbonTransfer[,year_x,] ) / Landuse[,year_x,]
 
 

@@ -15,14 +15,18 @@
 calcCarbonResidues <- function(){
 
   ResidueRecyclingAg  <- collapseNames(calcOutput("ResFieldBalancePast", cellular=TRUE, aggregate = FALSE)[,,"recycle"][,,c("c","nr")])
-  ResidueRecyclingBg  <- dimSums(calcOutput("ResBiomass", cellular=TRUE, aggregate = FALSE)[,,"bg"][,,c("c","nr")], dim=3)
-  ResidueRecycling    <- ResidueRecyclingBg + ResidueRecyclingAg
+  ResidueRecyclingBg  <- dimSums(calcOutput("ResBiomass", cellular=TRUE, aggregate = FALSE)[,,"bg"][,,c("c","nr")], dim=3.2)
+  ResidueRecycling    <- collapseNames(ResidueRecyclingBg + ResidueRecyclingAg)
   Cropland            <- dimSums(calcOutput("Croparea", cellular=TRUE, aggregate=FALSE), dim=3)
   ResidueRecycling    <- ResidueRecycling/Cropland
   ResidueRecycling    <- toolConditionalReplace(ResidueRecycling, conditions = c("is.na()","<0","is.infinite()"), replaceby = 0)
 
-  ## Cut high input values at 95%-percentil
-  #ResidueRecycling    <- toolConditionalReplace(ResidueRecycling, conditions = "> quantile(x, probs=0.95)", replaceby=eval(quantile(ResidueRecycling, probs=0.95)))
+  ResidueCNratio      <- toolConditionalReplace(ResidueRecycling[,,"c"]/ResidueRecycling[,,"nr"], conditions = "is.na()", replaceby = 1)
+
+  ## Cut high input values at 10 tC/ha
+  ResidueRecycling[,,"c"]  <- toolConditionalReplace(ResidueRecycling[,,"c"], conditions = "> 10", replaceby=10)
+  ResidueRecycling[,,"nr"] <- ResidueRecycling[,,"c"] / ResidueCNratio
+
 
   attributes   <- c("c","LC","NC")
   names        <- as.vector(outer("res", attributes, paste, sep="."))

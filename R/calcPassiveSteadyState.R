@@ -44,6 +44,7 @@ calcPassiveSteadyState <- function(landtype="crop"){
 
   # Calculate long term equillibrium as input divided by decay rate
   cell.ss_passive <- cell.alpha / cell.k_passive
+  cell.ss_passive <- toolConditionalReplace(cell.ss_passive[,sort(getItems(cell.ss_passive, dim=2)),], "is.na()", 0)
 
   return(list(
     x=cell.ss_passive,

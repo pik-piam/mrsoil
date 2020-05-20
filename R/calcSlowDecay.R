@@ -28,6 +28,7 @@ calcSlowDecay <- function(landtype="crop") {
   cell.till_Factor <- calcOutput("TillageEffectDecomposition", tillage=landtype2tillage[landtype], aggregate = FALSE)
 
   cell.k_slow  <- param.k_sopt * cell.w_Factor * cell.t_Factor * cell.till_Factor
+  cell.k_slow  <- cell.k_slow[,sort(getItems(cell.k_slow, dim=2)),]
 
   return(list(
     x=cell.k_slow,

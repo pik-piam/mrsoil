@@ -22,11 +22,11 @@ calcCarbonManure <- function(){
   ManureInput        <- toolConditionalReplace(ManureInput, conditions = c("is.na()","<0"), replaceby = 0)
   ManureInput        <- toolConditionalReplace(ManureInput, conditions = c("is.infinite()"), replaceby = 0)
 
-  ## Cut high input values at 95%-percentil
-  # ManureInput[,,"c"]  <- toolConditionalReplace(ManureInput[,,"c"], conditions = "> quantile(x, probs=0.95)", replaceby=eval(quantile(ManureInput[,,'c'], probs=0.95)))
-  # ManureInput[,,"nr"] <- toolConditionalReplace(ManureInput[,,"nr"], conditions = "> quantile(x, probs=0.95)", replaceby=eval(quantile(ManureInput[,,'nr'], probs=0.95)))
-
   param        <- readSource("IPCC", subtype="manure_table5p5c", convert=FALSE)
+
+  ##  Cut high input values at 10 tC/ha
+   ManureInput[,,"c"]  <- toolConditionalReplace(ManureInput[,,"c"],  conditions = "> 10", replaceby=10)
+   ManureInput[,,"nr"] <- ManureInput[,,"c"] / param[,,"cn_ratio"]
 
   kli <- findset("kli")
   attributes   <- c("c","LC","NC")

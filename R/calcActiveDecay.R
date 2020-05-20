@@ -34,7 +34,7 @@ calcActiveDecay <- function(landtype="crop"){
   cell.k_active    <-  param.k_aopt * cell.w_Factor * cell.t_Factor * cell.till_Factor *
                        ( param.sand_intercept +  param.sand_slope * cell.sand_frac )
 
-  #cell.k_active   <- collapseNames(cell.k_active)
+  cell.k_active    <- cell.k_active[,sort(getItems(cell.k_active, dim=2)),]
 
   return(list(
     x=cell.k_active,

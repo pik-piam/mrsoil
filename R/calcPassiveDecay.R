@@ -15,7 +15,7 @@
 
 calcPassiveDecay <- function(landtype="crop") {
 
-  landtype2irrigation <- c(crop   = "mixed",
+  landtype2irrigation <- c(crop   = "mixedirrig",
                            natveg = "rainfed")
 
   param <- readSource("IPCCSoil", convert=FALSE)
@@ -24,6 +24,7 @@ calcPassiveDecay <- function(landtype="crop") {
   cell.t_Factor   <- calcOutput("TempEffectDecomposition", aggregate = FALSE)
 
   cell.k_passive  <- param.k_popt * cell.w_Factor * cell.t_Factor
+  cell.k_passive  <- cell.k_passive[,sort(getItems(cell.k_passive, dim=2)),]
 
   return(list(
     x=cell.k_passive,

@@ -42,6 +42,7 @@ calcSlowSteadyState <- function(landtype="crop") {
 
   # Calculate long term equillibrium as input divided by decay rate
   cell.ss_slow   <- cell.alpha / cell.k_slow
+  cell.ss_slow   <- toolConditionalReplace(cell.ss_slow[,sort(getItems(cell.ss_slow, dim=2)),], "is.na()", 0)
 
   return(list(
     x=cell.ss_slow,

@@ -55,7 +55,7 @@ calcTillageEffectDecomposition <- function(tillage="mixedtill") {
     cell.till_areaShr  <- toolConditionalReplace(cell.till_areaShr, conditions = c("is.na()"), replaceby = 0)
 
     if(length(missingTillage <- setdiff(getItems(param.till, dim=3), getItems(cell.till_areaShr, dim=3))) != 0){
-      cell.till_areaShr <- add_columns(cell.till_areaShr, addnm=missingTillage, dim=3)
+      cell.till_areaShr <- add_columns(cell.till_areaShr, addnm=missingTillage, dim=3.1)
       cell.till_areaShr[,,missingTillage] <- 0
     }
 

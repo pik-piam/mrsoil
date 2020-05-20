@@ -14,6 +14,8 @@ calcLanduse <- function(){
   Landuse <- calcOutput("LUH2v2", cellular=TRUE, selectyears="past_all", aggregate=FALSE)
   Landuse <- mbind(Landuse[,,"crop"], setNames(dimSums(Landuse[,,"crop",invert=TRUE], dim=3), "natveg"))
 
+  Landuse <- Landuse[,sort(getItems(Landuse, dim=2)),]
+
   return(list(x=Landuse,
               weight=NULL,
               unit="Mha",
