@@ -79,19 +79,19 @@ calcSoilCarbon <- function(init="lu", output="full"){
     SoilCarbon[,years[1],"slow"]       <- mbind(SlowSteadyState[,years[1],"natveg"], setNames(SlowSteadyState[,years[1],"natveg"], "crop"))
     SoilCarbon[,years[1],"passive"]    <- mbind(PassiveSteadyState[,years[1],"natveg"], setNames(PassiveSteadyState[,years[1],"natveg"], "crop"))
 
-
   } else if(init=="lu"){
     SoilCarbon[,years[1],"active"]     <- ActiveSteadyState[,years[1],]
     SoilCarbon[,years[1],"slow"]       <- SlowSteadyState[,years[1],]
     SoilCarbon[,years[1],"passive"]    <- PassiveSteadyState[,years[1],]
   }
 
+
   #Clear cells with no Landuse -> no Soil
   noSoilCells               <- where(dimSums(Landuse, dim=3)==0)$true$regions
   SoilCarbon[noSoilCells,,] <- 0
   SoilCarbonSteadyState[noSoilCells,,] <- 0
 
-  SoilCarbonTransfer      <- SoilCarbonInter       <- SoilCarbonRelease       <-  SoilCarbon
+  SoilCarbonTransfer      <- SoilCarbonInter       <- SoilCarbonRelease       <- SoilCarbonNatural    <- SoilCarbon
   SoilCarbonTransfer[,1,] <- SoilCarbonInter[,1,]  <- SoilCarbonRelease[,1,]  <- 0
   ######################
   ### Looping        ###
@@ -119,6 +119,10 @@ calcSoilCarbon <- function(init="lu", output="full"){
 
     SoilCarbonRelease[,year_x,]  <- SoilCarbonInter[,year_x,] * Decay[,year_x,]
 
+    # Calculate counterfactual potential natural vegetation stocks
+    SoilCarbonNatural            <- setYears(SoilCarbon[,year_x-1,], year_x) + (SoilCarbonSteadyState[,year_x,] - setYears(SoilCarbon[,year_x-1,], year_x)) * Decay[,year_x,]
+    SoilCarbonNatural[,,"crop"]  <- 0
+
     print(year_x)
   }
 
@@ -132,7 +136,8 @@ calcSoilCarbon <- function(init="lu", output="full"){
                  add_dimension(SoilCarbonSteadyState, dim=3.1, add="var", nm="steadystate"),
                  add_dimension(Decay,                 dim=3.1, add="var", nm="decayrate"),
                  add_dimension(SoilCarbonTransfer,    dim=3.1, add="var", nm="carbontransfer"),
-                 add_dimension(SoilCarbonInter,       dim=3.1, add="var", nm="interstate"))
+                 add_dimension(SoilCarbonInter,       dim=3.1, add="var", nm="interstate"),
+                 add_dimension(SoilCarbonNatural,     dim=3.1, add="var", nm="naturalstate"))
   }
 
   return(list( x            = out,
