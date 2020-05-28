@@ -120,7 +120,7 @@ calcSoilCarbon <- function(init="lu", output="full"){
     SoilCarbonRelease[,year_x,]  <- SoilCarbonInter[,year_x,] * Decay[,year_x,]
 
     # Calculate counterfactual potential natural vegetation stocks
-    SoilCarbonNatural            <- setYears(SoilCarbon[,year_x-1,], year_x) + (SoilCarbonSteadyState[,year_x,] - setYears(SoilCarbon[,year_x-1,], year_x)) * Decay[,year_x,]
+    SoilCarbonNatural[,year_x,]  <- setYears(SoilCarbon[,year_x-1,], year_x) + (SoilCarbonSteadyState[,year_x,] - setYears(SoilCarbon[,year_x-1,], year_x)) * Decay[,year_x,]
     SoilCarbonNatural[,,"crop"]  <- 0
 
     print(year_x)
