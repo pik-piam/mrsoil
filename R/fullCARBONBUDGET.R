@@ -2,6 +2,7 @@
 #' @description Function that produces the complete cellular data set of the SOC budget
 #'
 #' @param rev data revision which should be used as input (positive numeric).
+#' @param dev flag to mark carbon budget calculations
 #' @author Kristine Karstens
 #'
 #' @seealso
@@ -14,7 +15,9 @@
 #' @importFrom magclass setNames
 #' @importFrom magpiesets findset
 
-fullCARBONBUDGET <- function(rev=0.1){
+fullCARBONBUDGET <- function(rev=0.1, dev="_mrSOC"){
+
+  setConfig(regionmapping = NULL)
 
   ### from mrcommons
   calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, file="ResiduesAg_FieldBalance.rds")
