@@ -36,7 +36,7 @@ calcCarbonManure <- function(){
 
   out[,,"c"]   <- ManureInput[,,"c"]
   out[,,"NC"]  <- ManureInput[,,"nr"] / ManureInput[,,"c"]
-  out[,,"LC"]  <- 1 / 0.45 * param[,,"LC_dm"]/100
+  out[,,"LC"]  <- 1 / 0.44 * param[,,"LC_dm"]/100
 
   out <- toolConditionalReplace(out, conditions = c("is.na()","<0"), replaceby = 0)
 

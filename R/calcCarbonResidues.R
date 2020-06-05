@@ -35,7 +35,7 @@ calcCarbonResidues <- function(){
 
   out[,,"c"]   <- ResidueRecycling[,,"c"]
   out[,,"NC"]  <- ResidueRecycling[,,"nr"]/ResidueRecycling[,,"c"]
-  out[,,"LC"]  <- 0.073
+  out[,,"LC"]  <- 0.073 / 0.44  # (LC/dm / c/dm  =  LC/c)
 
   out <- toolConditionalReplace(out, conditions = c("is.na()","<0"), replaceby = 0)
 

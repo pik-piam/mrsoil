@@ -31,7 +31,7 @@ fullCARBONBUDGET <- function(rev=0.1, dev="_mrSOC"){
   calcOutput("CarbonResidues", aggregate=FALSE, file="CarbonResidues.rds")
   calcOutput("CarbonManure",   aggregate=FALSE, file="CarbonManure.rds")
   calcOutput("CarbonLitter",   aggregate=FALSE, file="CarbonLitter.rds")
-  calcOutput("CarbonInput",    aggregate=FALSE, file="CarbonInput.rds")
+  calcOutput("CarbonInput",    aggregate=FALSE, landtype="all", file="CarbonInput.rds")
 
   calcOutput("Landuse",       aggregate=FALSE, file="Landuse.rds")
   calcOutput("LanduseChange", aggregate=FALSE, file="LanduseChange.rds")

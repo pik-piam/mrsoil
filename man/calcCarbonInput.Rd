@@ -7,7 +7,7 @@
 calcCarbonInput(landtype = "crop")
 }
 \arguments{
-\item{landtype}{'crop' for cropland, 'natveg' for all the rest}
+\item{landtype}{'crop' for cropland, 'natveg' for all the rest, 'all' for getting both}
 }
 \value{
 magpie object in cellular resolution
