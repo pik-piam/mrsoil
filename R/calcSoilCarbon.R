@@ -106,21 +106,17 @@ calcSoilCarbon <- function(init="lu", output="full"){
                                      LanduseChange[,year_x,"expansion"]
                                    - setYears(SoilCarbon[,year_x-1,], year_x) * LanduseChange[,year_x,"reduction"])
 
-
     # Calculate the carbon density after landuse change
     SoilCarbonInter[,year_x,]    <- (setYears(SoilCarbon[,year_x-1,], year_x) * setYears(Landuse[,year_x-1,], year_x)
                                     + SoilCarbonTransfer[,year_x,] ) / Landuse[,year_x,]
-
-
     SoilCarbonInter[,year_x,]    <- toolConditionalReplace(SoilCarbonInter[,year_x,], conditions = c("is.na()","is.infinite()"), replaceby = 0)
 
     # Update the carbon density after input and decay
     SoilCarbon[,year_x,]         <- SoilCarbonInter[,year_x,] + (SoilCarbonSteadyState[,year_x,] - SoilCarbonInter[,year_x,]) * Decay[,year_x,]
-
     SoilCarbonRelease[,year_x,]  <- SoilCarbonInter[,year_x,] * Decay[,year_x,]
 
     # Calculate counterfactual potential natural vegetation stocks
-    SoilCarbonNatural[,year_x,]  <- setYears(SoilCarbon[,year_x-1,], year_x) + (SoilCarbonSteadyState[,year_x,] - setYears(SoilCarbon[,year_x-1,], year_x)) * Decay[,year_x,]
+    SoilCarbonNatural[,year_x,]  <- setYears(SoilCarbonNatural[,year_x-1,], year_x) + (SoilCarbonSteadyState[,year_x,] - setYears(SoilCarbonNatural[,year_x-1,], year_x)) * Decay[,year_x,]
     SoilCarbonNatural[,,"crop"]  <- 0
 
     print(year_x)
