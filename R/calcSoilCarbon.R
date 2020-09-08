@@ -17,86 +17,46 @@ calcSoilCarbon <- function(init="lu", output="full"){
 
   years <- sort(as.numeric(substring(findset("past_all"),2)))
 
-  #1 calc all targets (steady states for all time steps for all sub pools)
-  #2 Load Landuse, LanduseChange data
-  #3 init all cell for natveg, crop and all sub pools -> use steady states in zero-th year
-  #4 loop over the years
-  ## * calc SoilCarbon*(t-1) after LanduseChange
-  ##   = ( SoilCarbon(t-1, lu) * lu(t-1, lu)
-  ##     - SoilCarbon(t-1, lu)  * lu_red(t, lu)
-  ##     + SoilCarbon(t-1, !lu) * lu_exp(t, lu)) /
-  ##     lu(t,lu)
-  ## * update soil Carbon
-  ##   = SoilCarbon*(t-1,lu) + (SoilCarbonSteadyState(t,lu) - SoilCarbon*(t-1,lu)) * Decay(t,lu)
-
-
   #######################
   ### Load Data & Ini ###
   #######################
 
-  ActiveSteadyState  <- mbind(setNames(calcOutput("ActiveSteadyState",  landtype="crop",   aggregate = FALSE),"crop"),
-                              setNames(calcOutput("ActiveSteadyState",  landtype="natveg", aggregate = FALSE),"natveg"))
-
-  SlowSteadyState    <- mbind(setNames(calcOutput("SlowSteadyState",  landtype="crop",   aggregate = FALSE),"crop"),
-                              setNames(calcOutput("SlowSteadyState",  landtype="natveg", aggregate = FALSE),"natveg"))
-
-  PassiveSteadyState <- mbind(setNames(calcOutput("PassiveSteadyState",  landtype="crop",   aggregate = FALSE),"crop"),
-                              setNames(calcOutput("PassiveSteadyState",  landtype="natveg", aggregate = FALSE),"natveg"))
-
-  ActiveDecay        <- mbind(setNames(calcOutput("ActiveDecay",  landtype="crop",   aggregate = FALSE),"crop"),
-                              setNames(calcOutput("ActiveDecay",  landtype="natveg", aggregate = FALSE),"natveg"))
-
-  SlowDecay          <- mbind(setNames(calcOutput("SlowDecay",  landtype="crop",   aggregate = FALSE),"crop"),
-                              setNames(calcOutput("SlowDecay",  landtype="natveg", aggregate = FALSE),"natveg"))
-
-  PassiveDecay       <- mbind(setNames(calcOutput("PassiveDecay", landtype="crop",   aggregate = FALSE),"crop"),
-                              setNames(calcOutput("PassiveDecay", landtype="natveg", aggregate = FALSE),"natveg"))
-
+  # Load Landuse data
   Landuse            <- calcOutput("Landuse",       aggregate=FALSE)
   LanduseChange      <- calcOutput("LanduseChange", aggregate=FALSE)
 
-  subpools     <- c("active","slow","passive")
-  names        <- as.vector(outer(getNames(Landuse), subpools, paste, sep="."))
-  SoilCarbon   <- SoilCarbonSteadyState <- Decay <- new.magpie(getCells(Landuse), getYears(Landuse), names, fill = 0)
-
-  SoilCarbonSteadyState[,years,"active"]  <- ActiveSteadyState
-  SoilCarbonSteadyState[,years,"slow"]    <- SlowSteadyState
-  SoilCarbonSteadyState[,years,"passive"] <- PassiveSteadyState
-
-  noCropCells               <- which(Landuse[,,"crop"]==0)
-  #Clear cells with no Cropland ->
+  # Load steady states (setting to zero for all non cropland cells)
+  SoilCarbonSteadyState <- calcOutput("SteadyState", aggregate = FALSE)
+  noCropCells           <- which(Landuse[,,"crop"]==0)
   for(sub in getNames(SoilCarbonSteadyState, dim=2)){
-    SoilCarbonSteadyState[,,sub][noCropCells] <- 0
+    SoilCarbonSteadyState[,,sub][noCropCells] <- 0  #Clear cells with no Cropland
   }
 
-  Decay[,years,"active"]                  <- ActiveDecay
-  Decay[,years,"slow"]                    <- SlowDecay
-  Decay[,years,"passive"]                 <- PassiveDecay
-  Decay[Decay>1]                          <- 1
+  # Loading decay rates (cutting over 1)
+  Decay                 <- calcOutput("Decay", aggregate = FALSE)
+  Decay[Decay>1]        <- 1
 
+  # Initialize SOC stocks
   if(init=="natveg"){
-    SoilCarbon[,years[1],"active"]     <- mbind(ActiveSteadyState[,years[1],"natveg"], setNames(ActiveSteadyState[,years[1],"natveg"], "crop"))
-    SoilCarbon[,years[1],"slow"]       <- mbind(SlowSteadyState[,years[1],"natveg"], setNames(SlowSteadyState[,years[1],"natveg"], "crop"))
-    SoilCarbon[,years[1],"passive"]    <- mbind(PassiveSteadyState[,years[1],"natveg"], setNames(PassiveSteadyState[,years[1],"natveg"], "crop"))
+    SoilCarbon[,years[1],]     <- mbind(         SoilCarbonSteadyState[,years[1],"natveg"],
+                                        setNames(SoilCarbonSteadyState[,years[1],"natveg"], "crop"))
 
   } else if(init=="lu"){
-    SoilCarbon[,years[1],"active"]     <- ActiveSteadyState[,years[1],]
-    SoilCarbon[,years[1],"slow"]       <- SlowSteadyState[,years[1],]
-    SoilCarbon[,years[1],"passive"]    <- PassiveSteadyState[,years[1],]
+    SoilCarbon[,years[1],]     <- SoilCarbonSteadyState[,years[1],]
   }
-
 
   #Clear cells with no Landuse -> no Soil
   noSoilCells               <- where(dimSums(Landuse, dim=3)==0)$true$regions
   SoilCarbon[noSoilCells,,] <- 0
   SoilCarbonSteadyState[noSoilCells,,] <- 0
 
-  SoilCarbonTransfer      <- SoilCarbonInter       <- SoilCarbonRelease       <- SoilCarbonNatural    <- SoilCarbon
-  SoilCarbonTransfer[,1,] <- SoilCarbonInter[,1,]  <- SoilCarbonRelease[,1,]  <- 0
+  #Initialize outputs
+  SoilCarbonTransfer      <- SoilCarbonInter        <- SoilCarbonNatural    <- SoilCarbon
+  SoilCarbonTransfer[,1,] <- SoilCarbonInter[,1,]   <- 0
+
   ######################
   ### Looping        ###
   ######################
-
 
   for(year_x in years[years!=years[1]]){
 
@@ -129,8 +89,6 @@ calcSoilCarbon <- function(init="lu", output="full"){
   } else if(output=="full"){
 
     out <- mbind(add_dimension(SoilCarbon,            dim=3.1, add="var", nm="actualstate"),
-                 add_dimension(SoilCarbonSteadyState, dim=3.1, add="var", nm="steadystate"),
-                 add_dimension(Decay,                 dim=3.1, add="var", nm="decayrate"),
                  add_dimension(SoilCarbonTransfer,    dim=3.1, add="var", nm="carbontransfer"),
                  add_dimension(SoilCarbonInter,       dim=3.1, add="var", nm="interstate"),
                  add_dimension(SoilCarbonNatural,     dim=3.1, add="var", nm="naturalstate"))

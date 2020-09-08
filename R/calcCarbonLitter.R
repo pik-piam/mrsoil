@@ -21,8 +21,10 @@ calcCarbonLitter <- function(){
   out          <- new.magpie(getCells(litfallc), getYears(litfallc), names, fill = 0)
   getSets(out) <- c("iso","cell","t","inputs","attributes")
 
-  out[,,"LC"] <- 0.2
-  out[,,"NC"] <- 0.0126/0.45
+  param.litter <- readSource("SOCbudgetParam", convert=FALSE)
+
+  out[,,"LC"] <- param.litter[,,"natveg_lgc_ratio"]
+  out[,,"NC"] <- param.litter[,,"natveg_nc_ratio"]
   out[,,"c"]  <- litfallc
 
   out <- toolConditionalReplace(out, conditions = c("is.na()","<0", "is.infinite()"), replaceby = 0)

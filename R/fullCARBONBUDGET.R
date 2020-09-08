@@ -18,6 +18,7 @@
 fullCARBONBUDGET <- function(rev=0.1, dev="_mrSOC"){
 
   setConfig(regionmapping = NULL)
+  options(litter_param="default")
 
   ### from mrcommons
   calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, file="ResiduesAg_FieldBalance.rds")

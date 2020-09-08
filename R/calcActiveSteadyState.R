@@ -26,7 +26,17 @@ calcActiveSteadyState <- function(landtype="crop"){
   cell.f4_a2s               <- calcOutput("TransferActive2Slow", aggregate = FALSE)
 
   if(landtype=="crop"){
-    param.f2_struc2a        <- setYears(param[,,"f2_ft"], NULL) # stabilization efficiencies for structural decay products entering the active pool if tillage is not known
+
+    tillage2param       <- c(fulltill    = "f2_ft",
+                             reducedtill = "f2_rt",
+                             notill      = "f2_nt")
+
+    f2                  <- setNames(param[,,tillage2param], names(tillage2param))
+    cell.till_areaShr   <- calcOutput("TillageArea", tillage="historicNoTill", aggregate = FALSE)
+    param.f2_struc2a    <- dimSums(f2*cell.till_areaShr, dim=3) # stabilization efficiencies for structural decay products entering the active pool if tillage is not known
+    param.f2_struc2a[param.f2_struc2a==0] <- param[,,"f2_ft"]   # backup: set all cell with no area info to full tillage (just in case it is needed)
+
+
   } else if(landtype=="natveg"){
     param.f2_struc2a        <- setYears(param[,,"f2_nt"], NULL) # stabilization efficiencies for structural decay products entering the active pool if tillage is not known
   }
