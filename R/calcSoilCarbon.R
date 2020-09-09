@@ -36,6 +36,9 @@ calcSoilCarbon <- function(init="lu", output="full"){
   Decay                 <- calcOutput("Decay", aggregate = FALSE)
   Decay[Decay>1]        <- 1
 
+  SoilCarbon            <- SoilCarbonSteadyState
+  SoilCarbon[]          <- 0
+
   # Initialize SOC stocks
   if(init=="natveg"){
     SoilCarbon[,years[1],]     <- mbind(         SoilCarbonSteadyState[,years[1],"natveg"],
