@@ -4,7 +4,7 @@
 \alias{fullCARBONBUDGET}
 \title{fullCARBONBUDGET}
 \usage{
-fullCARBONBUDGET(rev = 0.1, dev = "_mrSOC")
+fullCARBONBUDGET(rev = 0.1, dev = "default")
 }
 \arguments{
 \item{rev}{data revision which should be used as input (positive numeric).}

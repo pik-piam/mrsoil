@@ -15,10 +15,10 @@
 #' @importFrom magclass setNames
 #' @importFrom magpiesets findset
 
-fullCARBONBUDGET <- function(rev=0.1, dev="_mrSOC"){
+fullCARBONBUDGET <- function(rev=0.1, dev="default"){
 
   setConfig(regionmapping = NULL)
-  options(litter_param="default")
+  options(litter_param=dev)
 
   ### from mrcommons
   calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, file="ResiduesAg_FieldBalance.rds")
