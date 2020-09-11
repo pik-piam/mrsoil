@@ -18,7 +18,7 @@ calcActiveDecay <- function(landtype="crop"){
   landtype2irrigation <- c(crop   = "mixedirrig",
                            natveg = "rainfed")
 
-  landtype2tillage    <- c(crop   = "mixedtill",
+  landtype2tillage    <- c(crop   = "histtill",
                            natveg = "notill")
 
   param                <- readSource("IPCCSoil", convert=FALSE)
