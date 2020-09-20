@@ -18,7 +18,7 @@ calcSlowDecay <- function(landtype="crop") {
   landtype2irrigation <- c(crop   = "mixedirrig",
                            natveg = "rainfed")
 
-  landtype2tillage    <- c(crop   = "histtill",
+  landtype2tillage    <- c(crop   = getOption("tillage"),
                            natveg = "notill")
 
   param            <- readSource("IPCCSoil", convert=FALSE)

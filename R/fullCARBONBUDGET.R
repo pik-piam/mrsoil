@@ -18,7 +18,18 @@
 fullCARBONBUDGET <- function(rev=0.1, dev="default"){
 
   setConfig(regionmapping = NULL)
-  options(litter_param=dev)
+
+  options(manure  ="default")
+  options(residue ="default")
+  options(yield   ="default")
+  options(tillage ="default")
+
+
+  if(grepl("manure_*", dev)){           options(manure= gsub("manure_","",dev))
+  } else if(grepl("residue_*", dev)){   options(residue= gsub("residue_","",dev))
+  } else if(grepl("yield_*",   dev)){   options(yield= gsub("yield_","",dev))
+  } else if(grepl("tillage_*", dev)){   options(tillage= gsub("tillage_","",dev))
+  }
 
   ### from mrcommons
   calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, file="ResiduesAg_FieldBalance.rds")

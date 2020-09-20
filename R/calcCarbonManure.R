@@ -1,6 +1,10 @@
 #' @title calcCarbonManure
 #' @description Calculates carbon input from manure for cropland.
 #'
+#' @param scenario define scenario switch for sensititvy analysis.
+#'                'default' for historic assumptions
+#'                'freezeXXXX' for frozen manure recycling rates from year XXXX
+#'
 #' @return List of magpie object with results on country level, weight on country level, unit and description.
 #' @author Kristine Karstens
 #' @examples
@@ -12,7 +16,9 @@
 #' @importFrom stats quantile
 #' @import mrcommons
 
-calcCarbonManure <- function(){
+calcCarbonManure <- function(scenario="default"){
+
+  scenario <- getOption("manure")
 
   ManureApplication  <- collapseNames(calcOutput("ManureRecyclingCroplandPast", products = "kli", cellular = TRUE, aggregate = FALSE)[,,c("nr","c")])
   ManureGrazing      <- collapseNames(calcOutput("Excretion", cellular = TRUE, attributes = "npkc", aggregate = FALSE)[,,"stubble_grazing"][,,c("nr","c")])
@@ -39,6 +45,13 @@ calcCarbonManure <- function(){
   out[,,"LC"]  <- 1 / 0.44 * param[,,"LC_dm"]/100
 
   out <- toolConditionalReplace(out, conditions = c("is.na()","<0"), replaceby = 0)
+
+  if(grepl("freeze*", scenario)){
+
+    freeze_year <- as.integer(gsub("freeze","",scenario))
+    reset_years <- getYears(out, as.integer=TRUE) >= freeze_year
+    out[,reset_years,] <- setYears(out[,rep(freeze_year,sum(reset_years)),], getYears(out[,reset_years,]))
+  }
 
   return(list(x=out,
               weight=NULL,

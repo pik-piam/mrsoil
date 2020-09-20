@@ -4,7 +4,13 @@
 \alias{calcCarbonResidues}
 \title{calcCarbonResidues}
 \usage{
-calcCarbonResidues()
+calcCarbonResidues(scenario = "default")
+}
+\arguments{
+\item{scenario}{define scenario switch for sensititvy analysis.
+'default' for historic assumptions
+'freezeXXXX' for frozen residue recycling rates from year XXXX
+'yieldsXXXX' for frozen yields for res calculations from year XXXX}
 }
 \value{
 List of magpie object with results on cellular level, weight on cellular level, unit and description.

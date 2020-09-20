@@ -4,7 +4,12 @@
 \alias{calcCarbonManure}
 \title{calcCarbonManure}
 \usage{
-calcCarbonManure()
+calcCarbonManure(scenario = "default")
+}
+\arguments{
+\item{scenario}{define scenario switch for sensititvy analysis.
+'default' for historic assumptions
+'freezeXXXX' for frozen manure recycling rates from year XXXX}
 }
 \value{
 List of magpie object with results on country level, weight on country level, unit and description.
