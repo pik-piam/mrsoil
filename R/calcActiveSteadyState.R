@@ -35,7 +35,8 @@ calcActiveSteadyState <- function(landtype="crop"){
 
     tillage2area        <- c(mixedtill    = "ruleBased",
                              histtill     = "historicNoTill")
-    cell.till_areaShr   <- calcOutput("TillageArea", tillage=tillage2area(getOption("tillage")), aggregate = FALSE)
+
+    cell.till_areaShr   <- calcOutput("TillageArea", tillage=tillage2area[getOption("tillage")], aggregate = FALSE)
     param.f2_struc2a    <- dimSums(f2*cell.till_areaShr, dim=3) # stabilization efficiencies for structural decay products entering the active pool if tillage is not known
     param.f2_struc2a[param.f2_struc2a==0] <- param[,,"f2_ft"]   # backup: set all cell with no area info to full tillage (just in case it is needed)
 
