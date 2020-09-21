@@ -30,14 +30,14 @@ calcCarbonResidues <- function(scenario="default"){
   ResidueRecyclingAg  <- collapseNames(calcOutput("ResFieldBalancePast", cellular=TRUE, products = "kres", aggregate = FALSE, scenario=yieldscenario)[,,"recycle"][,,c("c","nr")])
 
   if(grepl("freeze*", scenario)){
-    RecycleShare   <- toolConditionalReplace(ResidueRecyclingAg/ResidueBiomass[,,"ag"], is.na(), 0)
+    RecycleShare   <- toolConditionalReplace(ResidueRecyclingAg/ResidueBiomass[,,"ag"], "is.na()", 0)
     freeze_year    <- as.integer(gsub("freeze","",scenario))
     reset_years    <- getYears(RecycleShare, as.integer=TRUE) >= freeze_year
     # constant recycle share
     RecycleShare[,reset_years,] <- setYears(RecycleShare[,rep(freeze_year,sum(reset_years)),], getYears(RecycleShare[,reset_years,]))
-    ResidueRecyclingAg          <- dimSums(RecycleShare + ResidueBiomass[,,"ag"], dim=3.2)
+    ResidueRecyclingAg          <- dimSums(RecycleShare + ResidueBiomass[,,"ag"], dim=3.1)
   } else {
-    ResidueRecyclingAg <- dimSums(ResidueRecyclingAg, dim=3.2)
+    ResidueRecyclingAg <- dimSums(ResidueRecyclingAg, dim=3.1)
   }
 
   ResidueRecyclingBg  <- dimSums(ResidueBiomass[,,"bg"][,,c("c","nr")], dim=3.2)
