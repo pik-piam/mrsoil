@@ -23,6 +23,7 @@ fullCARBONBUDGET <- function(rev=0.1, dev="default"){
   options(residue ="default")
   options(yield   ="default")
   options(tillage ="histtill")
+  options(litter_param="default")
 
 
   if(grepl("manure_*", dev)){           options(manure= gsub("manure_","",dev))
