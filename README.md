@@ -1,6 +1,6 @@
 # Calculates historical Soil Organic Carbon Budget for Cropland
 
-R package **mrSOCbudget**, version **0.8.5**
+R package **mrSOCbudget**, version **0.9.0**
 
   
 
@@ -38,7 +38,7 @@ In case of questions / problems please contact Kristine Karstens <karstens@pik-p
 
 To cite package **mrSOCbudget** in publications use:
 
-Karstens K (2020). _mrSOCbudget: Calculates historical Soil Organic Carbon Budget for Cropland_. R package version 0.8.5.
+Karstens K (2020). _mrSOCbudget: Calculates historical Soil Organic Carbon Budget for Cropland_. R package version 0.9.0.
 
 A BibTeX entry for LaTeX users is
 
@@ -47,7 +47,7 @@ A BibTeX entry for LaTeX users is
   title = {mrSOCbudget: Calculates historical Soil Organic Carbon Budget for Cropland},
   author = {Kristine Karstens},
   year = {2020},
-  note = {R package version 0.8.5},
+  note = {R package version 0.9.0},
 }
 ```
 

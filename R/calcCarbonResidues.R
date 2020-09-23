@@ -35,7 +35,7 @@ calcCarbonResidues <- function(scenario="default"){
     reset_years    <- getYears(RecycleShare, as.integer=TRUE) >= freeze_year
     # constant recycle share
     RecycleShare[,reset_years,] <- setYears(RecycleShare[,rep(freeze_year,sum(reset_years)),], getYears(RecycleShare[,reset_years,]))
-    ResidueRecyclingAg          <- dimSums(RecycleShare + ResidueBiomass[,,"ag"], dim=3.1)
+    ResidueRecyclingAg          <- dimSums(RecycleShare * ResidueBiomass[,,"ag"], dim=3.1)
   } else {
     ResidueRecyclingAg <- dimSums(ResidueRecyclingAg, dim=3.1)
   }
@@ -46,7 +46,7 @@ calcCarbonResidues <- function(scenario="default"){
   ResidueRecycling    <- ResidueRecycling/Cropland
   ResidueRecycling    <- toolConditionalReplace(ResidueRecycling, conditions = c("is.na()","<0","is.infinite()"), replaceby = 0)
 
-  ResidueCNratio      <- toolConditionalReplace(ResidueRecycling[,,"c"]/ResidueRecycling[,,"nr"], conditions = "is.na()", replaceby = 1)
+  ResidueCNratio      <- toolConditionalReplace(ResidueRecycling[,,"c"]/ResidueRecycling[,,"nr"], conditions = "is.na()", replaceby = 0.44/0.0083) # generic value
 
   ## Cut high input values at 10 tC/ha
   ResidueRecycling[,,"c"]  <- toolConditionalReplace(ResidueRecycling[,,"c"], conditions = "> 10", replaceby=10)
@@ -62,7 +62,7 @@ calcCarbonResidues <- function(scenario="default"){
   out[,,"NC"]  <- ResidueRecycling[,,"nr"]/ResidueRecycling[,,"c"]
   out[,,"LC"]  <- 0.073 / 0.44  # (LC/dm / c/dm  =  LC/c)
 
-  out <- toolConditionalReplace(out, conditions = c("is.na()","<0"), replaceby = 0)
+  out <- toolConditionalReplace(out, conditions = c("is.na()","<0","is.nan()"), replaceby = 0)
 
   if(grepl("freeze*",scenario)){
 
