@@ -51,6 +51,7 @@ calcCarbonManure <- function(scenario="default"){
     freeze_year <- as.integer(gsub("freeze","",scenario))
     reset_years <- getYears(out, as.integer=TRUE) >= freeze_year
     out[,reset_years,] <- setYears(out[,rep(freeze_year,sum(reset_years)),], getYears(out[,reset_years,]))
+    out[Cropland==0] <- 0
   }
 
   return(list(x=out,
