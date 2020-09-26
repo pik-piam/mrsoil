@@ -30,7 +30,7 @@ fullCARBONBUDGET <- function(rev=0.1, dev="default"){
   } else if(grepl("residue_",  dev)){   options(residue= gsub("residue_","",dev))
   } else if(grepl("yield_",    dev)){   options(yield= gsub("yield_","",dev))
   } else if(grepl("tillage_",  dev)){   options(tillage= gsub("tillage_","",dev))
-  } else if(grepl("rrecycle_", dev)){   options(tillage= gsub("rrecycle_","",dev))
+  } else if(grepl("rrecycle_", dev)){   options(rrecycle= gsub("rrecycle_","",dev))
   } else if(grepl("allon_",    dev)){   options(tillage  = "mixedtill")
                                          options(rrecycle = gsub("allon_","",dev))
                                          options(manure   = gsub("allon_","",dev))
