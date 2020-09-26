@@ -46,7 +46,7 @@ calcCarbonManure <- function(scenario="default"){
 
   out <- toolConditionalReplace(out, conditions = c("is.na()","<0"), replaceby = 0)
 
-  if(grepl("freeze*", scenario)){
+  if(grepl("freeze", scenario)){
 
     freeze_year <- as.integer(gsub("freeze","",scenario))
     reset_years <- getYears(out, as.integer=TRUE) >= freeze_year

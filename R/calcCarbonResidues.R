@@ -31,7 +31,7 @@ calcCarbonResidues <- function(scenario="default"){
   ResidueBiomass      <- toolAggregate(ResidueBiomass, rel=kcr2kres, from="kcr", to="kres", dim=3.2)
   ResidueRecyclingAg  <- collapseNames(calcOutput("ResFieldBalancePast", cellular=TRUE, products = "kres", aggregate = FALSE, scenario=yieldscenario)[,,"recycle"][,,c("c","nr")])
 
-  if(grepl("freeze*", rec.scenario)){
+  if(grepl("freeze", rec.scenario)){
     RecycleShare   <- toolConditionalReplace(ResidueRecyclingAg/ResidueBiomass[,,"ag"], "is.na()", 0)
     freeze_year    <- as.integer(gsub("freeze","",rec.scenario))
     reset_years    <- getYears(RecycleShare, as.integer=TRUE) >= freeze_year
@@ -67,7 +67,7 @@ calcCarbonResidues <- function(scenario="default"){
   out <- toolConditionalReplace(out, conditions = c("is.na()","<0","is.nan()"), replaceby = 0)
 
 
-  if(grepl("freeze*", res.scenario)){
+  if(grepl("freeze", res.scenario)){
 
     freeze_year <- as.integer(gsub("freeze","",res.scenario))
     reset_years <- getYears(out, as.integer=TRUE) >= freeze_year
