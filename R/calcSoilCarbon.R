@@ -48,15 +48,10 @@ calcSoilCarbon <- function(init="lu", output="full"){
     SoilCarbon[,years[1],]     <- SoilCarbonSteadyState[,years[1],]
 
   } else if(init=="mixed"){
-    SoilCarbon[,years[1],]     <- mbind(         SoilCarbonSteadyState[,years[1],"natveg"],
-                                                 setNames(SoilCarbonSteadyState[,years[1],"natveg"], "crop"))
-
-  } else if(init=="lu"){
 
     SoilCarbon[,years[1],]     <- mbind(         SoilCarbonSteadyState[,years[1],"natveg"],
                                                  setNames(SoilCarbonSteadyState[,years[1],"natveg"], "crop"))
     SoilCarbon[,years[1],]     <- (SoilCarbonSteadyState[,years[1],] + SoilCarbon[,years[1],])/2
-
 
   }
 
