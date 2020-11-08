@@ -40,6 +40,12 @@ fullCARBONBUDGET <- function(rev=0.1, dev="default"){
                                          options(manure   = gsub("allon2_","",dev))
   }
 
+  if(grepl("init", dev)){
+    soilinit <- gsub("init_","",dev)
+  } else {
+    soilinit <- "lu"
+  }
+
   ### from mrcommons
   calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, file="ResiduesAg_FieldBalance.rds")
   calcOutput("ResBiomass", cellular=TRUE, aggregate=FALSE, file="Residue_Biomass.rds")
@@ -56,5 +62,5 @@ fullCARBONBUDGET <- function(rev=0.1, dev="default"){
 
   calcOutput("Landuse",       aggregate=FALSE, file="Landuse.rds")
   calcOutput("LanduseChange", aggregate=FALSE, file="LanduseChange.rds")
-  calcOutput("SoilCarbon",    output="full", aggregate=FALSE, file="SoilCarbon.rds")
+  calcOutput("SoilCarbon",    output="full", init=soilinit, aggregate=FALSE, file="SoilCarbon.rds")
 }

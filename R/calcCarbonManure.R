@@ -18,7 +18,8 @@
 
 calcCarbonManure <- function(scenario="default"){
 
-  scenario <- getOption("manure")
+  man.scenario <- getOption("manure")
+  rec.scenario <- getOption("mrecycle")
 
   ManureApplication  <- collapseNames(calcOutput("ManureRecyclingCroplandPast", products = "kli", cellular = TRUE, aggregate = FALSE)[,,c("nr","c")])
   ManureGrazing      <- collapseNames(calcOutput("Excretion", cellular = TRUE, attributes = "npkc", aggregate = FALSE)[,,"stubble_grazing"][,,c("nr","c")])
@@ -46,7 +47,15 @@ calcCarbonManure <- function(scenario="default"){
 
   out <- toolConditionalReplace(out, conditions = c("is.na()","<0"), replaceby = 0)
 
-  if(grepl("freeze", scenario)){
+  if(grepl("freeze", man.scenario)){
+
+    freeze_year <- as.integer(gsub("freeze","",scenario))
+    reset_years <- getYears(out, as.integer=TRUE) >= freeze_year
+    out[,reset_years,] <- setYears(out[,rep(freeze_year,sum(reset_years)),], getYears(out[,reset_years,]))
+    out[Cropland==0] <- 0
+  }
+
+  if(grepl("freeze", rec.scenario)){
 
     freeze_year <- as.integer(gsub("freeze","",scenario))
     reset_years <- getYears(out, as.integer=TRUE) >= freeze_year
