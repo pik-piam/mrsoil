@@ -19,12 +19,12 @@ fullCARBONBUDGET <- function(rev=0.1, dev="default"){
 
   setConfig(regionmapping = NULL)
 
+  ### Management Scenarios
   options(manure   ="default")
   options(residue  ="default")
   options(rrecycle ="default")
   options(yield    ="default")
   options(tillage  ="histtill")
-  options(litter_param="default")
 
   if(grepl("manure_", dev)){            options(manure= gsub("manure_","",dev))
   } else if(grepl("residue_",  dev)){   options(residue= gsub("residue_","",dev))
@@ -40,11 +40,18 @@ fullCARBONBUDGET <- function(rev=0.1, dev="default"){
                                          options(manure   = gsub("allon2_","",dev))
   }
 
+  ### Initialization Scenarios
   if(grepl("init", dev)){
     soilinit <- gsub("init_","",dev)
   } else {
     soilinit <- "lu"
   }
+
+  ### Litter parameterization Scenarios
+  options(litter_param="default")
+
+  if(grepl("litterPNV_", dev)){ options(litter_param = gsub("litterPNV_","",dev))}
+
 
   ### from mrcommons
   calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, file="ResiduesAg_FieldBalance.rds")
