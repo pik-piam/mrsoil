@@ -22,5 +22,5 @@ for National Greenhouse Gas Inventories
 
 }
 \author{
-Kristine Karstens
+Kristine Karstens, Jan Philipp Dietrich
 }

@@ -60,7 +60,7 @@ readCRU <- function(subtype="precipitation"){
       }
     }
 
-    # multiply number of daye per month to get monthly data
+    # multiply number of days per month to get monthly data
     x <- as.magpie(x)*ndays
   }
 

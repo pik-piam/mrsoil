@@ -4,7 +4,7 @@
 #' for National Greenhouse Gas Inventories
 #'
 #' @return magpie object in cellular resolution
-#' @author Kristine Karstens
+#' @author Kristine Karstens, Jan Philipp Dietrich
 #'
 #' @param landtype 'crop' for cropland, 'natveg' for all the rest
 #' @examples
@@ -15,20 +15,21 @@
 
 calcActiveDecay <- function(landtype="crop"){
 
-  landtype2irrigation <- c(crop   = "mixedirrig",
-                           natveg = "rainfed")
-
-  landtype2tillage    <- c(crop   = getOption("tillage"),
-                           natveg = "notill")
-
   param                <- readSource("IPCCSoil", convert=FALSE)
   param.k_aopt         <- setYears(param[,,"kfaca"], NULL) # decay rate under optimum condition for active (k3)
   param.sand_intercept <- setYears(param[,,"k3par1"], NULL)
   param.sand_slope     <- setYears(param[,,"k3par2"], NULL)
 
-  cell.w_Factor    <- calcOutput("WaterEffectDecomposition", irrigation = landtype2irrigation[landtype], aggregate = FALSE)
+  if(landtype=="crop") {
+    cell.w_Factor    <- calcOutput("WaterEffectDecomposition", irrigation = "mixedirrig", aggregate = FALSE)
+    cell.till_Factor <- calcOutput("TillageEffectDecomposition", tillage = getOption("tillage"), aggregate = FALSE)
+  } else if(landtype=="natveg") {
+    cell.w_Factor    <- calcOutput("WaterEffectDecomposition", irrigation = "rainfed", aggregate = FALSE)
+    cell.till_Factor <- calcOutput("TillageEffectDecomposition", tillage = "notill", aggregate = FALSE)
+  } else {
+    stop("Unsupported landtype \"",landtype,"\"")
+  }
   cell.t_Factor    <- calcOutput("TempEffectDecomposition", aggregate = FALSE)
-  cell.till_Factor <- calcOutput("TillageEffectDecomposition", tillage = landtype2tillage[landtype], aggregate = FALSE)
   cell.sand_frac   <- calcOutput("SandFrac", aggregate = FALSE)
 
   cell.k_active    <-  param.k_aopt * cell.w_Factor * cell.t_Factor * cell.till_Factor *
