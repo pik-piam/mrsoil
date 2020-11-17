@@ -4,7 +4,12 @@
 \alias{calcSteadyState}
 \title{calcSteadyState}
 \usage{
-calcSteadyState()
+calcSteadyState(tillage = "histtill")
+}
+\arguments{
+\item{tillage}{tillage type to de considered.
+Default (histill) is historic tillage area shares based on no tillage areas from Porwollik together with rule based assumption;
+'mixedtill' includes pure rule based assumptions.}
 }
 \value{
 magpie object in cellular resolution
