@@ -4,12 +4,16 @@
 \alias{calcSoilCarbon}
 \title{calcSoilCarbon}
 \usage{
-calcSoilCarbon(init = "lu", output = "full")
+calcSoilCarbon(init = "lu", output = "full", tillage = "histtill")
 }
 \arguments{
 \item{init}{'lu' for land-use specific initialisation, 'natveg' initialisation with natural vegetation stocks}
 
 \item{output}{'full' - all important soil related values, 'reduced' - just SOC state values}
+
+\item{tillage}{tillage type to de considered.
+Default (histill) is historic tillage area shares based on no tillage areas from Porwollik together with rule based assumption;
+'mixedtill' includes pure rule based assumptions.}
 }
 \value{
 magpie object in cellular resolution
