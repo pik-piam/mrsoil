@@ -16,6 +16,8 @@
 
 calcDecay <- function(tillage="histtill") {
 
+  if(is.null(tillage)) tillage <- "histtill"
+
   param <- readSource("IPCCSoil", convert=FALSE)
   # kfaca = decay rate under optimum condition for active (k3)
   # kfacs = decay rate under optimum condition for slow (k4)

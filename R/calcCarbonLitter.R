@@ -1,6 +1,6 @@
 #' @title calcCarbonLitter
 #' @description Calculates Carbon Input from litter
-#'
+#' @param litter_param litter scenario
 #' @return List of magpie object with results on cellular level, weight on cellular level, unit and description.
 #' @author Kristine Karstens
 #' @examples
@@ -12,7 +12,9 @@
 #' @importFrom magpiesets findset
 #' @importFrom stats quantile
 
-calcCarbonLitter <- function(){
+calcCarbonLitter <- function(litter_param="default"){
+
+  if(is.null(litter_param)) litter_param <- "default"
 
   litfallc <- readSource("LPJmL", subtype="LPJmL4:CRU_4.alitterfallc", convert="onlycorrect")[,findset("past_all"),]
 
@@ -21,7 +23,7 @@ calcCarbonLitter <- function(){
   out          <- new.magpie(getCells(litfallc), getYears(litfallc), names, fill = 0)
   getSets(out) <- c("iso","cell","t","inputs","attributes")
 
-  param.litter <- readSource("SOCbudgetParam", convert=FALSE)
+  param.litter <- readSource("SOCbudgetParam", subtype=litter_param, convert=FALSE)
 
   out[,,"LC"] <- param.litter[,,"natveg_lgc_ratio"]
   out[,,"NC"] <- param.litter[,,"natveg_nc_ratio"]

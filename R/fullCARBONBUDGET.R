@@ -19,55 +19,59 @@ fullCARBONBUDGET <- function(rev=0.1, dev="default"){
 
   setConfig(regionmapping = NULL)
 
-  ### Management Scenarios
-  options(manure   ="default")
-  options(residue  ="default")
-  options(rrecycle ="default")
-  options(yield    ="default")
-  options(tillage  ="histtill")
-
-  if(grepl("manure_", dev)){            options(manure= gsub("manure_","",dev))
-  } else if(grepl("residue_",  dev)){   options(residue= gsub("residue_","",dev))
-  } else if(grepl("yield_",    dev)){   options(yield= gsub("yield_","",dev))
-  } else if(grepl("tillage_",  dev)){   options(tillage= gsub("tillage_","",dev))
-  } else if(grepl("rrecycle_", dev)){   options(rrecycle= gsub("rrecycle_","",dev))
-  } else if(grepl("allon_",    dev)){   options(tillage  = "mixedtill")
-                                         options(rrecycle = gsub("allon_","",dev))
-                                         options(manure   = gsub("allon_","",dev))
-                                         options(yield    = gsub("allon_","",dev))
-  } else if(grepl("allon2_",   dev)){   options(tillage  = "mixedtill")
-                                         options(residue  = gsub("allon2_","",dev))
-                                         options(manure   = gsub("allon2_","",dev))
+  .cfg <- function(dev) {
+    ### Management Scenarios
+    cfg <- list(manure       = "default",
+                residue      = "default",
+                rrecycle     = "default",
+                yield        = "default",
+                tillage      = "histtill",
+                litter_param = "default",
+                soilinit     = "lu")
+    if(grepl("manure_", dev)) {
+      cfg$manure <- gsub("manure_","",dev)
+    } else if(grepl("residue_",  dev)) {
+      cfg$residue <- gsub("residue_","",dev)
+    } else if(grepl("yield_",    dev)) {
+      cfg$yield <- gsub("yield_","",dev)
+    } else if(grepl("tillage_",  dev)) {
+      cfg$tillage <- gsub("tillage_","",dev)
+    } else if(grepl("rrecycle_", dev)) {
+      cfg$rrecycle <- gsub("rrecycle_","",dev)
+    } else if(grepl("allon_",    dev)){
+      cfg$tillage  <- "mixedtill"
+      cfg$rrecycle <- gsub("allon_","",dev)
+      cfg$manure   <- gsub("allon_","",dev)
+      cfg$yield    <- gsub("allon_","",dev)
+    } else if(grepl("allon2_",   dev)) {
+      cfg$tillage  <- "mixedtill"
+      cfg$residue  <- gsub("allon2_","",dev)
+      cfg$manure   <- gsub("allon2_","",dev)
+    }
+    if(grepl("init", dev))       cfg$soilinit     <- gsub("init_","",dev)
+    if(grepl("litterPNV_", dev)) cfg$litter_param <- gsub("litterPNV_","",dev)
+    return(cfg)
   }
+  cfg <- .cfg(dev)
 
-  ### Initialization Scenarios
-  if(grepl("init", dev)){
-    soilinit <- gsub("init_","",dev)
-  } else {
-    soilinit <- "lu"
-  }
 
-  ### Litter parameterization Scenarios
-  options(litter_param="default")
-
-  if(grepl("litterPNV_", dev)){ options(litter_param = gsub("litterPNV_","",dev))}
 
 
   ### from mrcommons
   calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, file="ResiduesAg_FieldBalance.rds")
-  calcOutput("ResBiomass", cellular=TRUE, aggregate=FALSE, file="Residue_Biomass.rds")
-  calcOutput("Production", products="kcr", cellular=TRUE, calibrated=TRUE, attributes="c", aggregate=FALSE, file="Crop_Harvest.rds")
+  calcOutput("ResBiomass",          cellular=TRUE, aggregate=FALSE, file="Residue_Biomass.rds")
+  calcOutput("Production",     products="kcr",  cellular=TRUE, calibrated=TRUE, attributes="c", aggregate=FALSE, file="Crop_Harvest.rds")
   calcOutput("FAOmassbalance", aggregate=FALSE, file="FAOmassbalance_ISO.rds")
-  calcOutput("ManureRecyclingCroplandPast", products="kli", cellular=TRUE, aggregate=FALSE, file="Manure_recycled.rds")
-  calcOutput("Excretion", cellular=TRUE, attributes="npkc", aggregate=FALSE, file="Manure_excreted.rds")
+  calcOutput("ManureRecyclingCroplandPast",     products="kli", cellular=TRUE, aggregate=FALSE, file="Manure_recycled.rds")
+  calcOutput("Excretion",      cellular=TRUE,   attributes="npkc", aggregate=FALSE, file="Manure_excreted.rds")
 
   ### from mrSOCbudget
-  calcOutput("CarbonResidues", aggregate=FALSE, file="CarbonResidues.rds")
-  calcOutput("CarbonManure",   aggregate=FALSE, file="CarbonManure.rds")
-  calcOutput("CarbonLitter",   aggregate=FALSE, file="CarbonLitter.rds")
-  calcOutput("CarbonInput",    aggregate=FALSE, file="CarbonInput.rds")
+  calcOutput("CarbonResidues", yieldscenario = cfg$yield, rec.scenario = cfg$rrecycle, res.scenario=cfg$residue, aggregate=FALSE, file="CarbonResidues.rds")
+  calcOutput("CarbonManure",   scenario=cfg$manure, aggregate=FALSE, file="CarbonManure.rds")
+  calcOutput("CarbonLitter",   litter_param=cfg$litter_param,   aggregate=FALSE, file="CarbonLitter.rds")
+  calcOutput("CarbonInput",    cfg=cfg, aggregate=FALSE, file="CarbonInput.rds")
 
   calcOutput("Landuse",       aggregate=FALSE, file="Landuse.rds")
   calcOutput("LanduseChange", aggregate=FALSE, file="LanduseChange.rds")
-  calcOutput("SoilCarbon",    output="full", init=soilinit, aggregate=FALSE, file="SoilCarbon.rds")
+  calcOutput("SoilCarbon",    output="full", init=cfg$soilinit, cfg=cfg, aggregate=FALSE, file="SoilCarbon.rds")
 }

@@ -18,7 +18,7 @@
 
 calcCarbonManure <- function(scenario="default"){
 
-  scenario <- getOption("manure")
+  if(is.null(scenario)) scenario <- "default"
 
   ManureApplication  <- collapseNames(calcOutput("ManureRecyclingCroplandPast", products = "kli", cellular = TRUE, aggregate = FALSE)[,,c("nr","c")])
   ManureGrazing      <- collapseNames(calcOutput("Excretion", cellular = TRUE, attributes = "npkc", aggregate = FALSE)[,,"stubble_grazing"][,,c("nr","c")])

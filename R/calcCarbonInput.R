@@ -3,6 +3,7 @@
 #' using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines
 #' for National Greenhouse Gas Inventories
 #'
+#' @param cfg run configuration
 #' @return magpie object in cellular resolution
 #' @author Kristine Karstens
 #'
@@ -14,15 +15,15 @@
 #' @import mrcommons
 #' @importFrom magpiesets findset
 
-calcCarbonInput <- function() {
+calcCarbonInput <- function(cfg=NULL) {
 
   .prep <- function(x,landtype) {
     return(toolFillYears(add_dimension(x, dim=3.3, nm=landtype, add="landtype"), findset("past_all")))
   }
 
-  Residues   <- .prep(calcOutput("CarbonResidues", aggregate = FALSE),"crop")
-  Manure     <- .prep(calcOutput("CarbonManure", aggregate = FALSE),  "crop")
-  Litter     <- .prep(calcOutput("CarbonLitter", aggregate = FALSE),  "natveg")
+  Residues   <- .prep(calcOutput("CarbonResidues", yieldscenario = cfg$yield, rec.scenario = cfg$rrecycle, res.scenario=cfg$residue, aggregate = FALSE),"crop")
+  Manure     <- .prep(calcOutput("CarbonManure", scenario=cfg$manure, aggregate = FALSE),  "crop")
+  Litter     <- .prep(calcOutput("CarbonLitter", litter_param=cfg$litter_param, aggregate = FALSE),  "natveg")
   cell.input <- mbind(Residues, Manure, Litter)
 
   param <- readSource("IPCCSoil", convert=FALSE)

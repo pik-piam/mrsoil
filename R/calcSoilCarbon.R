@@ -6,9 +6,7 @@
 #'
 #' @param init 'lu' for land-use specific initialisation, 'natveg' initialisation with natural vegetation stocks
 #' @param output 'full' - all important soil related values, 'reduced' - just SOC state values
-#' @param tillage tillage type to de considered.
-#'                Default (histill) is historic tillage area shares based on no tillage areas from Porwollik together with rule based assumption;
-#'                'mixedtill' includes pure rule based assumptions.
+#' @param cfg run configuration
 #' @examples
 #' \dontrun{
 #' calcOutput("SoilCarbon")
@@ -16,7 +14,7 @@
 #' @importFrom magclass setNames
 #' @importFrom magpiesets findset
 
-calcSoilCarbon <- function(init="lu", output="full", tillage="histtill"){
+calcSoilCarbon <- function(init="lu", output="full", cfg=NULL){
 
   years <- sort(as.numeric(substring(findset("past_all"),2)))
 
@@ -29,14 +27,14 @@ calcSoilCarbon <- function(init="lu", output="full", tillage="histtill"){
   LanduseChange      <- calcOutput("LanduseChange", aggregate=FALSE)
 
   # Load steady states (setting to zero for all non cropland cells)
-  SoilCarbonSteadyState <- calcOutput("SteadyState", tillage=tillage, aggregate = FALSE)
+  SoilCarbonSteadyState <- calcOutput("SteadyState", cfg=cfg, aggregate = FALSE)
   noCropCells           <- which(Landuse[,,"crop"]==0)
   for(sub in getNames(SoilCarbonSteadyState, dim=2)){
     SoilCarbonSteadyState[,,sub][noCropCells] <- 0  #Clear cells with no Cropland
   }
 
   # Loading decay rates (cutting over 1)
-  Decay                 <- calcOutput("Decay", tillage=tillage, aggregate = FALSE)
+  Decay                 <- calcOutput("Decay", tillage=cfg$tillage, aggregate = FALSE)
   Decay[Decay>1]        <- 1
 
   SoilCarbon            <- SoilCarbonSteadyState

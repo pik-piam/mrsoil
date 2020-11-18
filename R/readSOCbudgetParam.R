@@ -14,7 +14,7 @@
 
 readSOCbudgetParam <- function(subtype="default"){
 
-  filename <- paste0(getOption("litter_param"),".csv")
+  filename <- paste0(subtype,".csv")
   x <- as.magpie(read.table(filename, sep=",", header = TRUE))
 
   return(x)

@@ -4,7 +4,10 @@
 \alias{calcCarbonInput}
 \title{calcCarbonInput}
 \usage{
-calcCarbonInput()
+calcCarbonInput(cfg = NULL)
+}
+\arguments{
+\item{cfg}{run configuration}
 }
 \value{
 magpie object in cellular resolution

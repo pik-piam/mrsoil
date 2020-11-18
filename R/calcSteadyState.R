@@ -2,9 +2,7 @@
 #' @description This function wraps together the steady state for all sub-pool SOC stock for mineral soils
 #' using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines
 #' for National Greenhouse Gas Inventories
-#' @param tillage tillage type to de considered.
-#'                   Default (histill) is historic tillage area shares based on no tillage areas from Porwollik together with rule based assumption;
-#'                   'mixedtill' includes pure rule based assumptions.
+#' @param cfg general configuration
 #' @return magpie object in cellular resolution
 #' @author Kristine Karstens
 #'
@@ -14,7 +12,7 @@
 #' @import madrat
 #' @import magclass
 
-calcSteadyState <- function(tillage="histtill") {
+calcSteadyState <- function(cfg=NULL) {
 
   .steadystate <- function(alpha,decay,name) {
     x <- toolConditionalReplace(alpha/decay[,,name], "is.na()", 0)
@@ -33,6 +31,7 @@ calcSteadyState <- function(tillage="histtill") {
   cell.f4_a2s      <- calcOutput("TransferActive2Slow", aggregate = FALSE)
 
   f2_struc2a <- function(param, tillage) {
+    if(is.null(tillage)) tillage <- "histtill"
     tillage2param  <- c(fulltill    = "f2_ft",
                         reducedtill = "f2_rt",
                         notill      = "f2_nt")
@@ -52,10 +51,10 @@ calcSteadyState <- function(tillage="histtill") {
     f2_struc2a.natveg[,,] <- param[,,"f2_nt"]
     return(mbind(f2_struc2a.crop,f2_struc2a.natveg))
   }
-  param.f2_struc2a   <- f2_struc2a(param,tillage)
+  param.f2_struc2a   <- f2_struc2a(param,cfg$tillage)
 
-  cell.input <- calcOutput("CarbonInput", aggregate = FALSE)
-  decay      <- calcOutput("Decay", tillage=tillage, aggregate = FALSE)
+  cell.input <- calcOutput("CarbonInput", cfg=cfg, aggregate = FALSE)
+  decay      <- calcOutput("Decay", tillage=cfg$tillage, aggregate = FALSE)
 
   ### ActiveAlpha calculations ###
   ## Calculate all parts of carbon inflows to active pool

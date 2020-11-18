@@ -1,11 +1,9 @@
 #' @title calcCarbonResidues
 #' @description Calculates carbon input from residues for cropland soils.
 #'
-#' @param scenario define scenario switch for sensititvy analysis.
-#'                'default' for historic assumptions
-#'                'freezeXXXX' for frozen residue recycling rates from year XXXX
-#'                'yieldsXXXX' for frozen yields for res calculations from year XXXX
-#'
+#' @param yieldscenario yield scenario
+#' @param rec.scenario recycling scenario
+#' @param res.scenario residue scenario
 #'
 #' @return List of magpie object with results on cellular level, weight on cellular level, unit and description.
 #' @author Kristine Karstens
@@ -19,12 +17,15 @@
 #' @importFrom stats quantile
 
 
-calcCarbonResidues <- function(scenario="default"){
+calcCarbonResidues <- function(yieldscenario = "default", rec.scenario = "default", res.scenario="default"){
 
-  yieldscenario <- getOption("yield")
-  rec.scenario  <- getOption("rrecycle")
-  res.scenario  <- getOption("residue")
-
+  .setdefault <- function(x) {
+    if(is.null(x)) x <- "default"
+    return(x)
+  }
+  yieldscenario <- .setdefault(yieldscenario)
+  rec.scenario  <- .setdefault(rec.scenario)
+  res.scenario  <- .setdefault(res.scenario)
 
   ResidueBiomass      <- calcOutput("ResBiomass", cellular=TRUE, aggregate = FALSE, scenario=yieldscenario)[,,c("c","nr")]
   kcr2kres            <- toolGetMapping("kcr_kres.csv",type="sectoral")
