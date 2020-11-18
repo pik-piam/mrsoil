@@ -33,22 +33,24 @@ calcSteadyState <- function(tillage="histtill") {
   cell.f4_a2s      <- calcOutput("TransferActive2Slow", aggregate = FALSE)
 
   f2_struc2a <- function(param, tillage) {
-    tillage2param       <- c(fulltill    = "f2_ft",
-                             reducedtill = "f2_rt",
-                             notill      = "f2_nt")
-    tillage2area        <- c(mixedtill    = "ruleBased",
-                             histtill     = "historicNoTill")
+    tillage2param  <- c(fulltill    = "f2_ft",
+                        reducedtill = "f2_rt",
+                        notill      = "f2_nt")
+    tillage2area   <- c(mixedtill    = "ruleBased",
+                        histtill     = "historicNoTill")
 
-    f2                  <- setNames(param[,,tillage2param], names(tillage2param))
+    f2              <- setNames(param[,,tillage2param], names(tillage2param))
 
-    cell.till_areaShr   <- calcOutput("TillageArea", tillage=tillage2area[tillage], aggregate = FALSE)
-    param.f2_struc2a.crop    <- dimSums(f2*cell.till_areaShr, dim=3) # stabilization efficiencies for structural decay products entering the active pool if tillage is not known
-    param.f2_struc2a.crop[param.f2_struc2a.crop==0] <- param[,,"f2_ft"]   # backup: set all cell with no area info to full tillage (just in case it is needed)
-    param.f2_struc2a.crop <- setNames(param.f2_struc2a.crop,"crop")
-    param.f2_struc2a.natveg <- param.f2_struc2a.crop
-    param.f2_struc2a.natveg[,,] <- param[,,"f2_nt"] # stabilization efficiencies for structural decay products entering the active pool if tillage is not known
-    param.f2_struc2a.natveg <- setNames(param.f2_struc2a.natveg,"natveg")
-    return(mbind(param.f2_struc2a.crop,param.f2_struc2a.natveg))
+    cell.till_areaShr <- calcOutput("TillageArea", tillage=tillage2area[tillage], aggregate = FALSE)
+    # stabilization efficiencies for structural decay products entering the active pool if tillage is not known
+    f2_struc2a.crop   <- dimSums(f2*cell.till_areaShr, dim=3)
+    # backup: set all cell with no area info to full tillage (just in case it is needed)
+    f2_struc2a.crop[f2_struc2a.crop==0] <- param[,,"f2_ft"]
+    f2_struc2a.crop       <- setNames(f2_struc2a.crop,"crop")
+    f2_struc2a.natveg     <- setNames(f2_struc2a.crop,"natveg")
+    # stabilization efficiencies for structural decay products entering the active pool if tillage is not known
+    f2_struc2a.natveg[,,] <- param[,,"f2_nt"]
+    return(mbind(f2_struc2a.crop,f2_struc2a.natveg))
   }
   param.f2_struc2a   <- f2_struc2a(param,tillage)
 
@@ -64,8 +66,7 @@ calcSteadyState <- function(tillage="histtill") {
   # lignin carbon in slow and passive SOC sub-pool transferred back to active SOC sub-pool
   cell.lign_reflow <- cell.input[,,"ligninC"]  * param[,,"f3"] * (param[,,"f7"] + param[,,"f6"]*param[,,"f8"])
   # 1 - fraction of re-transferred SOC to active SOC sub-pool
-  cell.frac_reflow <- 1 - cell.f4_a2s  * param[,,"f7"] -
-                          param[,,"f5"] * param[,,"f8"] -
+  cell.frac_reflow <- 1 - cell.f4_a2s  * param[,,"f7"] -  param[,,"f5"] * param[,,"f8"] -
                           cell.f4_a2s  * param[,,"f6"] * param[,,"f8"]
 
   # Bring all carbon input to the active SOC sub-pool together
@@ -89,7 +90,7 @@ calcSteadyState <- function(tillage="histtill") {
   # SOC transferred from slow to passive SOC sub-pool
   cell.sSOC_in    <- SlowSteadyState * decay[,,"slow"] * param[,,"f6"]
   # Bring all carbon input to the slow SOC sub-pool together
-  PassiveAlpha     <- dimSums(collapseNames(cell.aSOC_in2 + cell.sSOC_in), dim=3.1)
+  PassiveAlpha     <- collapseNames(cell.aSOC_in2 + cell.sSOC_in)
   PassiveSteadyState <- .steadystate(PassiveAlpha,  decay, "passive")
 
 
