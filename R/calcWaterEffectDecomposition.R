@@ -44,7 +44,7 @@ calcWaterEffectDecomposition <- function(irrigation="mixedirrig") {
     # days_per_month <- calcOutput("GrowingPeriod", aggregate = FALSE)
 
     years <- sort(findset("past_all"))
-    cells <- toolGetMapping("CountryToCellMapping.csv", type="cell")$celliso
+    cells <- rownames(magpie_coord)
     cell.w_monthFactor <- new.magpie(cells, years, c("jan","feb","mar","apr","mai","jun","jul","aug","sep","oct","nov","dec"))
     cell.w_monthFactor <- add_dimension(collapseNames(cell.w_monthFactor), dim=3.1, add="irrigation", nm="irrigated")
     cell.w_monthFactor[,,"irrigated"] <- 0.775

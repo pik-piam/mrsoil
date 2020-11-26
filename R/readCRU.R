@@ -46,8 +46,7 @@ readCRU <- function(subtype="precipitation"){
     nc.lat  <- ncdf4::ncvar_get(nc.file,"lat")
 
     #Load celliso names for 1:59199 magpie cells
-    mapping   <- toolMappingFile(type="cell",name="CountryToCellMapping.csv", readcsv=TRUE)
-    cellNames <- mapping$celliso
+    cellNames <- rownames(magpie_coord)
     ndays     <- clean_magpie(as.magpie(c( jan=31, feb=28, mar=31, apr=30, mai=31, jun=30, jul=31, aug=31, sep=30, oct=31, nov=30, dec=31)))
     years     <- seq(years[1],years[2],1)
     x         <- as.array(new.magpie(cellNames, years, getNames(ndays) ,fill=NA))
