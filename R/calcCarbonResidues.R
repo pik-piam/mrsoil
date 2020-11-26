@@ -28,7 +28,7 @@ calcCarbonResidues <- function(yieldscenario = "default", rec.scenario = "defaul
   res.scenario  <- .setdefault(res.scenario)
 
   ResidueBiomass      <- calcOutput("ResBiomass", cellular=TRUE, aggregate = FALSE, scenario=yieldscenario)[,,c("c","nr")]
-  kcr2kres            <- toolGetMapping("kcr_kres.csv",type="sectoral")
+  kcr2kres            <- toolGetMapping("kcr_kres.csv",where="mrSOCbudget")
   ResidueBiomass      <- toolAggregate(ResidueBiomass, rel=kcr2kres, from="kcr", to="kres", dim=3.2)
   ResidueRecyclingAg  <- collapseNames(calcOutput("ResFieldBalancePast", cellular=TRUE, products = "kres", aggregate = FALSE, scenario=yieldscenario)[,,"recycle"][,,c("c","nr")])
 
