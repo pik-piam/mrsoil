@@ -1,6 +1,7 @@
 #' @title calcCarbonLitter
 #' @description Calculates Carbon Input from litter
 #' @param litter_param litter scenario
+#' @param cfg general configuration
 #' @return List of magpie object with results on cellular level, weight on cellular level, unit and description.
 #' @author Kristine Karstens
 #' @examples
@@ -12,7 +13,7 @@
 #' @importFrom magpiesets findset
 #' @importFrom stats quantile
 
-calcCarbonLitter <- function(litter_param="default"){
+calcCarbonLitter <- function(litter_param="default", cfg=NULL){
 
   if(is.null(litter_param)) litter_param <- "default"
 
@@ -34,6 +35,11 @@ calcCarbonLitter <- function(litter_param="default"){
   ## Cut high input values at 95%-percentil
   #out[,,"NC"] <- toolConditionalReplace(out[,,"NC"], conditions = '> quantile(x, probs=0.95)', replaceby=eval(quantile(out[,,"NC"], probs=0.95)))
 
+  if(grepl("freeze", cfg$climate)){
+    freeze_year <- as.integer(gsub("freeze","",cfg$climate))
+    reset_years <- getYears(out, as.integer=TRUE) >= freeze_year
+    out[,reset_years,] <- setYears(out[,rep(freeze_year,sum(reset_years)),], getYears(out[,reset_years,]))
+  }
 
   return(list(x=out,
               weight=NULL,

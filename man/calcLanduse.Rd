@@ -4,7 +4,10 @@
 \alias{calcLanduse}
 \title{calcLanduse}
 \usage{
-calcLanduse()
+calcLanduse(cfg = NULL)
+}
+\arguments{
+\item{cfg}{general configuration}
 }
 \value{
 List of magpie object with results on country or cellular level, weight, unit and description.

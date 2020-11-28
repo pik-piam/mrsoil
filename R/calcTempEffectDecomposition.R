@@ -2,7 +2,7 @@
 #' @description This function calculates the temperature effect on decomposition for mineral soils
 #' using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines
 #' for National Greenhouse Gas Inventories
-#'
+#' @param cfg general configuration
 #' @return magpie object in cellular resolution
 #' @author Kristine Karstens
 #'
@@ -13,7 +13,7 @@
 #' @import magclass
 #' @importFrom magpiesets findset
 
-calcTempEffectDecomposition <- function() {
+calcTempEffectDecomposition <- function(cfg=NULL) {
 
   param <- readSource("IPCCSoil", convert=FALSE)
   param.t_max <- setYears(param[,,"tmax"],NULL)
@@ -28,6 +28,12 @@ calcTempEffectDecomposition <- function() {
   cell.t_monthFactor  <- collapseNames(tempFunc(tempArg))
   cell.t_monthFactor  <- ifelse(cell.temp > 45, 0, cell.t_monthFactor)
   cell.t_Factor       <- dimSums(cell.t_monthFactor, dim=3)/12
+
+  if(grepl("freeze", cfg$climate)){
+    freeze_year <- as.integer(gsub("freeze","",cfg$climate))
+    reset_years <- getYears(cell.t_Factor, as.integer=TRUE) >= freeze_year
+    cell.t_Factor[,reset_years,] <- setYears(cell.t_Factor[,rep(freeze_year,sum(reset_years)),], getYears(cell.t_Factor[,reset_years,]))
+  }
 
   return(list(
     x=cell.t_Factor,

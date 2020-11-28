@@ -5,6 +5,7 @@
 #' @param tillage tillage type to de considered.
 #'                   Default (histill) is historic tillage area shares based on no tillage areas from Porwollik together with rule based assumption;
 #'                   'mixedtill' includes pure rule based assumptions.
+#' @param cfg general configuration
 #' @return magpie object in cellular resolution
 #' @author Kristine Karstens
 #'
@@ -14,7 +15,7 @@
 #' @import madrat
 #' @import magclass
 
-calcDecay <- function(tillage="histtill") {
+calcDecay <- function(tillage="histtill", cfg=NULL) {
 
   if(is.null(tillage)) tillage <- "histtill"
 

@@ -25,31 +25,33 @@ fullCARBONBUDGET <- function(rev=0.1, dev="default"){
                 residue      = "default",
                 rrecycle     = "default",
                 yield        = "default",
+                landuse      = "default",
+                climate      = "default",
                 tillage      = "histtill",
                 litter_param = "default",
                 soilinit     = "lu")
-    if(grepl("manure_", dev)) {
-      cfg$manure <- gsub("manure_","",dev)
-    } else if(grepl("residue_",  dev)) {
-      cfg$residue <- gsub("residue_","",dev)
-    } else if(grepl("yield_",    dev)) {
-      cfg$yield <- gsub("yield_","",dev)
-    } else if(grepl("tillage_",  dev)) {
-      cfg$tillage <- gsub("tillage_","",dev)
-    } else if(grepl("rrecycle_", dev)) {
-      cfg$rrecycle <- gsub("rrecycle_","",dev)
-    } else if(grepl("allon_",    dev)){
+
+    if(grepl("manure_",   dev)) cfg$manure   <- gsub(".*(manure_)(.[^_]*\\d{4}).*","\\2",dev)
+    if(grepl("residue_",  dev)) cfg$residue  <- gsub(".*(residue_)(.[^_]*\\d{4}).*","\\2",dev)
+    if(grepl("yield_",    dev)) cfg$yield    <- gsub(".*(yield_)(.[^_]*\\d{4}).*","\\2",dev)
+    if(grepl("tillage_",  dev)) cfg$tillage  <- gsub(".*(tillage_)(.[^_]*).*","\\2",dev)
+    if(grepl("rrecycle_", dev)) cfg$rrecycle <- gsub(".*(rrecycle_)(.[^_]*\\d{4}).*","\\2",dev)
+    if(grepl("landuse_",  dev)) cfg$landuse  <- gsub(".*(landuse_)(.[^_]*\\d{4}).*","\\2",dev)
+    if(grepl("climate_",  dev)) cfg$climate  <- gsub(".*(climate_)(.[^_]*\\d{4}).*","\\2",dev)
+
+    if(grepl("alloff_",    dev)){
       cfg$tillage  <- "mixedtill"
-      cfg$rrecycle <- gsub("allon_","",dev)
-      cfg$manure   <- gsub("allon_","",dev)
-      cfg$yield    <- gsub("allon_","",dev)
-    } else if(grepl("allon2_",   dev)) {
-      cfg$tillage  <- "mixedtill"
-      cfg$residue  <- gsub("allon2_","",dev)
-      cfg$manure   <- gsub("allon2_","",dev)
+      cfg$rrecycle <- gsub(".*(alloff_)(.[^_]*\\d{4}).*","\\2",dev)
+      cfg$manure   <- gsub(".*(alloff_)(.[^_]*\\d{4}).*","\\2",dev)
+      cfg$yield    <- gsub(".*(alloff_)(.[^_]*\\d{4}).*","\\2",dev)
     }
-    if(grepl("init", dev))       cfg$soilinit     <- gsub("init_","",dev)
-    if(grepl("litterPNV_", dev)) cfg$litter_param <- gsub("litterPNV_","",dev)
+    if(grepl("alloff2_",   dev)){
+      cfg$tillage  <- "mixedtill"
+      cfg$residue  <- gsub(".*(alloff2_)(.[^_]*\\d{4}).*","\\2",dev)
+      cfg$manure   <- gsub(".*(alloff2_)(.[^_]*\\d{4}).*","\\2",dev)
+    }
+    if(grepl("init_", dev))       cfg$soilinit     <- gsub(".*(init_)(.[^_]*).*","\\2",dev)
+    if(grepl("litterPNV_", dev))  cfg$litter_param <- gsub(".*(litterPNV_)(.[^_]*_.[^_]*).*","\\2",dev)
     return(cfg)
   }
   cfg <- .cfg(dev)

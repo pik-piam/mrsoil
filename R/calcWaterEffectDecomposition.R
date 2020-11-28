@@ -8,6 +8,7 @@
 #'
 #' @param irrigation irrigation type to de considered. Default (mixedirrig) is historic irrigation area shares
 #'                   to calculate area weighted mean over rainfed and irrigated factors. Other options: rainfed, irrigated
+#' @param cfg general configuration
 #' @examples
 #' \dontrun{ calcOutput("WaterEffectDecomposition", aggregate = FALSE) }
 #'
@@ -16,7 +17,7 @@
 #' @import mrcommons
 #' @importFrom magpiesets findset
 
-calcWaterEffectDecomposition <- function(irrigation="mixedirrig") {
+calcWaterEffectDecomposition <- function(irrigation="mixedirrig", cfg=NULL) {
 
   if(irrigation=="rainfed"){
 
@@ -27,6 +28,13 @@ calcWaterEffectDecomposition <- function(irrigation="mixedirrig") {
 
     cell.prep   <- readSource("CRU", subtype="precipitation", convert = "onlycorrect")[,sort(findset("past_all")),]
     cell.pet    <- readSource("CRU", subtype="potential_evap", convert = "onlycorrect")[,sort(findset("past_all")),]
+
+    if(grepl("freeze", cfg$climate)){
+      freeze_year <- as.integer(gsub("freeze","",cfg$climate))
+      reset_years <- getYears(cell.prep, as.integer=TRUE) >= freeze_year
+      cell.prep[,reset_years,] <- setYears(cell.prep[,rep(freeze_year,sum(reset_years)),], getYears(cell.prep[,reset_years,]))
+      cell.pet[,reset_years,]  <- setYears(cell.pet[,rep(freeze_year,sum(reset_years)),],  getYears(cell.pet[,reset_years,]))
+    }
 
     cell.mappet                   <- cell.prep/cell.pet
     cell.mappet[cell.mappet>1.25] <- 1.25

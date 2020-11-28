@@ -4,10 +4,12 @@
 \alias{calcCarbonLitter}
 \title{calcCarbonLitter}
 \usage{
-calcCarbonLitter(litter_param = "default")
+calcCarbonLitter(litter_param = "default", cfg = NULL)
 }
 \arguments{
 \item{litter_param}{litter scenario}
+
+\item{cfg}{general configuration}
 }
 \value{
 List of magpie object with results on cellular level, weight on cellular level, unit and description.

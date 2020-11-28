@@ -4,7 +4,10 @@
 \alias{calcTempEffectDecomposition}
 \title{calcTempEffectDecomposition}
 \usage{
-calcTempEffectDecomposition()
+calcTempEffectDecomposition(cfg = NULL)
+}
+\arguments{
+\item{cfg}{general configuration}
 }
 \value{
 magpie object in cellular resolution

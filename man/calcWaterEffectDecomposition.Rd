@@ -4,11 +4,13 @@
 \alias{calcWaterEffectDecomposition}
 \title{calcWaterEffectDecomposition}
 \usage{
-calcWaterEffectDecomposition(irrigation = "mixedirrig")
+calcWaterEffectDecomposition(irrigation = "mixedirrig", cfg = NULL)
 }
 \arguments{
 \item{irrigation}{irrigation type to de considered. Default (mixedirrig) is historic irrigation area shares
 to calculate area weighted mean over rainfed and irrigated factors. Other options: rainfed, irrigated}
+
+\item{cfg}{general configuration}
 }
 \value{
 magpie object in cellular resolution
