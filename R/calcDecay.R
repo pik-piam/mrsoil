@@ -26,12 +26,12 @@ calcDecay <- function(tillage="histtill", cfg=NULL) {
   # k3par1 = sand intercept
   # k3par2 = sand slope
 
-  cell.w_Factor    <- mbind(setNames(calcOutput("WaterEffectDecomposition", irrigation = "mixedirrig", aggregate = FALSE),"crop"),
-                            setNames(calcOutput("WaterEffectDecomposition", irrigation = "rainfed", aggregate = FALSE),"natveg"))
+  cell.w_Factor    <- mbind(setNames(calcOutput("WaterEffectDecomposition", climate_scen=cfg$climate, irrigation = "mixedirrig", aggregate = FALSE),"crop"),
+                            setNames(calcOutput("WaterEffectDecomposition", climate_scen=cfg$climate, irrigation = "rainfed", aggregate = FALSE),"natveg"))
   cell.till_Factor <- setNames(calcOutput("TillageEffectDecomposition", tillage = tillage, aggregate = FALSE)[,,rep(1,2)],c("crop","natveg"))
   cell.till_Factor[,,"natveg"] <- calcOutput("TillageEffectDecomposition", tillage = "notill", aggregate = FALSE)[,,]
 
-  cell.t_Factor    <- calcOutput("TempEffectDecomposition", aggregate = FALSE)
+  cell.t_Factor    <- calcOutput("TempEffectDecomposition", climate_scen=cfg$climate, aggregate = FALSE)
   cell.sand_frac   <- calcOutput("SandFrac", aggregate = FALSE)
 
   ActiveDecay    <-  param[,,"kfaca"] * cell.w_Factor * cell.t_Factor * cell.till_Factor *

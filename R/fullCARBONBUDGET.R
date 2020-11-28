@@ -57,8 +57,6 @@ fullCARBONBUDGET <- function(rev=0.1, dev="default"){
   cfg <- .cfg(dev)
 
 
-
-
   ### from mrcommons
   calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, file="ResiduesAg_FieldBalance.rds")
   calcOutput("ResBiomass",          cellular=TRUE, aggregate=FALSE, file="Residue_Biomass.rds")
@@ -70,10 +68,10 @@ fullCARBONBUDGET <- function(rev=0.1, dev="default"){
   ### from mrSOCbudget
   calcOutput("CarbonResidues", yieldscenario = cfg$yield, rec.scenario = cfg$rrecycle, res.scenario=cfg$residue, aggregate=FALSE, file="CarbonResidues.rds")
   calcOutput("CarbonManure",   scenario=cfg$manure, aggregate=FALSE, file="CarbonManure.rds")
-  calcOutput("CarbonLitter",   litter_param=cfg$litter_param,   aggregate=FALSE, file="CarbonLitter.rds")
+  calcOutput("CarbonLitter",   litter_param=cfg$litter_param, climate_scen=cfg$climate, aggregate=FALSE, file="CarbonLitter.rds")
   calcOutput("CarbonInput",    cfg=cfg, aggregate=FALSE, file="CarbonInput.rds")
 
-  calcOutput("Landuse",       aggregate=FALSE, file="Landuse.rds")
-  calcOutput("LanduseChange", aggregate=FALSE, file="LanduseChange.rds")
+  calcOutput("Landuse",       aggregate=FALSE, landuse_scen=cfg$landuse, file="Landuse.rds")
+  calcOutput("LanduseChange", aggregate=FALSE, landuse_scen=cfg$landuse, file="LanduseChange.rds")
   calcOutput("SoilCarbon",    output="full", init=cfg$soilinit, cfg=cfg, aggregate=FALSE, file="SoilCarbon.rds")
 }

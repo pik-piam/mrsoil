@@ -23,7 +23,7 @@ calcCarbonInput <- function(cfg=NULL) {
 
   Residues   <- .prep(calcOutput("CarbonResidues", yieldscenario = cfg$yield, rec.scenario = cfg$rrecycle, res.scenario=cfg$residue, aggregate = FALSE),"crop")
   Manure     <- .prep(calcOutput("CarbonManure", scenario=cfg$manure, aggregate = FALSE),  "crop")
-  Litter     <- .prep(calcOutput("CarbonLitter", litter_param=cfg$litter_param, aggregate = FALSE),  "natveg")
+  Litter     <- .prep(calcOutput("CarbonLitter", litter_param=cfg$litter_param, climate_scen=cfg$climate, aggregate = FALSE),  "natveg")
   cell.input <- mbind(Residues, Manure, Litter)
 
   param <- readSource("IPCCSoil", convert=FALSE)

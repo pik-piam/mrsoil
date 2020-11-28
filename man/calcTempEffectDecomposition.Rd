@@ -4,10 +4,10 @@
 \alias{calcTempEffectDecomposition}
 \title{calcTempEffectDecomposition}
 \usage{
-calcTempEffectDecomposition(cfg = NULL)
+calcTempEffectDecomposition(climate_scen = "default")
 }
 \arguments{
-\item{cfg}{general configuration}
+\item{climate_scen}{climate configuration}
 }
 \value{
 magpie object in cellular resolution

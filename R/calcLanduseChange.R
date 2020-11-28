@@ -1,7 +1,7 @@
 #' @title calcLanduseChange
 #' @description Calculates the cellular MAgPIE landuse change area based on LUH2v2 or LanduseInitialisation data.
 #'
-#' @param cfg general configuration
+#' @param landuse_scen landuse configuration
 #' @return List of magpie object with results on country or cellular level, weight, unit and description.
 #' @author Kristine Karstens
 #' @examples
@@ -10,7 +10,7 @@
 #' calcOutput("LanduseChange")
 #' }
 
-calcLanduseChange <- function(cfg=NULL){
+calcLanduseChange <- function(landuse_scen="default"){
 
   years <- sort(as.numeric(substring(findset("past_all"),2)))
 
@@ -29,8 +29,8 @@ calcLanduseChange <- function(cfg=NULL){
   out <- mbind(add_dimension(LandReduction, dim=3.1, add="change", nm="reduction"),
                add_dimension(LandExpansion, dim=3.1, add="change", nm="expansion"))
 
-  if(grepl("freeze", cfg$landuse)){
-    freeze_year <- as.integer(gsub("freeze","",cfg$landuse))
+  if(grepl("freeze", landuse_scen)){
+    freeze_year <- as.integer(gsub("freeze","",landuse_scen))
     reset_years <- getYears(out, as.integer=TRUE) >= freeze_year
     out[,reset_years,] <- 0
   }

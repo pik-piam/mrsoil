@@ -23,8 +23,8 @@ calcSoilCarbon <- function(init="lu", output="full", cfg=NULL){
   #######################
 
   # Load Landuse data
-  Landuse            <- calcOutput("Landuse",       cfg=cfg, aggregate=FALSE)
-  LanduseChange      <- calcOutput("LanduseChange", cfg=cfg, aggregate=FALSE)
+  Landuse            <- calcOutput("Landuse",       landuse_scen=cfg$landuse, aggregate=FALSE)
+  LanduseChange      <- calcOutput("LanduseChange", landuse_scen=cfg$landuse, aggregate=FALSE)
 
   # Load steady states (setting to zero for all non cropland cells)
   SoilCarbonSteadyState <- calcOutput("SteadyState", cfg=cfg, aggregate = FALSE)
