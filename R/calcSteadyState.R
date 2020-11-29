@@ -54,8 +54,10 @@ calcSteadyState <- function(cfg=NULL) {
   param.f2_struc2a   <- f2_struc2a(param,cfg$tillage)
 
   cell.input <- calcOutput("CarbonInput", cfg=cfg, aggregate = FALSE)
-  decay      <- calcOutput("Decay", tillage=cfg$tillage, aggregate = FALSE)
+  decay      <- calcOutput("Decay", tillage=cfg$tillage, climate_scen=cfg$climate, aggregate = FALSE)
 
+
+  #################################################
   ### ActiveAlpha calculations ###
   ## Calculate all parts of carbon inflows to active pool
   # metabolic dead organic matter transferred to active SOC sub-pool

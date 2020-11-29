@@ -4,14 +4,14 @@
 \alias{calcDecay}
 \title{calcDecay}
 \usage{
-calcDecay(tillage = "histtill", cfg = NULL)
+calcDecay(tillage = "histtill", climate_scen = "default")
 }
 \arguments{
 \item{tillage}{tillage type to de considered.
 Default (histill) is historic tillage area shares based on no tillage areas from Porwollik together with rule based assumption;
 'mixedtill' includes pure rule based assumptions.}
 
-\item{cfg}{general configuration}
+\item{climate_scen}{climate configuration}
 }
 \value{
 magpie object in cellular resolution

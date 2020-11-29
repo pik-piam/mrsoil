@@ -5,7 +5,7 @@
 #' @param tillage tillage type to de considered.
 #'                   Default (histill) is historic tillage area shares based on no tillage areas from Porwollik together with rule based assumption;
 #'                   'mixedtill' includes pure rule based assumptions.
-#' @param cfg general configuration
+#' @param climate_scen climate configuration
 #' @return magpie object in cellular resolution
 #' @author Kristine Karstens
 #'
@@ -15,7 +15,7 @@
 #' @import madrat
 #' @import magclass
 
-calcDecay <- function(tillage="histtill", cfg=NULL) {
+calcDecay <- function(tillage="histtill", climate_scen="default") {
 
   if(is.null(tillage)) tillage <- "histtill"
 
@@ -26,12 +26,12 @@ calcDecay <- function(tillage="histtill", cfg=NULL) {
   # k3par1 = sand intercept
   # k3par2 = sand slope
 
-  cell.w_Factor    <- mbind(setNames(calcOutput("WaterEffectDecomposition", climate_scen=cfg$climate, irrigation = "mixedirrig", aggregate = FALSE),"crop"),
-                            setNames(calcOutput("WaterEffectDecomposition", climate_scen=cfg$climate, irrigation = "rainfed", aggregate = FALSE),"natveg"))
+  cell.w_Factor    <- mbind(setNames(calcOutput("WaterEffectDecomposition", climate_scen=climate_scen, irrigation = "mixedirrig", aggregate = FALSE),"crop"),
+                            setNames(calcOutput("WaterEffectDecomposition", climate_scen=climate_scen, irrigation = "rainfed", aggregate = FALSE),"natveg"))
   cell.till_Factor <- setNames(calcOutput("TillageEffectDecomposition", tillage = tillage, aggregate = FALSE)[,,rep(1,2)],c("crop","natveg"))
   cell.till_Factor[,,"natveg"] <- calcOutput("TillageEffectDecomposition", tillage = "notill", aggregate = FALSE)[,,]
 
-  cell.t_Factor    <- calcOutput("TempEffectDecomposition", climate_scen=cfg$climate, aggregate = FALSE)
+  cell.t_Factor    <- calcOutput("TempEffectDecomposition", climate_scen=climate_scen, aggregate = FALSE)
   cell.sand_frac   <- calcOutput("SandFrac", aggregate = FALSE)
 
   ActiveDecay    <-  param[,,"kfaca"] * cell.w_Factor * cell.t_Factor * cell.till_Factor *

@@ -34,7 +34,7 @@ calcSoilCarbon <- function(init="lu", output="full", cfg=NULL){
   }
 
   # Loading decay rates (cutting over 1)
-  Decay                 <- calcOutput("Decay", tillage=cfg$tillage, aggregate = FALSE)
+  Decay                 <- calcOutput("Decay", tillage=cfg$tillage, climate_scen=cfg$climate, aggregate = FALSE)
   Decay[Decay>1]        <- 1
 
   SoilCarbon            <- SoilCarbonSteadyState
