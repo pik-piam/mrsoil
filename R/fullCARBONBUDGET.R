@@ -2,7 +2,7 @@
 #' @description Function that produces the complete cellular data set of the SOC budget
 #'
 #' @param rev data revision which should be used as input (positive numeric).
-#' @param scenario flag to define carbon budget calculations
+#' @param dev flag to define carbon budget calculations
 #' @param start_year start year
 #' @author Kristine Karstens
 #'
@@ -16,9 +16,10 @@
 #' @importFrom magclass setNames
 #' @importFrom magpiesets findset
 
-fullCARBONBUDGET <- function(rev=0.1, scenario="default", start_year=1901){
+fullCARBONBUDGET <- function(rev=0.1, dev="", start_year=1901){
 
   setConfig(regionmapping = NULL)
+  setConfig(cachefolder = paste0("rev",rev), forcecache = TRUE)
 
   .cfg <- function(name) {
     ### Management Scenarios
@@ -55,7 +56,7 @@ fullCARBONBUDGET <- function(rev=0.1, scenario="default", start_year=1901){
     if(grepl("litterPNV_", name))  cfg$litter_param <- gsub(".*(litterPNV_)(.[^_]*_.[^_]*).*","\\2",name)
     return(cfg)
   }
-  cfg <- .cfg(scenario)
+  cfg <- .cfg(dev)
 
 
   ### from mrcommons
