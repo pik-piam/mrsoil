@@ -22,7 +22,7 @@ toolFreezeEffect <- function(x, year, constrain=FALSE) {
       # determine first use
       first_use   <- toolConditionalReplace(magpply(x, found_first <- function(x){return(which(x!=0)[1])}, 1), "is.na()", 1)
       # find value of first use
-      first_value <- x[as.vector(first_use) + (c(1:59199)-1)*(length(getYears(x))*length(getNames(x)))]
+      first_value <- as.magpie(as.array(x)[1:59199+(as.vector(first_use)-1)*59199], spatial=1)
       # set first use value for in all used years
       out[out==0 & x!=0] <- first_value[,rep(1, length(getYears(x))),][out==0 & x!=0]
     }
