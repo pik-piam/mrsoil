@@ -25,18 +25,18 @@ calcSoilCarbon <- function(init="lu", output="full", cfg=NULL, start_year=1901){
   #######################
 
   # Load Landuse data
-  Landuse            <- calcOutput("Landuse",       landuse_scen=cfg$landuse, aggregate=FALSE)
-  LanduseChange      <- calcOutput("LanduseChange", landuse_scen=cfg$landuse, aggregate=FALSE)
+  Landuse            <- calcOutput("Landuse",       landuse_scen=cfg$landuse, aggregate=FALSE)[,years,]
+  LanduseChange      <- calcOutput("LanduseChange", landuse_scen=cfg$landuse, aggregate=FALSE)[,years,]
 
   # Load steady states (setting to zero for all non cropland cells)
-  SoilCarbonSteadyState <- calcOutput("SteadyState", cfg=cfg, aggregate = FALSE)
+  SoilCarbonSteadyState <- calcOutput("SteadyState", cfg=cfg, aggregate = FALSE)[,years,]
   noCropCells           <- which(Landuse[,,"crop"]==0)
   for(sub in getNames(SoilCarbonSteadyState, dim=2)){
     SoilCarbonSteadyState[,,sub][noCropCells] <- 0  #Clear cells with no Cropland
   }
 
   # Loading decay rates (cutting over 1)
-  Decay                 <- calcOutput("Decay", tillage=cfg$tillage, climate_scen=cfg$climate, aggregate = FALSE)
+  Decay                 <- calcOutput("Decay", tillage=cfg$tillage, climate_scen=cfg$climate, aggregate = FALSE)[,years,]
   Decay[Decay>1]        <- 1
 
   SoilCarbon            <- SoilCarbonSteadyState
