@@ -26,7 +26,7 @@ calcSoilCarbon <- function(init="lu", output="full", cfg=NULL, start_year=1901){
 
   # Load Landuse data
   Landuse            <- calcOutput("Landuse",       landuse_scen=cfg$landuse, aggregate=FALSE)[,years,]
-  LanduseChange      <- calcOutput("LanduseChange", landuse_scen=cfg$landuse, aggregate=FALSE)[,years,]
+  LanduseChange      <- calcOutput("LanduseChange", landuse_scen=cfg$landuse, aggregate=FALSE)[,years[-1],]
 
   # Load steady states (setting to zero for all non cropland cells)
   SoilCarbonSteadyState <- calcOutput("SteadyState", cfg=cfg, aggregate = FALSE)[,years,]
@@ -74,7 +74,7 @@ calcSoilCarbon <- function(init="lu", output="full", cfg=NULL, start_year=1901){
   ### Looping        ###
   ######################
 
-  for(year_x in years[years!=years[1]]){
+  for(year_x in years[-1]){
 
     # Calculate carbon transfer between landuse types
     SoilCarbonTransfer[,year_x,] <- (setYears(mbind(add_dimension(collapseNames(SoilCarbon[,year_x-1 ,"crop"]),  nm="natveg"),
