@@ -42,7 +42,7 @@ calcCarbonResidues <- function(yieldscenario = "default", rec.scenario = "defaul
   }
 
   ResidueRecyclingBg  <- dimSums(ResidueBiomass[,,"bg"][,,c("c","nr")], dim=3.2)
-  ResidueRecycling    <- collapseNames(ResidueRecyclingBg + ResidueRecyclingAg)
+  ResidueRecycling    <- mbind(ResidueRecyclingBg,add_dimension(ResidueRecyclingAg, dim=3.1, add="residues", nm="ag"))
   Cropland            <- dimSums(calcOutput("Croparea", cellular=TRUE, aggregate=FALSE), dim=3)
   ResidueRecycling    <- ResidueRecycling/Cropland
   ResidueRecycling    <- toolConditionalReplace(ResidueRecycling, conditions = c("is.na()","<0","is.infinite()"), replaceby = 0)
@@ -51,16 +51,17 @@ calcCarbonResidues <- function(yieldscenario = "default", rec.scenario = "defaul
 
   if(grepl("freeze", res.scenario)){
     freeze_year <- as.integer(gsub("freeze","",res.scenario))
-    ResidueRecycling[,,"c"] <- toolFreezeEffect(ResidueRecycling[,,"c"],freeze_year, constrain="first_use")
+    ResidueRecycling[,,"ag.c"] <- toolFreezeEffect(ResidueRecycling[,,"ag.c"],freeze_year, constrain="first_use")
+    ResidueRecycling[,,"bg.c"] <- toolFreezeEffect(ResidueRecycling[,,"bg.c"],freeze_year, constrain="first_use")
     ResidueRecycling[,,"c"][Cropland==0] <- 0
   }
 
   ## Cut high input values at 10 tC/ha
-  ResidueRecycling[,,"c"]  <- toolConditionalReplace(ResidueRecycling[,,"c"], conditions = "> 10", replaceby=10)
+  ResidueRecycling[,,"c"]  <- toolConditionalReplace(ResidueRecycling[,,"c"], conditions = "> 5", replaceby=5)
   ResidueRecycling[,,"nr"] <- ResidueRecycling[,,"c"] / ResidueCNratio
 
   attributes   <- c("c","LC","NC")
-  names        <- as.vector(outer("res", attributes, paste, sep="."))
+  names        <- as.vector(outer(c("ag","bg"), attributes, paste, sep="."))
   out          <- new.magpie(getCells(ResidueRecycling), getYears(ResidueRecycling), names, fill = 0)
   getSets(out) <- c("iso","cell","t","inputs","attributes")
 
