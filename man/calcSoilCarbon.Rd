@@ -4,7 +4,7 @@
 \alias{calcSoilCarbon}
 \title{calcSoilCarbon}
 \usage{
-calcSoilCarbon(init = "lu", output = "full", cfg = NULL)
+calcSoilCarbon(init = "lu", output = "full", cfg = NULL, start_year = 1901)
 }
 \arguments{
 \item{init}{'lu' for land-use specific initialisation, 'natveg' initialisation with natural vegetation stocks}
@@ -12,6 +12,8 @@ calcSoilCarbon(init = "lu", output = "full", cfg = NULL)
 \item{output}{'full' - all important soil related values, 'reduced' - just SOC state values}
 
 \item{cfg}{run configuration}
+
+\item{start_year}{start year}
 }
 \value{
 magpie object in cellular resolution

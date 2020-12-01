@@ -26,8 +26,8 @@ calcWaterEffectDecomposition <- function(irrigation="mixedirrig", climate_scen="
     param.w_slope     <- setYears(param[,,"wfacpar2"], NULL)
     param.w_slope2    <- setYears(param[,,"wfacpar3"], NULL)
 
-    cell.prep   <- readSource("CRU", subtype="precipitation", convert = "onlycorrect")[,sort(findset("past_all")),]
-    cell.pet    <- readSource("CRU", subtype="potential_evap", convert = "onlycorrect")[,sort(findset("past_all")),]
+    cell.prep   <- readSource("CRU", subtype="precipitation", convert = "onlycorrect")[,sort(findset("past_soc")),]
+    cell.pet    <- readSource("CRU", subtype="potential_evap", convert = "onlycorrect")[,sort(findset("past_soc")),]
 
     if(grepl("freeze", climate_scen)){
       freeze_year <- as.integer(gsub("freeze","", climate_scen))
@@ -51,7 +51,7 @@ calcWaterEffectDecomposition <- function(irrigation="mixedirrig", climate_scen="
     # improve later by using just growing month
     # days_per_month <- calcOutput("GrowingPeriod", aggregate = FALSE)
 
-    years <- sort(findset("past_all"))
+    years <- sort(findset("past_soc"))
     cells <- rownames(magpie_coord)
     cell.w_monthFactor <- new.magpie(cells, years, c("jan","feb","mar","apr","mai","jun","jul","aug","sep","oct","nov","dec"))
     cell.w_monthFactor <- add_dimension(collapseNames(cell.w_monthFactor), dim=3.1, add="irrigation", nm="irrigated")
@@ -61,7 +61,7 @@ calcWaterEffectDecomposition <- function(irrigation="mixedirrig", climate_scen="
 
   } else if(irrigation=="mixedirrig") {
 
-    cell.ir_areaShr    <- readSource("LUH2v2", subtype="irrigation", convert="onlycorrect")[,sort(findset("past_all")),]
+    cell.ir_areaShr    <- readSource("LUH2v2", subtype="irrigation", convert="onlycorrect")[,sort(findset("past_soc")),]
     cell.ir_areaShr    <- dimSums(cell.ir_areaShr, dim=3)
 
     cell.w_Factor      <- mbind(calcOutput("WaterEffectDecomposition", irrigation="rainfed",   climate_scen=climate_scen, aggregate = FALSE),

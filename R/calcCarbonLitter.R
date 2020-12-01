@@ -17,7 +17,7 @@ calcCarbonLitter <- function(litter_param="default", climate_scen="default"){
 
   if(is.null(litter_param)) litter_param <- "default"
 
-  litfallc <- readSource("LPJmL", subtype="LPJmL4:CRU_4.alitterfallc", convert="onlycorrect")[,findset("past_all"),]
+  litfallc <- readSource("LPJmL", subtype="LPJmL4:CRU_4.alitterfallc", convert="onlycorrect")[,findset("past_soc"),]
 
   attributes   <- c("c","LC","NC")
   names        <- as.vector(outer("litfall", attributes, paste, sep="."))

@@ -2,7 +2,8 @@
 #' @description Function that produces the complete cellular data set of the SOC budget
 #'
 #' @param rev data revision which should be used as input (positive numeric).
-#' @param dev flag to mark carbon budget calculations
+#' @param scenario flag to define carbon budget calculations
+#' @param start_year start year
 #' @author Kristine Karstens
 #'
 #' @seealso
@@ -15,11 +16,11 @@
 #' @importFrom magclass setNames
 #' @importFrom magpiesets findset
 
-fullCARBONBUDGET <- function(rev=0.1, dev="default"){
+fullCARBONBUDGET <- function(rev=0.1, scenario="default", start_year=1901){
 
   setConfig(regionmapping = NULL)
 
-  .cfg <- function(dev) {
+  .cfg <- function(name) {
     ### Management Scenarios
     cfg <- list(manure       = "default",
                 residue      = "default",
@@ -31,30 +32,30 @@ fullCARBONBUDGET <- function(rev=0.1, dev="default"){
                 litter_param = "default",
                 soilinit     = "lu")
 
-    if(grepl("manure_",   dev)) cfg$manure   <- gsub(".*(manure_)(.[^_]*\\d{4}).*","\\2",dev)
-    if(grepl("residue_",  dev)) cfg$residue  <- gsub(".*(residue_)(.[^_]*\\d{4}).*","\\2",dev)
-    if(grepl("yield_",    dev)) cfg$yield    <- gsub(".*(yield_)(.[^_]*\\d{4}).*","\\2",dev)
-    if(grepl("tillage_",  dev)) cfg$tillage  <- gsub(".*(tillage_)(.[^_]*).*","\\2",dev)
-    if(grepl("rrecycle_", dev)) cfg$rrecycle <- gsub(".*(rrecycle_)(.[^_]*\\d{4}).*","\\2",dev)
-    if(grepl("landuse_",  dev)) cfg$landuse  <- gsub(".*(landuse_)(.[^_]*\\d{4}).*","\\2",dev)
-    if(grepl("climate_",  dev)) cfg$climate  <- gsub(".*(climate_)(.[^_]*\\d{4}).*","\\2",dev)
+    if(grepl("manure_",   name)) cfg$manure   <- gsub(".*(manure_)(.[^_]*\\d{4}).*","\\2",name)
+    if(grepl("residue_",  name)) cfg$residue  <- gsub(".*(residue_)(.[^_]*\\d{4}).*","\\2",name)
+    if(grepl("yield_",    name)) cfg$yield    <- gsub(".*(yield_)(.[^_]*\\d{4}).*","\\2",name)
+    if(grepl("tillage_",  name)) cfg$tillage  <- gsub(".*(tillage_)(.[^_]*).*","\\2",name)
+    if(grepl("rrecycle_", name)) cfg$rrecycle <- gsub(".*(rrecycle_)(.[^_]*\\d{4}).*","\\2",name)
+    if(grepl("landuse_",  name)) cfg$landuse  <- gsub(".*(landuse_)(.[^_]*\\d{4}).*","\\2",name)
+    if(grepl("climate_",  name)) cfg$climate  <- gsub(".*(climate_)(.[^_]*\\d{4}).*","\\2",name)
 
-    if(grepl("alloff_",    dev)){
+    if(grepl("alloff_",    name)){
       cfg$tillage  <- "mixedtill"
-      cfg$rrecycle <- gsub(".*(alloff_)(.[^_]*\\d{4}).*","\\2",dev)
-      cfg$manure   <- gsub(".*(alloff_)(.[^_]*\\d{4}).*","\\2",dev)
-      cfg$yield    <- gsub(".*(alloff_)(.[^_]*\\d{4}).*","\\2",dev)
+      cfg$rrecycle <- gsub(".*(alloff_)(.[^_]*\\d{4}).*","\\2",name)
+      cfg$manure   <- gsub(".*(alloff_)(.[^_]*\\d{4}).*","\\2",name)
+      cfg$yield    <- gsub(".*(alloff_)(.[^_]*\\d{4}).*","\\2",name)
     }
-    if(grepl("alloff2_",   dev)){
+    if(grepl("alloff2_",   name)){
       cfg$tillage  <- "mixedtill"
-      cfg$residue  <- gsub(".*(alloff2_)(.[^_]*\\d{4}).*","\\2",dev)
-      cfg$manure   <- gsub(".*(alloff2_)(.[^_]*\\d{4}).*","\\2",dev)
+      cfg$residue  <- gsub(".*(alloff2_)(.[^_]*\\d{4}).*","\\2",name)
+      cfg$manure   <- gsub(".*(alloff2_)(.[^_]*\\d{4}).*","\\2",name)
     }
-    if(grepl("init_", dev))       cfg$soilinit     <- gsub(".*(init_)(.[^_]*).*","\\2",dev)
-    if(grepl("litterPNV_", dev))  cfg$litter_param <- gsub(".*(litterPNV_)(.[^_]*_.[^_]*).*","\\2",dev)
+    if(grepl("init_", name))       cfg$soilinit     <- gsub(".*(init_)(.[^_]*).*","\\2",name)
+    if(grepl("litterPNV_", name))  cfg$litter_param <- gsub(".*(litterPNV_)(.[^_]*_.[^_]*).*","\\2",name)
     return(cfg)
   }
-  cfg <- .cfg(dev)
+  cfg <- .cfg(scenario)
 
 
   ### from mrcommons
@@ -73,5 +74,5 @@ fullCARBONBUDGET <- function(rev=0.1, dev="default"){
 
   calcOutput("Landuse",       aggregate=FALSE, landuse_scen=cfg$landuse, file="Landuse.rds")
   calcOutput("LanduseChange", aggregate=FALSE, landuse_scen=cfg$landuse, file="LanduseChange.rds")
-  calcOutput("SoilCarbon",    output="full", init=cfg$soilinit, cfg=cfg, aggregate=FALSE, file="SoilCarbon.rds")
+  calcOutput("SoilCarbon",    output="full", init=cfg$soilinit, cfg=cfg, start_year=start_year, aggregate=FALSE, file="SoilCarbon.rds")
 }

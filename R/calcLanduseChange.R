@@ -12,14 +12,10 @@
 
 calcLanduseChange <- function(landuse_scen="default"){
 
-  years <- sort(as.numeric(substring(findset("past_all"),2)))
-
-  LanduseFirst <- calcOutput("LUH2v2", cellular=TRUE, selectyears="y1960", aggregate=FALSE)
-  LanduseFirst <- mbind(LanduseFirst[,,"crop"], setNames(dimSums(LanduseFirst[,,"crop",invert=TRUE], dim=3), "natveg"))
+  years        <- sort(as.numeric(substring(findset("past_soc"),2)))
   Landuse      <- calcOutput("Landuse", aggregate=FALSE)
-  Landuse      <- mbind(LanduseFirst, Landuse)
 
-  LanduseChange <- Landuse[,years[1:length(years)],]-setYears(Landuse[,years[1:length(years)]-1,],years[1:length(years)])
+  LanduseChange <- Landuse[,years[2:length(years)],]-setYears(Landuse[,years[2:length(years)]-1,],years[2:length(years)])
 
   LandReduction <- LandExpansion <- LanduseChange
   LandReduction[LandReduction>0] <- 0
@@ -34,7 +30,6 @@ calcLanduseChange <- function(landuse_scen="default"){
     reset_years <- getYears(out, as.integer=TRUE) >= freeze_year
     out[,reset_years,] <- 0
   }
-
 
   return(list(x=out,
               weight=NULL,

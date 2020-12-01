@@ -14,7 +14,7 @@
 
 calcTillageArea <- function(tillage="historicNoTill") {
 
-  Cropland            <- toolFillYears(calcOutput("Croparea", cellular=TRUE, aggregate=FALSE), sort(findset("past_all")))
+  Cropland            <- toolFillYears(calcOutput("Croparea", cellular=TRUE, aggregate=FALSE), sort(findset("past_soc")))
 
   crop2tillage        <- c(fulltill = "cassav_sp",
                            fulltill = "cottn_pro",

@@ -7,6 +7,7 @@
 #' @param init 'lu' for land-use specific initialisation, 'natveg' initialisation with natural vegetation stocks
 #' @param output 'full' - all important soil related values, 'reduced' - just SOC state values
 #' @param cfg run configuration
+#' @param start_year start year
 #' @examples
 #' \dontrun{
 #' calcOutput("SoilCarbon")
@@ -14,9 +15,10 @@
 #' @importFrom magclass setNames
 #' @importFrom magpiesets findset
 
-calcSoilCarbon <- function(init="lu", output="full", cfg=NULL){
+calcSoilCarbon <- function(init="lu", output="full", cfg=NULL, start_year=1901){
 
-  years <- sort(as.numeric(substring(findset("past_all"),2)))
+  years <- sort(as.numeric(substring(findset("past_soc"),2)))
+  years <- years[years>=start_year]
 
   #######################
   ### Load Data & Ini ###

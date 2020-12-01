@@ -18,7 +18,7 @@
 calcCarbonInput <- function(cfg=NULL) {
 
   .prep <- function(x,landtype) {
-    return(toolFillYears(add_dimension(x, dim=3.3, nm=landtype, add="landtype"), findset("past_all")))
+    return(toolFillYears(add_dimension(x, dim=3.3, nm=landtype, add="landtype"), findset("past_soc")))
   }
 
   Residues   <- .prep(calcOutput("CarbonResidues", yieldscenario = cfg$yield, rec.scenario = cfg$rrecycle, res.scenario=cfg$residue, aggregate = FALSE),"crop")

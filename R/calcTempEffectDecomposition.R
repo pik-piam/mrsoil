@@ -20,7 +20,7 @@ calcTempEffectDecomposition <- function(climate_scen="default") {
   param.t_opt <- setYears(param[,,"topt"],NULL)
   param.t_a   <- setYears(param[,,"ta"],NULL)
   param.t_b   <- setYears(param[,,"tb"],NULL)
-  cell.temp   <- readSource("CRU", subtype="temperature", convert = "onlycorrect")[,sort(findset("past_all")),]
+  cell.temp   <- readSource("CRU", subtype="temperature", convert = "onlycorrect")[,sort(findset("past_soc")),]
 
   tempFunc            <- function(x){ x**param.t_a * exp(0.076 * (1 - x**param.t_b )) }
   tempArg             <- (param.t_max - cell.temp)/(param.t_max - param.t_opt)
