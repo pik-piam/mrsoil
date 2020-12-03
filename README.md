@@ -1,6 +1,6 @@
 # Calculates historical Soil Organic Carbon Budget for Cropland
 
-R package **mrSOCbudget**, version **0.19.0**
+R package **mrsoil**, version **0.20.0**
 
   
 
@@ -21,7 +21,7 @@ The additional repository can be made available permanently by adding the line a
 After that the most recent version of the package can be installed using `install.packages`:
 
 ```r 
-install.packages("mrSOCbudget")
+install.packages("mrsoil")
 ```
 
 Package updates can be installed using `update.packages` (make sure that the additional repository has been added before running that command):
@@ -36,18 +36,19 @@ In case of questions / problems please contact Kristine Karstens <karstens@pik-p
 
 ## Citation
 
-To cite package **mrSOCbudget** in publications use:
+To cite package **mrsoil** in publications use:
 
-Karstens K, Dietrich J (2020). _mrSOCbudget: Calculates historical Soil Organic Carbon Budget for Cropland_. R package version 0.19.0.
+Karstens K, Dietrich J (2020). _mrsoil: Calculates historical Soil Organic Carbon Budget for Cropland_. R package version
+0.20.0.
 
 A BibTeX entry for LaTeX users is
 
  ```latex
 @Manual{,
-  title = {mrSOCbudget: Calculates historical Soil Organic Carbon Budget for Cropland},
+  title = {mrsoil: Calculates historical Soil Organic Carbon Budget for Cropland},
   author = {Kristine Karstens and Jan Philipp Dietrich},
   year = {2020},
-  note = {R package version 0.19.0},
+  note = {R package version 0.20.0},
 }
 ```
 
