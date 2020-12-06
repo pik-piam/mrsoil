@@ -36,7 +36,7 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
     if(grepl("constManure",   name))  cfg$manure   <- gsub(".*(constManure)(\\d{4}).*",  "freeze\\2",name)
     if(grepl("constResidues",  name)) cfg$residue  <- gsub(".*(constResidues)(\\d{4}).*","freeze\\2",name)
     if(grepl("constYield",    name))  cfg$yield    <- gsub(".*(constYield)(\\d{4}).*",   "freeze\\2",name)
-    if(grepl("constTillage",  name))  cfg$tillage  <- "mixedtill"
+    if(grepl("constTillage",  name))  cfg$tillage  <- gsub(".*(constTillage-)(.[^_]*).*","\\2",name)
     if(grepl("constResrate", name))   cfg$rrecycle <- gsub(".*(constResrate)(\\d{4}).*", "freeze\\2",name)
     if(grepl("constLanduse",  name))  cfg$landuse  <- gsub(".*(constLanduse)(\\d{4}).*", "freeze\\2",name)
     if(grepl("constClimate",  name))  cfg$climate  <- gsub(".*(constClimate)(\\d{4}).*", "freeze\\2",name)
