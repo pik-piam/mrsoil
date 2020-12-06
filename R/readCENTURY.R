@@ -11,7 +11,7 @@
 #' }
 #'
 #' @importFrom reshape2 colsplit
-#' @importFrom utils untar
+#' @importFrom utils untar write.csv
 
 readCENTURY <- function(subtype="tree"){
 
@@ -42,6 +42,7 @@ readCENTURY <- function(subtype="tree"){
     out  <- mbind(out, tmp_out)
     full <- mbind(full, add_dimension(cratio, add="type", nm=header[1]))
     type <- rbind(type, paste(header,collapse = " - "))
+    write.csv(type, "TreeTypes.csv")
   }
 
   return(out)
