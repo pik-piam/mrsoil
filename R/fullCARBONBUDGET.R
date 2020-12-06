@@ -3,7 +3,7 @@
 #'
 #' @param rev data revision which should be used as input (positive numeric).
 #' @param dev flag to define carbon budget calculations
-#' @param start_year start year
+#'
 #' @author Kristine Karstens
 #'
 #' @seealso
@@ -16,7 +16,7 @@
 #' @importFrom magclass setNames
 #' @importFrom magpiesets findset
 
-fullCARBONBUDGET <- function(rev=0.1, dev="", start_year=1901){
+fullCARBONBUDGET <- function(rev=0.1, dev=""){
 
   setConfig(regionmapping = NULL)
   setConfig(cachefolder = paste0("rev",rev), forcecache = TRUE)
@@ -30,30 +30,30 @@ fullCARBONBUDGET <- function(rev=0.1, dev="", start_year=1901){
                 landuse      = "default",
                 climate      = "default",
                 tillage      = "histtill",
-                litter_param = "default",
+                litter_param = "CenturyAverage",
                 soilinit     = "lu")
 
-    if(grepl("manure_",   name)) cfg$manure   <- gsub(".*(manure_)(.[^_]*\\d{4}).*","\\2",name)
-    if(grepl("residue_",  name)) cfg$residue  <- gsub(".*(residue_)(.[^_]*\\d{4}).*","\\2",name)
-    if(grepl("yield_",    name)) cfg$yield    <- gsub(".*(yield_)(.[^_]*\\d{4}).*","\\2",name)
-    if(grepl("tillage_",  name)) cfg$tillage  <- gsub(".*(tillage_)(.[^_]*).*","\\2",name)
-    if(grepl("rrecycle_", name)) cfg$rrecycle <- gsub(".*(rrecycle_)(.[^_]*\\d{4}).*","\\2",name)
-    if(grepl("landuse_",  name)) cfg$landuse  <- gsub(".*(landuse_)(.[^_]*\\d{4}).*","\\2",name)
-    if(grepl("climate_",  name)) cfg$climate  <- gsub(".*(climate_)(.[^_]*\\d{4}).*","\\2",name)
+    if(grepl("constManure",   name))  cfg$manure   <- gsub(".*(constManure)(\\d{4}).*",  "freeze\\2",name)
+    if(grepl("constResidues",  name)) cfg$residue  <- gsub(".*(constResidues)(\\d{4}).*","freeze\\2",name)
+    if(grepl("constYield",    name))  cfg$yield    <- gsub(".*(constYield)(\\d{4}).*",   "freeze\\2",name)
+    if(grepl("constTillage",  name))  cfg$tillage  <- "mixedtill"
+    if(grepl("constResrate", name))   cfg$rrecycle <- gsub(".*(constResrate)(\\d{4}).*", "freeze\\2",name)
+    if(grepl("constLanduse",  name))  cfg$landuse  <- gsub(".*(constLanduse)(\\d{4}).*", "freeze\\2",name)
+    if(grepl("constClimate",  name))  cfg$climate  <- gsub(".*(constClimate)(\\d{4}).*", "freeze\\2",name)
 
-    if(grepl("alloff_",    name)){
+    if(grepl("constManagement2",    name)){
       cfg$tillage  <- "mixedtill"
-      cfg$rrecycle <- gsub(".*(alloff_)(.[^_]*\\d{4}).*","\\2",name)
-      cfg$manure   <- gsub(".*(alloff_)(.[^_]*\\d{4}).*","\\2",name)
-      cfg$yield    <- gsub(".*(alloff_)(.[^_]*\\d{4}).*","\\2",name)
+      cfg$rrecycle <- gsub(".*(constManagement2)(\\d{4}).*", "freeze\\2",name)
+      cfg$manure   <- gsub(".*(constManagement2)(\\d{4}).*", "freeze\\2",name)
+      cfg$yield    <- gsub(".*(constManagement2)(\\d{4}).*", "freeze\\2",name)
     }
-    if(grepl("alloff2_",   name)){
+    if(grepl("constManagement",   name)){
       cfg$tillage  <- "mixedtill"
-      cfg$residue  <- gsub(".*(alloff2_)(.[^_]*\\d{4}).*","\\2",name)
-      cfg$manure   <- gsub(".*(alloff2_)(.[^_]*\\d{4}).*","\\2",name)
+      cfg$residue  <- gsub(".*(constManagement)(\\d{4}).*", "freeze\\2",name)
+      cfg$manure   <- gsub(".*(constManagement)(\\d{4}).*", "freeze\\2",name)
     }
-    if(grepl("init_", name))       cfg$soilinit     <- gsub(".*(init_)(.[^_]*).*","\\2",name)
-    if(grepl("litterPNV_", name))  cfg$litter_param <- gsub(".*(litterPNV_)(.[^_]*_.[^_]*).*","\\2",name)
+    if(grepl("Initial-", name))    cfg$soilinit     <- gsub(".*(Initial-)(.[^_]*).*","\\2",name)
+    if(grepl("LitterPNV-", name))  cfg$litter_param <- gsub(".*(LitterPNV-)(.[^_]*).*","\\2",name)
     return(cfg)
   }
   cfg <- .cfg(dev)
@@ -72,8 +72,10 @@ fullCARBONBUDGET <- function(rev=0.1, dev="", start_year=1901){
   calcOutput("CarbonManure",   scenario=cfg$manure, aggregate=FALSE, file="CarbonManure.rds")
   calcOutput("CarbonLitter",   litter_param=cfg$litter_param, climate_scen=cfg$climate, aggregate=FALSE, file="CarbonLitter.rds")
   calcOutput("CarbonInput",    cfg=cfg, aggregate=FALSE, file="CarbonInput.rds")
+  calcOutput("Decay",          tillage=cfg$tillage, climate_scen=cfg$climate, aggregate=FALSE, file="Decay.rds")
+  calcOutput("SteadyState",    cfg=cfg, aggregate=FALSE, file="SteadyState.rds")
 
   calcOutput("Landuse",       aggregate=FALSE, landuse_scen=cfg$landuse, file="Landuse.rds")
   calcOutput("LanduseChange", aggregate=FALSE, landuse_scen=cfg$landuse, file="LanduseChange.rds")
-  calcOutput("SoilCarbon",    output="full", init=cfg$soilinit, cfg=cfg, start_year=start_year, aggregate=FALSE, file="SoilCarbon.rds")
+  calcOutput("SoilCarbon",    output="full", init=cfg$soilinit, cfg=cfg, aggregate=FALSE, file="SoilCarbon.rds")
 }

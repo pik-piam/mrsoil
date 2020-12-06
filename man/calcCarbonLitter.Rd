@@ -4,7 +4,7 @@
 \alias{calcCarbonLitter}
 \title{calcCarbonLitter}
 \usage{
-calcCarbonLitter(litter_param = "default", climate_scen = "default")
+calcCarbonLitter(litter_param = "CenturyAverage", climate_scen = "default")
 }
 \arguments{
 \item{litter_param}{litter scenario}

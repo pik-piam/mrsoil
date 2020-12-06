@@ -4,14 +4,12 @@
 \alias{fullCARBONBUDGET}
 \title{fullCARBONBUDGET}
 \usage{
-fullCARBONBUDGET(rev = 0.1, dev = "", start_year = 1901)
+fullCARBONBUDGET(rev = 0.1, dev = "")
 }
 \arguments{
 \item{rev}{data revision which should be used as input (positive numeric).}
 
 \item{dev}{flag to define carbon budget calculations}
-
-\item{start_year}{start year}
 }
 \description{
 Function that produces the complete cellular data set of the SOC budget

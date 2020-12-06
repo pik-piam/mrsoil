@@ -13,9 +13,9 @@
 #' @importFrom magpiesets findset
 #' @importFrom stats quantile
 
-calcCarbonLitter <- function(litter_param="default", climate_scen="default"){
+calcCarbonLitter <- function(litter_param="CenturyAverage", climate_scen="default"){
 
-  if(is.null(litter_param)) litter_param <- "default"
+  if(is.null(litter_param)) litter_param <- "CenturyAverage"
 
   litfallc <- readSource("LPJmL", subtype="LPJmL4:CRU_4.alitterfallc", convert="onlycorrect")[,sort(findset("past_soc")),]
 
@@ -24,10 +24,25 @@ calcCarbonLitter <- function(litter_param="default", climate_scen="default"){
   out          <- new.magpie(getCells(litfallc), getYears(litfallc), names, fill = 0)
   getSets(out) <- c("iso","cell","t","inputs","attributes")
 
-  param.litter <- readSource("SOCbudgetParam", subtype=litter_param, convert=FALSE)
+  if(litter_param=="PerennialGrasses"){
 
-  out[,,"LC"] <- param.litter[,,"natveg_lgc_ratio"]
-  out[,,"NC"] <- param.litter[,,"natveg_nc_ratio"]
+    # from TABLE 5.5B (NEW GUIDANCE) of the 2019 refinement off the ipcc guidelines vol. 4 from 2006
+    param.litter <- new.magpie("GLO",NULL,c("nc_ratio", "lgc_ratio"), fill=signif(c(0.0126/0.44, 0.049/0.44),2))
+
+  } else if(litter_param=="CenturyAverage"){
+
+    tmp          <- readSource("CENTURY", subtype="tree", convert=FALSE)
+    param.litter <- collapseNames(tmp[,,1:2])
+    param.litter[,,"nc_ratio"]  <- signif(mean(tmp[,,"nc_ratio"]),2)
+    param.litter[,,"lgc_ratio"] <- signif(mean(tmp[,,"lgc_ratio"]),2)
+
+  } else {
+
+    param.litter <- signif(collapseNames(readSource("CENTURY", subtype="tree", convert=FALSE)[,,litter_param]),2)
+  }
+
+  out[,,"LC"] <- param.litter[,,"lgc_ratio"]
+  out[,,"NC"] <- param.litter[,,"nc_ratio"]
   out[,,"c"]  <- litfallc
 
   out <- toolConditionalReplace(out, conditions = c("is.na()","<0", "is.infinite()"), replaceby = 0)
