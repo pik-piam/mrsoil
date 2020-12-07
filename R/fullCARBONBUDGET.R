@@ -67,7 +67,7 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
   calcOutput("ManureRecyclingCroplandPast",     products="kli", cellular=TRUE, aggregate=FALSE, file="Manure_recycled.rds")
   calcOutput("Excretion",      cellular=TRUE,   attributes="npkc", aggregate=FALSE, file="Manure_excreted.rds")
 
-  ### from mrSOCbudget
+  ### from mrsoil
   calcOutput("CarbonResidues", yieldscenario = cfg$yield, rec.scenario = cfg$rrecycle, res.scenario=cfg$residue, aggregate=FALSE, file="CarbonResidues.rds")
   calcOutput("CarbonManure",   scenario=cfg$manure, aggregate=FALSE, file="CarbonManure.rds")
   calcOutput("CarbonLitter",   litter_param=cfg$litter_param, climate_scen=cfg$climate, aggregate=FALSE, file="CarbonLitter.rds")

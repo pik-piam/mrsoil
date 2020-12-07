@@ -1,8 +1,8 @@
 Package: mrsoil
 Type: Package
 Title: Calculates historical Soil Organic Carbon Budget for Cropland
-Version: 0.21.2
-Date: 2020-12-06
+Version: 0.21.3
+Date: 2020-12-07
 Authors@R: c(person("Kristine", "Karstens", email = "karstens@pik-potsdam.de", role = c("aut","cre")),
              person("Jan Philipp", "Dietrich", email = "dietrich@pik-potsdam.de", role = "aut"))
 Description: This packages provides functions for soil organic carbon budget for mineral soils using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories.
