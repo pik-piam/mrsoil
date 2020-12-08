@@ -13,7 +13,7 @@
 #' calcOutput("CarbonResidues")
 #' }
 #' @importFrom magclass dimCode
-#' @import mrcommons
+#' @importFrom mrcommons toolFreezeEffect
 #' @importFrom stats quantile
 
 
@@ -51,8 +51,7 @@ calcCarbonResidues <- function(yieldscenario = "default", rec.scenario = "defaul
 
   if(grepl("freeze", res.scenario)){
     freeze_year <- as.integer(gsub("freeze","",res.scenario))
-    ResidueRecycling[,,"ag.c"] <- toolFreezeEffect(ResidueRecycling[,,"ag.c"],freeze_year, constrain="first_use")
-    ResidueRecycling[,,"bg.c"] <- toolFreezeEffect(ResidueRecycling[,,"bg.c"],freeze_year, constrain="first_use")
+    ResidueRecycling[,,"c"] <- toolFreezeEffect(ResidueRecycling[,,"c"],freeze_year, constrain="first_use")
     ResidueRecycling[,,"c"][Cropland==0] <- 0
   }
 

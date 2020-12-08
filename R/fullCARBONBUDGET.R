@@ -33,24 +33,24 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
                 litter_param = "CenturyAverage",
                 soilinit     = "lu")
 
-    if(grepl("constManure",   name))  cfg$manure   <- gsub(".*(constManure)(\\d{4}).*",  "freeze\\2",name)
-    if(grepl("constResidues",  name)) cfg$residue  <- gsub(".*(constResidues)(\\d{4}).*","freeze\\2",name)
-    if(grepl("constYield",    name))  cfg$yield    <- gsub(".*(constYield)(\\d{4}).*",   "freeze\\2",name)
-    if(grepl("constTillage",  name))  cfg$tillage  <- gsub(".*(constTillage-)(.[^_]*).*","\\2",name)
-    if(grepl("constResrate", name))   cfg$rrecycle <- gsub(".*(constResrate)(\\d{4}).*", "freeze\\2",name)
-    if(grepl("constLanduse",  name))  cfg$landuse  <- gsub(".*(constLanduse)(\\d{4}).*", "freeze\\2",name)
-    if(grepl("constClimate",  name))  cfg$climate  <- gsub(".*(constClimate)(\\d{4}).*", "freeze\\2",name)
+    if(grepl("constManure-",   name))  cfg$manure   <- gsub(".*(constManure-)(\\d{4}).*",  "freeze\\2",name)
+    if(grepl("constResidues-", name))  cfg$residue  <- gsub(".*(constResidues-)(\\d{4}).*","freeze\\2",name)
+    if(grepl("constYield-",    name))  cfg$yield    <- gsub(".*(constYield-)(\\d{4}).*",   "freeze\\2",name)
+    if(grepl("constTillage-",  name))  cfg$tillage  <- gsub(".*(constTillage-)(.[^_]*).*","\\2",name)
+    if(grepl("constResrate-",  name))  cfg$rrecycle <- gsub(".*(constResrate-)(\\d{4}).*", "freeze\\2",name)
+    if(grepl("constLanduse-",  name))  cfg$landuse  <- gsub(".*(constLanduse-)(\\d{4}).*", "freeze\\2",name)
+    if(grepl("constClimate-",  name))  cfg$climate  <- gsub(".*(constClimate-)(\\d{4}).*", "freeze\\2",name)
 
-    if(grepl("constManagement2",    name)){
+    if(grepl("constManagement2-",    name)){
       cfg$tillage  <- "mixedtill"
-      cfg$rrecycle <- gsub(".*(constManagement2)(\\d{4}).*", "freeze\\2",name)
-      cfg$manure   <- gsub(".*(constManagement2)(\\d{4}).*", "freeze\\2",name)
-      cfg$yield    <- gsub(".*(constManagement2)(\\d{4}).*", "freeze\\2",name)
+      cfg$rrecycle <- gsub(".*(constManagement2-)(\\d{4}).*", "freeze\\2",name)
+      cfg$manure   <- gsub(".*(constManagement2-)(\\d{4}).*", "freeze\\2",name)
+      cfg$yield    <- gsub(".*(constManagement2-)(\\d{4}).*", "freeze\\2",name)
     }
-    if(grepl("constManagement",   name)){
+    if(grepl("constManagement-",   name)){
       cfg$tillage  <- "mixedtill"
-      cfg$residue  <- gsub(".*(constManagement)(\\d{4}).*", "freeze\\2",name)
-      cfg$manure   <- gsub(".*(constManagement)(\\d{4}).*", "freeze\\2",name)
+      cfg$residue  <- gsub(".*(constManagement-)(\\d{4}).*", "freeze\\2",name)
+      cfg$manure   <- gsub(".*(constManagement-)(\\d{4}).*", "freeze\\2",name)
     }
     if(grepl("Initial-", name))    cfg$soilinit     <- gsub(".*(Initial-)(.[^_]*).*","\\2",name)
     if(grepl("LitterPNV-", name))  cfg$litter_param <- gsub(".*(LitterPNV-)(.[^_]*).*","\\2",name)

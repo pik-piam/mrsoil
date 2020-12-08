@@ -1,6 +1,6 @@
 # Calculates historical Soil Organic Carbon Budget for Cropland
 
-R package **mrsoil**, version **0.21.3**
+R package **mrsoil**, version **0.21.4**
 
   
 
@@ -39,7 +39,7 @@ In case of questions / problems please contact Kristine Karstens <karstens@pik-p
 To cite package **mrsoil** in publications use:
 
 Karstens K, Dietrich J (2020). _mrsoil: Calculates historical Soil Organic Carbon Budget for Cropland_. R package version
-0.21.3.
+0.21.4.
 
 A BibTeX entry for LaTeX users is
 
@@ -48,7 +48,7 @@ A BibTeX entry for LaTeX users is
   title = {mrsoil: Calculates historical Soil Organic Carbon Budget for Cropland},
   author = {Kristine Karstens and Jan Philipp Dietrich},
   year = {2020},
-  note = {R package version 0.21.3},
+  note = {R package version 0.21.4},
 }
 ```
 
