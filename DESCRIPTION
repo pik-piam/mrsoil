@@ -1,7 +1,7 @@
 Package: mrsoil
 Type: Package
 Title: Calculates historical Soil Organic Carbon Budget for Cropland
-Version: 0.22.0
+Version: 0.22.1
 Date: 2020-12-09
 Authors@R: c(person("Kristine", "Karstens", email = "karstens@pik-potsdam.de", role = c("aut","cre")),
              person("Jan Philipp", "Dietrich", email = "dietrich@pik-potsdam.de", role = "aut"))
@@ -27,4 +27,3 @@ Suggests: knitr,
           rmarkdown,
 	        ggplot2
 VignetteBuilder: knitr
-ValidationKey: 4093100
