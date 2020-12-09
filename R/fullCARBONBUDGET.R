@@ -60,8 +60,8 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
 
 
   ### from mrcommons
-  calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, file="ResiduesAg_FieldBalance.rds")
-  calcOutput("ResBiomass",          cellular=TRUE, aggregate=FALSE, file="Residue_Biomass.rds")
+  calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, scenario = cfg$yield, file="ResiduesAg_FieldBalance.rds")
+  calcOutput("ResBiomass",          cellular=TRUE, aggregate=FALSE, scenario = cfg$yield, file="Residue_Biomass.rds")
   calcOutput("Production",     products="kcr",  cellular=TRUE, calibrated=TRUE, attributes="c", aggregate=FALSE, file="Crop_Harvest.rds")
   calcOutput("FAOmassbalance", aggregate=FALSE, file="FAOmassbalance_ISO.rds")
   calcOutput("ManureRecyclingCroplandPast",     products="kli", cellular=TRUE, aggregate=FALSE, file="Manure_recycled.rds")

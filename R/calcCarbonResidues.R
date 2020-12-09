@@ -30,19 +30,21 @@ calcCarbonResidues <- function(yieldscenario = "default", rec.scenario = "defaul
   ResidueBiomass      <- calcOutput("ResBiomass", cellular=TRUE, aggregate = FALSE, scenario=yieldscenario)[,,c("c","nr")]
   kcr2kres            <- toolGetMapping("mappingCrop2Residue.csv", type="sectoral", where="mrcommons")
   ResidueBiomass      <- toolAggregate(ResidueBiomass, rel=kcr2kres, from="kcr", to="kres", dim=3.2)
-  ResidueRecyclingAg  <- collapseNames(calcOutput("ResFieldBalancePast", cellular=TRUE, products = "kres", aggregate = FALSE, scenario=yieldscenario)[,,"recycle"][,,c("c","nr")])
+  ResidueRecyclingAg  <- add_dimension(collapseNames(calcOutput("ResFieldBalancePast", cellular=TRUE, products = "kres",
+                                                                aggregate = FALSE, scenario=yieldscenario)[,,"recycle"][,,c("c","nr")]),
+                                                                dim=3.1, add="residues", nm="ag")
 
   if(grepl("freeze", rec.scenario)){
     RecycleShare   <- toolConditionalReplace(ResidueRecyclingAg/ResidueBiomass[,,"ag"], "is.na()", 0)
     freeze_year    <- as.integer(gsub("freeze","",rec.scenario))
     RecycleShare   <- toolFreezeEffect(RecycleShare,freeze_year)
-    ResidueRecyclingAg <- dimSums(RecycleShare * ResidueBiomass[,,"ag"], dim=3.1)
+    ResidueRecyclingAg <- dimSums(RecycleShare * ResidueBiomass[,,"ag"], dim=3.2)
   } else {
-    ResidueRecyclingAg <- dimSums(ResidueRecyclingAg, dim=3.1)
+    ResidueRecyclingAg <- dimSums(ResidueRecyclingAg, dim=3.2)
   }
 
   ResidueRecyclingBg  <- dimSums(ResidueBiomass[,,"bg"][,,c("c","nr")], dim=3.2)
-  ResidueRecycling    <- mbind(ResidueRecyclingBg,add_dimension(ResidueRecyclingAg, dim=3.1, add="residues", nm="ag"))
+  ResidueRecycling    <- mbind(ResidueRecyclingBg, ResidueRecyclingAg)
   Cropland            <- dimSums(calcOutput("Croparea", cellular=TRUE, aggregate=FALSE), dim=3)
   ResidueRecycling    <- ResidueRecycling/Cropland
   ResidueRecycling    <- toolConditionalReplace(ResidueRecycling, conditions = c("is.na()","<0","is.infinite()"), replaceby = 0)
