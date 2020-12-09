@@ -21,6 +21,8 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
   setConfig(regionmapping = NULL)
   setConfig(cachefolder = paste0("rev",rev), forcecache = TRUE)
 
+  years <- sort(findset("past_all"))
+
   .cfg <- function(name) {
     ### Management Scenarios
     cfg <- list(manure       = "default",
@@ -58,24 +60,28 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
   }
   cfg <- .cfg(dev)
 
+  ### historic output only
+  if(dev=="histManagement"){
 
-  ### from mrcommons
-  calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, scenario = cfg$yield, file="ResiduesAg_FieldBalance.rds")
-  calcOutput("ResBiomass",          cellular=TRUE, aggregate=FALSE, scenario = cfg$yield, file="Residue_Biomass.rds")
-  calcOutput("Production",     products="kcr",  cellular=TRUE, calibrated=TRUE, attributes="c", aggregate=FALSE, file="Crop_Harvest.rds")
-  calcOutput("FAOmassbalance", aggregate=FALSE, file="FAOmassbalance_ISO.rds")
-  calcOutput("ManureRecyclingCroplandPast",     products="kli", cellular=TRUE, aggregate=FALSE, file="Manure_recycled.rds")
-  calcOutput("Excretion",      cellular=TRUE,   attributes="npkc", aggregate=FALSE, file="Manure_excreted.rds")
+    ### from mrcommons
+    calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, scenario = cfg$yield, file="ResiduesAg_FieldBalance.rds")
+    calcOutput("ResBiomass",          cellular=TRUE, aggregate=FALSE, scenario = cfg$yield, file="Residue_Biomass.rds")
+    calcOutput("Production",     products="kcr",  cellular=TRUE, calibrated=TRUE, attributes="c", aggregate=FALSE, file="Crop_Harvest.rds")
+    calcOutput("FAOmassbalance", aggregate=FALSE, file="FAOmassbalance_ISO.rds")
+    calcOutput("ManureRecyclingCroplandPast",     products="kli", cellular=TRUE, aggregate=FALSE, file="Manure_recycled.rds")
+    calcOutput("Excretion",      cellular=TRUE,   attributes="npkc", aggregate=FALSE, file="Manure_excreted.rds")
 
-  ### from mrsoil
-  calcOutput("CarbonResidues", yieldscenario = cfg$yield, rec.scenario = cfg$rrecycle, res.scenario=cfg$residue, aggregate=FALSE, file="CarbonResidues.rds")
-  calcOutput("CarbonManure",   scenario=cfg$manure, aggregate=FALSE, file="CarbonManure.rds")
-  calcOutput("CarbonLitter",   litter_param=cfg$litter_param, climate_scen=cfg$climate, aggregate=FALSE, file="CarbonLitter.rds")
-  calcOutput("CarbonInput",    cfg=cfg, aggregate=FALSE, file="CarbonInput.rds")
-  calcOutput("Decay",          tillage=cfg$tillage, climate_scen=cfg$climate, aggregate=FALSE, file="Decay.rds")
-  calcOutput("SteadyState",    cfg=cfg, aggregate=FALSE, file="SteadyState.rds")
+    ### from mrsoil
+    calcOutput("CarbonResidues", yieldscenario = cfg$yield, rec.scenario = cfg$rrecycle, res.scenario=cfg$residue, aggregate=FALSE, file="CarbonResidues.rds")
+    calcOutput("CarbonManure",   scenario=cfg$manure, aggregate=FALSE, file="CarbonManure.rds")
+    calcOutput("CarbonLitter",   litter_param=cfg$litter_param, climate_scen=cfg$climate, aggregate=FALSE, years=years, file="CarbonLitter.rds")
+    calcOutput("CarbonInput",    cfg=cfg, aggregate=FALSE, years=years, file="CarbonInput.rds")
+    calcOutput("Decay",          tillage=cfg$tillage, climate_scen=cfg$climate, aggregate=FALSE, years=years, file="Decay.rds")
+    calcOutput("SteadyState",    cfg=cfg, aggregate=FALSE, years=years, file="SteadyState.rds")
+  }
 
-  calcOutput("Landuse",       aggregate=FALSE, landuse_scen=cfg$landuse, file="Landuse.rds")
-  calcOutput("LanduseChange", aggregate=FALSE, landuse_scen=cfg$landuse, file="LanduseChange.rds")
-  calcOutput("SoilCarbon",    output="full", init=cfg$soilinit, cfg=cfg, aggregate=FALSE, file="SoilCarbon.rds")
+  ### historic & scenario output
+  calcOutput("Landuse",       aggregate=FALSE, landuse_scen=cfg$landuse, years=years, file="Landuse.rds")
+  calcOutput("LanduseChange", aggregate=FALSE, landuse_scen=cfg$landuse, years=years, file="LanduseChange.rds")
+  calcOutput("SoilCarbon",    output="full", init=cfg$soilinit, cfg=cfg, aggregate=FALSE, years=years, file="SoilCarbon.rds")
 }
