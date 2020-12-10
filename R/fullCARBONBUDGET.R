@@ -15,6 +15,7 @@
 #' }
 #' @importFrom magclass setNames
 #' @importFrom magpiesets findset
+#' @import mrvalidation
 
 fullCARBONBUDGET <- function(rev=0.1, dev=""){
 
@@ -66,10 +67,10 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
     ### from mrcommons
     calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, scenario = cfg$yield, file="ResiduesAg_FieldBalance.rds")
     calcOutput("ResBiomass",          cellular=TRUE, aggregate=FALSE, scenario = cfg$yield, file="Residue_Biomass.rds")
-    calcOutput("Production",     products="kcr",  cellular=TRUE, calibrated=TRUE, attributes="c", aggregate=FALSE, file="Crop_Harvest.rds")
-    calcOutput("FAOmassbalance", aggregate=FALSE, file="FAOmassbalance_ISO.rds")
+    calcOutput("Production",          products="kcr",  cellular=TRUE, calibrated=TRUE, attributes="c", aggregate=FALSE, file="Crop_Harvest.rds")
+    calcOutput("FAOmassbalance",      aggregate=FALSE, file="FAOmassbalance_ISO.rds")
     calcOutput("ManureRecyclingCroplandPast",     products="kli", cellular=TRUE, aggregate=FALSE, file="Manure_recycled.rds")
-    calcOutput("Excretion",      cellular=TRUE,   attributes="npkc", aggregate=FALSE, file="Manure_excreted.rds")
+    calcOutput("Excretion",           cellular=TRUE,   attributes="npkc", aggregate=FALSE, file="Manure_excreted.rds")
 
     ### from mrsoil
     calcOutput("CarbonResidues", yieldscenario = cfg$yield, rec.scenario = cfg$rrecycle, res.scenario=cfg$residue, aggregate=FALSE, file="CarbonResidues.rds")
@@ -78,7 +79,17 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
     calcOutput("CarbonInput",    cfg=cfg, aggregate=FALSE, years=years, file="CarbonInput.rds")
     calcOutput("Decay",          tillage=cfg$tillage, climate_scen=cfg$climate, aggregate=FALSE, years=years, file="Decay.rds")
     calcOutput("SteadyState",    cfg=cfg, aggregate=FALSE, years=years, file="SteadyState.rds")
+
+    ### validation and post-processing
+    calcOutput("ValidCarbonStocks", datasource = "LPJ_IPCC2006", aggregate="REG+GLO", file="LPJ_IPCC.rds")
+    calcOutput("ValidCarbonStocks", datasource = "WISE", aggregate="REG+GLO", file="WISE.rds")
+    calcOutput("ValidCarbonStocks", datasource = "GSOC", aggregate="REG+GLO", file="GSOC.rds")
+    calcOutput("ValidCarbonStocks", datasource = "SoilGrids", aggregate="REG+GLO", file="SoilGrids.rds")
+    calcOutput("ValidCarbonStocks", datasource = "LPJmL4Paper", aggregate="REG+GLO", file="LPJmL4.rds")
+    calcOutput("ClimateClass", aggregate=FALSE, years="past", file="KoeppenGeiger.rds")
+    calcOutput("LPJmL", "LPJmL4", climatetype="CRU_4", subtype="vegc", years=years, aggregate = FALSE, file="CarbonVegetation.rds")
   }
+
 
   ### historic & scenario output
   calcOutput("Landuse",       aggregate=FALSE, landuse_scen=cfg$landuse, years=years, file="Landuse.rds")
