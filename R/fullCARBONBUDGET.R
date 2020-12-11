@@ -87,7 +87,7 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
     calcOutput("ValidCarbonStocks", datasource = "SoilGrids", aggregate="REG+GLO", file="SoilGrids.rds")
     calcOutput("ValidCarbonStocks", datasource = "LPJmL4Paper", aggregate="REG+GLO", file="LPJmL4.rds")
     calcOutput("ClimateClass", aggregate=FALSE, years="y2010", file="KoeppenGeiger.rds")
-    calcOutput("LPJmL", "LPJmL4", climatetype="CRU_4", subtype="vegc", years=years, aggregate = FALSE, file="CarbonVegetation.rds")
+    calcOutput("LPJmL", "LPJmL4", climatetype="CRU_4", subtype="vegc", years=years, aggregate = FALSE, round=4, file="CarbonVegetation.rds")
   }
 
 
