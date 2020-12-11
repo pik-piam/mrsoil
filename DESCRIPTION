@@ -1,7 +1,7 @@
 Package: mrsoil
 Type: Package
 Title: Calculates historical Soil Organic Carbon Budget for Cropland
-Version: 0.23.3
+Version: 1.0.0
 Date: 2020-12-11
 Authors@R: c(person("Kristine", "Karstens", email = "karstens@pik-potsdam.de", role = c("aut","cre")),
              person("Jan Philipp", "Dietrich", email = "dietrich@pik-potsdam.de", role = "aut"))
