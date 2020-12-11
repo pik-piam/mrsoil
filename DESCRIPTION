@@ -1,7 +1,7 @@
 Package: mrsoil
 Type: Package
-Title: Calculates historical Soil Organic Carbon Budget for Cropland
-Version: 1.0.0
+Title: MadRat Soil Organic Carbon Budget Library
+Version: 1.1.0
 Date: 2020-12-11
 Authors@R: c(person("Kristine", "Karstens", email = "karstens@pik-potsdam.de", role = c("aut","cre")),
              person("Jan Philipp", "Dietrich", email = "dietrich@pik-potsdam.de", role = "aut"))
@@ -21,6 +21,8 @@ Imports:
     utils,
     xml2
 License: LGPL-3 | file LICENSE
+URL: https://github.com/pik-piam/mrsoil, https://doi.org/10.5281/zenodo.4317933
+BugReports: https://github.com/pik-piam/mrsoil/issues
 Encoding: UTF-8
 LazyData: no
 RoxygenNote: 7.1.1
