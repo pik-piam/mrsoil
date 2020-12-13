@@ -78,7 +78,7 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
     calcOutput("CarbonLitter",   litter_param=cfg$litter_param, climate_scen=cfg$climate, aggregate=FALSE, years=years, file="CarbonLitter.rds")
     calcOutput("CarbonInput",    cfg=cfg, aggregate=FALSE, years=years, file="CarbonInput.rds")
     calcOutput("Decay",          tillage=cfg$tillage, climate_scen=cfg$climate, aggregate=FALSE, years=years, file="Decay.rds")
-    calcOutput("SteadyState",    cfg=cfg, aggregate=FALSE, years=years, file="SteadyState.rds")
+    calcOutput("SteadyState",    cfg=cfg, aggregate=FALSE, output="full", years=years, file="SteadyState.rds")
 
     ### validation and post-processing
     calcOutput("ValidGridCarbonStocks", datasource = "WISE", aggregate="IPCC", file="WISE.rds")

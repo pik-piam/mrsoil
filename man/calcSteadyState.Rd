@@ -4,10 +4,12 @@
 \alias{calcSteadyState}
 \title{calcSteadyState}
 \usage{
-calcSteadyState(cfg = NULL)
+calcSteadyState(cfg = NULL, output = "reduced")
 }
 \arguments{
 \item{cfg}{general configuration}
+
+\item{output}{'full' - all important soil related values, 'reduced' - just SOC state values}
 }
 \value{
 magpie object in cellular resolution
