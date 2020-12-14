@@ -1,6 +1,6 @@
 # MadRat Soil Organic Carbon Budget Library
 
-R package **mrsoil**, version **1.4.0**
+R package **mrsoil**, version **1.4.1**
 
 [![Travis build status](https://travis-ci.com/pik-piam/mrsoil.svg?branch=master)](https://travis-ci.com/pik-piam/mrsoil) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4317933.svg)](https://doi.org/10.5281/zenodo.4317933) 
 
@@ -39,7 +39,7 @@ In case of questions / problems please contact Kristine Karstens <karstens@pik-p
 To cite package **mrsoil** in publications use:
 
 Karstens K, Dietrich J (2020). _mrsoil: MadRat Soil Organic Carbon Budget Library_. doi: 10.5281/zenodo.4317933 (URL:
-https://doi.org/10.5281/zenodo.4317933), R package version 1.4.0, <URL: https://github.com/pik-piam/mrsoil>.
+https://doi.org/10.5281/zenodo.4317933), R package version 1.4.1, <URL: https://github.com/pik-piam/mrsoil>.
 
 A BibTeX entry for LaTeX users is
 
@@ -48,7 +48,7 @@ A BibTeX entry for LaTeX users is
   title = {mrsoil: MadRat Soil Organic Carbon Budget Library},
   author = {Kristine Karstens and Jan Philipp Dietrich},
   year = {2020},
-  note = {R package version 1.4.0},
+  note = {R package version 1.4.1},
   doi = {10.5281/zenodo.4317933},
   url = {https://github.com/pik-piam/mrsoil},
 }

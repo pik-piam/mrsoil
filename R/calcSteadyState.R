@@ -100,7 +100,7 @@ calcSteadyState <- function(cfg=NULL, output="reduced") {
                                            SlowSteadyState,
                                            PassiveSteadyState))
 
-  if(output=="full"){
+  if(output%in%c("full","alpha_in")){
 
     .alpha <- function(alpha,name,name2) {
       return(add_dimension(add_dimension(collapseNames(alpha),
@@ -108,20 +108,27 @@ calcSteadyState <- function(cfg=NULL, output="reduced") {
                            dim=3.1,add="output",nm=name2))
     }
 
-    Alpha <- magpiesort(mbind(.alpha(ActiveAlpha, "active","alpha"),
-                              .alpha(SlowAlpha, "slow","alpha"),
-                              .alpha(PassiveAlpha, "passive","alpha")))
+    if(output=="full"){    Alpha <- magpiesort(mbind(.alpha(ActiveAlpha, "active","alpha"),
+                                                      .alpha(SlowAlpha, "slow","alpha"),
+                                                      .alpha(PassiveAlpha, "passive","alpha")))
 
-    tmp   <- PassiveAlpha
-    tmp[] <- 0
-    Alpha_in <- magpiesort(mbind(.alpha(dimSums(cell.metabDOC_in + cell.strucDOC_in, dim=3.1),"active","alpha_in"),
-                              .alpha(dimSums(cell.lign_in, dim=3.1), "slow","alpha_in"),
-                              .alpha(tmp,"passive","alpha_in")))
+     tmp   <- PassiveAlpha
+     tmp[] <- 0
+     Alpha_in <- magpiesort(mbind(.alpha(dimSums(cell.metabDOC_in + cell.strucDOC_in, dim=3.1),"active","alpha_in"),
+                                  .alpha(dimSums(cell.lign_in, dim=3.1), "slow","alpha_in"),
+                                  .alpha(tmp,"passive","alpha_in")))
 
-    SoilCarbonSteadyState <- add_dimension(SoilCarbonSteadyState,
-                                           dim=3.1,add="output",nm="steadystate")
-    SoilCarbonSteadyState <- mbind(SoilCarbonSteadyState, Alpha, Alpha_in)
+     SoilCarbonSteadyState <- add_dimension(SoilCarbonSteadyState,
+                                            dim=3.1,add="output",nm="steadystate")
+     SoilCarbonSteadyState <- mbind(SoilCarbonSteadyState, Alpha, Alpha_in)
 
+     } else if(output=="alpha_in"){
+
+       Alpha_in <- magpiesort(mbind(.alpha(cell.metabDOC_in + cell.strucDOC_in,"active","alpha_in"),
+                                    .alpha(cell.lign_in, "slow","alpha_in")))
+
+       SoilCarbonSteadyState <- Alpha_in
+     }
   }
 
   return(list(
