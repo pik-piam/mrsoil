@@ -19,6 +19,9 @@
 
 fullCARBONBUDGET <- function(rev=0.1, dev=""){
 
+
+
+
   setConfig(regionmapping = NULL)
   setConfig(cachefolder = paste0("rev",rev), forcecache = TRUE)
 
@@ -60,6 +63,12 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
     return(cfg)
   }
   cfg <- .cfg(dev)
+
+  if(grepl("ResAllom_2021_01_12", dev)){
+
+    options(prodatt_folder="Version_2021_01_12/")
+    options(hi_folder="Version_2021_01_12/")
+  }
 
   ### historic output only
   if(dev=="histManagement"){
