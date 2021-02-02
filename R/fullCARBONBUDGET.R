@@ -64,10 +64,11 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
   }
   cfg <- .cfg(dev)
 
-  if(grepl("ResAllom_2021_01_12", dev)){
+  if(grepl("ResAllom", dev)){
 
-    options(prodatt_folder="Version_2021_01_12/")
-    options(hi_folder="Version_2021_01_12/")
+    version <- gsub("(.*)ResAllom_(.*)$","\\2", dev)
+    options(prodatt_folder=paste0("Version_",version,"/"))
+    options(hi_folder=paste0("Version_",version,"/"))
   }
 
   ### historic output only
