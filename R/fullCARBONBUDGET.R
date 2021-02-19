@@ -92,10 +92,10 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
     calcOutput("SteadyState",    cfg=cfg, aggregate=FALSE, output="alpha_in", years=years, file="CarbonInflow.rds")
 
     ### validation and post-processing
-    calcOutput("ValidGridCarbonStocks", datasource = "WISE", aggregate="IPCC", file="WISE.rds")
-    calcOutput("ValidGridCarbonStocks", datasource = "GSOC", aggregate="IPCC", file="GSOC.rds")
-    calcOutput("ValidGridCarbonStocks", datasource = "SoilGrids", aggregate="IPCC", file="SoilGrids.rds")
-    calcOutput("ValidGridCarbonStocks", datasource = "LPJmL4Paper", aggregate="IPCC", file="LPJmL4.rds")
+    calcOutput("ValidGridSOCStocks", datasource = "WISE", aggregate="IPCC", file="WISE.rds")
+    calcOutput("ValidGridSOCStocks", datasource = "GSOC", aggregate="IPCC", file="GSOC.rds")
+    calcOutput("ValidGridSOCStocks", datasource = "SoilGrids", aggregate="IPCC", file="SoilGrids.rds")
+    calcOutput("ValidGridSOCStocks", datasource = "LPJmL4Paper", aggregate="IPCC", file="LPJmL4.rds")
     calcOutput("ClimateClass", source="IPCC_reduced" , aggregate=FALSE, file="IPCC_reduced.rds")
     calcOutput("ClimateClass", source="IPCC" ,         aggregate=FALSE, file="IPCC.rds")
     calcOutput("LPJmL", version="LPJmL4", climatetype="CRU_4", subtype="vegc", years=years, aggregate = FALSE, round=4, file="CarbonVegetation.rds")
