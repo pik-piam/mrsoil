@@ -72,7 +72,7 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
   }
 
   ### historic output only
-  if(dev=="histManagement"){
+  if(grepl("histManagement",dev)){
 
     ### from mrcommons
     calcOutput("ResFieldBalancePast", cellular=TRUE, products="kres", aggregate=FALSE, scenario = cfg$yield, file="ResiduesAg_FieldBalance.rds")
@@ -100,7 +100,6 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
     calcOutput("ClimateClass", source="IPCC" ,         aggregate=FALSE, file="IPCC.rds")
     calcOutput("LPJmL", version="LPJmL4", climatetype="CRU_4", subtype="vegc", years=years, aggregate = FALSE, round=4, file="CarbonVegetation.rds")
   }
-
 
   ### historic & scenario output
   calcOutput("Landuse",       aggregate=FALSE, landuse_scen=cfg$landuse, years=years, file="Landuse.rds")
