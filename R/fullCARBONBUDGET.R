@@ -16,11 +16,9 @@
 #' @importFrom magclass setNames
 #' @importFrom magpiesets findset
 #' @import mrvalidation
+#' @import mrmagpie
 
 fullCARBONBUDGET <- function(rev=0.1, dev=""){
-
-
-
 
   setConfig(regionmapping = NULL)
   setConfig(cachefolder = paste0("rev",rev), forcecache = TRUE)
