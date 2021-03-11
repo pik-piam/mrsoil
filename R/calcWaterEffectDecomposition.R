@@ -61,7 +61,7 @@ calcWaterEffectDecomposition <- function(irrigation="mixedirrig", climate_scen="
 
   } else if(irrigation=="mixedirrig") {
 
-    cell.ir_areaShr    <- readSource("LUH2v2", subtype="irrigation", convert="onlycorrect")[,sort(findset("past_soc")),]
+    cell.ir_areaShr    <- toolCoord2Isocell(readSource("LUH2v2", subtype="irrigation", convert="onlycorrect"))[,sort(findset("past_soc")),]
     cell.ir_areaShr    <- dimSums(cell.ir_areaShr, dim=3)
 
     cell.w_Factor      <- mbind(calcOutput("WaterEffectDecomposition", irrigation="rainfed",   climate_scen=climate_scen, aggregate = FALSE),

@@ -82,7 +82,7 @@ calcSteadyState <- function(cfg=NULL, output="reduced") {
   # SOC transferred from active to slow SOC sub-pool
   cell.aSOC_in   <- ActiveSteadyState * decay[,,"active"] * cell.f4_a2s
   # Bring all carbon input to the slow SOC sub-pool together
-  SlowAlpha <- dimSums(collapseNames(cell.lign_in + cell.aSOC_in), dim=3.1)
+  SlowAlpha <- collapseNames(dimSums(cell.lign_in, dim=3.1) + cell.aSOC_in)
   SlowSteadyState <- .steadystate(SlowAlpha,  decay, "slow")
 
   ### PassiveAlpha calculations ###
