@@ -1,6 +1,6 @@
 #' @title readCRU
 #' @description Read CRU content
-#' @param subtype Switch between diffrent input
+#' @param subtype Switch between different input
 #' @return List of magpie objects with results on cellular level, weight, unit and description.
 #' @author Kristine Karstens
 #' @seealso

@@ -25,6 +25,7 @@ calcCarbonInput <- function(cfg=NULL) {
   Manure     <- .prep(calcOutput("CarbonManure", scenario=cfg$manure, aggregate = FALSE),  "crop")
   Litter     <- .prep(calcOutput("CarbonLitter", litter_param=cfg$litter_param, climate_scen=cfg$climate, aggregate = FALSE),  "natveg")
   cell.input <- mbind(Residues, Manure, Litter)
+  rm(Litter, Manure, Residues)
 
   param <- readSource("IPCCSoil", convert=FALSE)
   param.metabfrac_intercept <- param[,,"sp1"] # empirical parameter to estimate metabolic fraction of residue input (intercept)
@@ -33,6 +34,8 @@ calcCarbonInput <- function(cfg=NULL) {
   # Calculate metabolic dead organic carbon input
   cell.LC2NC       <- collapseNames(toolConditionalReplace(cell.input[,,"LC"]/cell.input[,,"NC"], c("is.na()","is.infinite()"), 0))
   cell.metabDOC    <- collapseNames(cell.input[,,"c"] * toolConditionalReplace(param.metabfrac_intercept - param.metabfrac_slope * cell.LC2NC, "<0", 0))
+  # Correct for too big metabolic carbon input
+  cell.metabDOC    <- pmin(cell.metabDOC, collapseNames(cell.input[,,"c"] * (1 -cell.input[,,"LC"])))
 
   # Calculate structural dead organic carbon input
   cell.strucDOC    <- collapseNames( cell.input[,,"c"] * (1 - cell.input[,,"LC"]) - cell.metabDOC )

@@ -7,7 +7,7 @@
 readCRU(subtype = "precipitation")
 }
 \arguments{
-\item{subtype}{Switch between diffrent input}
+\item{subtype}{Switch between different input}
 }
 \value{
 List of magpie objects with results on cellular level, weight, unit and description.
