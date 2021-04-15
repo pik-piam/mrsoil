@@ -20,6 +20,7 @@ Calculates the cellular MAgPIE landuse area based on LUH2v2 or LanduseInitialisa
 \dontrun{
 calcOutput("Landuse")
 }
+
 }
 \author{
 Kristine Karstens

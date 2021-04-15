@@ -7,7 +7,7 @@
 #' @param init 'lu' for land-use specific initialisation, 'natveg' initialisation with natural vegetation stocks
 #' @param output 'full' - all important soil related values, 'reduced' - just SOC state values
 #' @param cfg run configuration
-#' @param start_year start year
+#' @param cfg_default run configuration for default setup (used for spinup setup)
 #' @examples
 #' \dontrun{
 #' calcOutput("SoilCarbon")
@@ -15,10 +15,10 @@
 #' @importFrom magclass setNames
 #' @importFrom magpiesets findset
 
-calcSoilCarbon <- function(init="lu", output="full", cfg=NULL, start_year=1901){
+calcSoilCarbon <- function(init="spinup", output="full", cfg=NULL, cfg_default=NULL){
 
-  years <- sort(as.numeric(substring(findset("past_soc"),2)))
-  years <- years[years>=start_year]
+  model_start <- 1901
+  years       <- seq(model_start, 2010, 1)
 
   #######################
   ### Load Data & Ini ###
@@ -26,88 +26,39 @@ calcSoilCarbon <- function(init="lu", output="full", cfg=NULL, start_year=1901){
 
   # Load Landuse data
   Landuse            <- calcOutput("Landuse",       landuse_scen=cfg$landuse, aggregate=FALSE)[,years,]
-  LanduseChange      <- calcOutput("LanduseChange", landuse_scen=cfg$landuse, aggregate=FALSE)[,years[-1],]
+  LanduseChange      <- calcOutput("LanduseChange", landuse_scen=cfg$landuse, aggregate=FALSE)[,years,]
 
   # Load steady states (setting to zero for all non cropland cells)
   SoilCarbonSteadyState <- calcOutput("SteadyState", cfg=cfg, aggregate = FALSE)[,years,]
   noCropCells           <- which(Landuse[,,"crop"]==0)
   for(sub in getNames(SoilCarbonSteadyState, dim=2)){
-    SoilCarbonSteadyState[,,sub][noCropCells] <- 0  #Clear cells with no Cropland
+    SoilCarbonSteadyState[,,"crop"][,,sub][noCropCells] <- 0  #Clear cells with no Cropland
   }
 
   # Loading decay rates (cutting over 1)
-  Decay                 <- calcOutput("Decay", tillage=cfg$tillage, climate_scen=cfg$climate, aggregate = FALSE)[,years,]
+  Decay                 <- calcOutput("Decay", tillage=cfg$tillage, climate_scen=cfg$climate, aggregate = FALSE)
   Decay[Decay>1]        <- 1
+
 
   SoilCarbon            <- SoilCarbonSteadyState
   SoilCarbon[]          <- 0
 
   # Initialize SOC stocks
-  if(init=="natveg"){
-    SoilCarbon[,years[1],]     <- mbind(         SoilCarbonSteadyState[,years[1],"natveg"],
-                                        setNames(SoilCarbonSteadyState[,years[1],"natveg"],
-                                                 paste0("crop.",getNames(SoilCarbonSteadyState[,years[1],"natveg"], dim=2))))
-
-  } else if(init=="lu"){
-    SoilCarbon[,years[1],]     <- SoilCarbonSteadyState[,years[1],]
-
-  } else if(init=="mixed"){
-
-    SoilCarbon[,years[1],]     <- mbind(         SoilCarbonSteadyState[,years[1],"natveg"],
-                                                 setNames(SoilCarbonSteadyState[,years[1],"natveg"],
-                                                          paste0("crop.",getNames(SoilCarbonSteadyState[,years[1],"natveg"], dim=2))))
-
-    SoilCarbon[,years[1],]     <- (SoilCarbonSteadyState[,years[1],] + SoilCarbon[,years[1],])/2
-
+  if(init=="spinup"){     SoilCarbon[,years[1],] <- calcOutput("SoilCarbonSpinup", model_start=model_start, cfg_default=cfg_default)
+  } else if(init=="lu"){  SoilCarbon[,years[1],] <- SoilCarbonSteadyState[,years[1],]
   }
-
-  #Clear cells with no Landuse -> no Soil
-  noSoilCells               <- where(dimSums(Landuse, dim=3)==0)$true$regions
-  SoilCarbon[noSoilCells,,] <- 0
-  SoilCarbonSteadyState[noSoilCells,,] <- 0
-
-  #Initialize outputs
-  SoilCarbonTransfer      <- SoilCarbonInter        <- SoilCarbonNatural    <- SoilCarbon
-  SoilCarbonTransfer[,1,] <- SoilCarbonInter[,1,]   <- 0
 
   ######################
-  ### Looping        ###
+  ### Carbon Cycling ###
   ######################
 
-  for(year_x in years[-1]){
+  out <- toolSoilCarbonCycling(SoilCarbon,
+                               SoilCarbonSteadyState,
+                               Decay,
+                               Landuse,
+                               LanduseChange)
 
-    # Calculate carbon transfer between landuse types
-    SoilCarbonTransfer[,year_x,] <- (setYears(mbind(add_dimension(collapseNames(SoilCarbon[,year_x-1 ,"crop"]),  nm="natveg"),
-                                                    add_dimension(collapseNames(SoilCarbon[,year_x-1,"natveg"]), nm="crop")), year_x) *
-                                     LanduseChange[,year_x,"expansion"]
-                                   - setYears(SoilCarbon[,year_x-1,], year_x) * LanduseChange[,year_x,"reduction"])
-
-    # Calculate the carbon density after landuse change
-    SoilCarbonInter[,year_x,]    <- (setYears(SoilCarbon[,year_x-1,], year_x) * setYears(Landuse[,year_x-1,], year_x)
-                                    + SoilCarbonTransfer[,year_x,] ) / Landuse[,year_x,]
-    SoilCarbonInter[,year_x,]    <- toolConditionalReplace(SoilCarbonInter[,year_x,], conditions = c("is.na()","is.infinite()"), replaceby = 0)
-
-    # Update the carbon density after input and decay
-    SoilCarbon[,year_x,]         <- SoilCarbonInter[,year_x,] + (SoilCarbonSteadyState[,year_x,] - SoilCarbonInter[,year_x,]) * Decay[,year_x,]
-
-    # Calculate counterfactual potential natural vegetation stocks
-    SoilCarbonNatural[,year_x,]  <- setYears(SoilCarbonNatural[,year_x-1,], year_x) + (SoilCarbonSteadyState[,year_x,] - setYears(SoilCarbonNatural[,year_x-1,], year_x)) * Decay[,year_x,]
-    SoilCarbonNatural[,,"crop"]  <- 0
-
-    print(year_x)
-  }
-
-  if(output=="reduced"){
-
-    out <- SoilCarbon
-
-  } else if(output=="full"){
-
-    out <- mbind(add_dimension(SoilCarbon,            dim=3.1, add="var", nm="actualstate"),
-                 add_dimension(SoilCarbonTransfer,    dim=3.1, add="var", nm="carbontransfer"),
-                 add_dimension(SoilCarbonInter,       dim=3.1, add="var", nm="interstate"),
-                 add_dimension(SoilCarbonNatural,     dim=3.1, add="var", nm="naturalstate"))
-  }
+  if(output == "reduced") out <- out[,,"actualstate"]
 
   return(list( x            = out,
                weight       = NULL,

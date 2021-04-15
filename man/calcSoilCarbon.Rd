@@ -4,7 +4,12 @@
 \alias{calcSoilCarbon}
 \title{calcSoilCarbon}
 \usage{
-calcSoilCarbon(init = "lu", output = "full", cfg = NULL, start_year = 1901)
+calcSoilCarbon(
+  init = "spinup",
+  output = "full",
+  cfg = NULL,
+  cfg_default = NULL
+)
 }
 \arguments{
 \item{init}{'lu' for land-use specific initialisation, 'natveg' initialisation with natural vegetation stocks}
@@ -13,7 +18,7 @@ calcSoilCarbon(init = "lu", output = "full", cfg = NULL, start_year = 1901)
 
 \item{cfg}{run configuration}
 
-\item{start_year}{start year}
+\item{cfg_default}{run configuration for default setup (used for spinup setup)}
 }
 \value{
 magpie object in cellular resolution
