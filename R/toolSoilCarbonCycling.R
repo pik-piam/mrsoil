@@ -14,7 +14,7 @@
 
 toolSoilCarbonCycling <- function(SoilCarbon, SoilCarbonSteadyState, Decay, Landuse, LanduseChange) {
 
-  years <- getYears(SoilCarbon)
+  years <- getYears(SoilCarbon, as.integer = TRUE)
 
   #Clear cells with no Landuse -> no Soil
   noSoilCells               <- where(dimSums(Landuse[,1,], dim=3)==0)$true$regions
