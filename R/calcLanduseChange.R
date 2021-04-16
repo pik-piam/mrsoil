@@ -15,7 +15,7 @@ calcLanduseChange <- function(landuse_scen="default"){
   if(grepl("spinup",landuse_scen)) Landuse      <- calcOutput("Landuse", landuse_scen=landuse_scen, aggregate=FALSE)
   else                             Landuse      <- calcOutput("Landuse", aggregate=FALSE)
 
-  years        <- getYears(Landuse)
+  years         <- getYears(Landuse, as.integer = TRUE)
   LanduseChange <- Landuse[,years[2:length(years)],] - setYears(Landuse[,years[2:length(years)]-1,], years[2:length(years)])
 
   LandReduction <- LandExpansion <- LanduseChange
