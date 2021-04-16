@@ -61,7 +61,7 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
     return(cfg)
   }
   cfg         <- .cfg(dev)
-  cfg_default <- .cfg()
+  cfg_default <- .cfg("")
 
   if(grepl("ResAllom", dev)){
 
