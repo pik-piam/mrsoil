@@ -44,7 +44,7 @@ calcSoilCarbon <- function(init="spinup", output="full", cfg=NULL, cfg_default=N
   SoilCarbon[]          <- 0
 
   # Initialize SOC stocks
-  if(init=="spinup"){     SoilCarbon[,years[1],] <- calcOutput("SoilCarbonSpinup", model_start=model_start, cfg_default=cfg_default)
+  if(init=="spinup"){     SoilCarbon[,years[1],] <- calcOutput("SoilCarbonSpinup", model_start=model_start, cfg_default=cfg_default, aggregate=FALSE)
   } else if(init=="lu"){  SoilCarbon[,years[1],] <- SoilCarbonSteadyState[,years[1],]
   }
 
