@@ -4,24 +4,16 @@
 \alias{toolSoilCarbonCycling}
 \title{toolSoilCarbonCycling}
 \usage{
-toolSoilCarbonCycling(
-  SoilCarbon,
-  SoilCarbonSteadyState,
-  Decay,
-  Landuse,
-  LanduseChange
-)
+toolSoilCarbonCycling(SoilCarbonInit, SoilCarbonSteadyState, Decay, Landuse)
 }
 \arguments{
-\item{SoilCarbon}{soil carbon to be filled}
+\item{SoilCarbonInit}{soil carbon initialization}
 
 \item{SoilCarbonSteadyState}{steadystates}
 
 \item{Decay}{decay rates}
 
 \item{Landuse}{landuse}
-
-\item{LanduseChange}{landuse change}
 }
 \value{
 magpie object with global parameters

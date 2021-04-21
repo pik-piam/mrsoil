@@ -5,14 +5,14 @@
 \title{calcSoilCarbon}
 \usage{
 calcSoilCarbon(
-  init = "spinup",
+  spinup_start = "1510",
   output = "full",
   cfg = NULL,
   cfg_default = NULL
 )
 }
 \arguments{
-\item{init}{'lu' for land-use specific initialisation, 'natveg' initialisation with natural vegetation stocks}
+\item{spinup_start}{start of initialization with natural vegetation stocks}
 
 \item{output}{'full' - all important soil related values, 'reduced' - just SOC state values}
 

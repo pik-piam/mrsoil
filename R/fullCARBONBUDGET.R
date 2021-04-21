@@ -82,13 +82,14 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
     calcOutput("Excretion",           cellular=TRUE,   attributes="npkc", aggregate=FALSE, file="Manure_excreted.rds")
 
     ### from mrsoil
-    calcOutput("CarbonResidues", yieldscenario = cfg$yield, rec.scenario = cfg$rrecycle, res.scenario=cfg$residue, aggregate=FALSE, file="CarbonResidues.rds")
-    calcOutput("CarbonManure",   scenario=cfg$manure, aggregate=FALSE, file="CarbonManure.rds")
-    calcOutput("CarbonLitter",   litter_param=cfg$litter_param, climate_scen=cfg$climate, aggregate=FALSE, years=years, file="CarbonLitter.rds")
-    calcOutput("CarbonInput",    cfg=cfg, aggregate=FALSE, years=years, file="CarbonInput.rds")
-    calcOutput("Decay",          tillage=cfg$tillage, climate_scen=cfg$climate, aggregate=FALSE, years=years, file="Decay.rds")
-    calcOutput("SteadyState",    cfg=cfg, aggregate=FALSE, output="reduced", years=years, file="SteadyState.rds")
-    calcOutput("SteadyState",    cfg=cfg, aggregate=FALSE, output="alpha_in", years=years, file="CarbonInflow.rds")
+    calcOutput("CarbonResidues",   yieldscenario = cfg$yield, rec.scenario = cfg$rrecycle, res.scenario=cfg$residue, aggregate=FALSE, file="CarbonResidues.rds")
+    calcOutput("CarbonManure",     scenario=cfg$manure, aggregate=FALSE, file="CarbonManure.rds")
+    calcOutput("CarbonLitter",     litter_param=cfg$litter_param, climate_scen=cfg$climate, aggregate=FALSE, years=years, file="CarbonLitter.rds")
+    calcOutput("CarbonInput",      cfg=cfg, aggregate=FALSE, years=years, file="CarbonInput.rds")
+    calcOutput("Decay",            tillage=cfg$tillage, climate_scen=cfg$climate, aggregate=FALSE, years=years, file="Decay.rds")
+    calcOutput("SteadyState",      cfg=cfg, aggregate=FALSE, output="reduced", years=years, file="SteadyState.rds")
+    calcOutput("SteadyState",      cfg=cfg, aggregate=FALSE, output="alpha_in", years=years, file="CarbonInflow.rds")
+    calcOutput("SoilCarbonSpinup", cfg_default=cfg_default, file="SoilCarbonSpinup.rds")
 
     ### validation and post-processing
     calcOutput("ValidGridSOCStocks", datasource = "WISE", aggregate="IPCC", file="WISE.rds")
@@ -101,7 +102,7 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
   }
 
   ### historic & scenario output
-  calcOutput("Landuse",       aggregate=FALSE, landuse_scen=cfg$landuse, years=years, file="Landuse.rds")
-  calcOutput("LanduseChange", aggregate=FALSE, landuse_scen=cfg$landuse, years=years, file="LanduseChange.rds")
+  calcOutput("Landuse", aggregate=FALSE, landuse_scen=cfg$landuse,                years=years, file="Landuse.rds")
+  calcOutput("Landuse", aggregate=FALSE, landuse_scen=cfg$landuse, type="change", years=years, file="LanduseChange.rds")
   calcOutput("SoilCarbon",    output="full", init=cfg$soilinit, cfg=cfg, cfg_default=cfg_default, aggregate=FALSE, years=years, file="SoilCarbon.rds")
 }

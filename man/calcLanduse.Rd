@@ -4,10 +4,12 @@
 \alias{calcLanduse}
 \title{calcLanduse}
 \usage{
-calcLanduse(landuse_scen = "default")
+calcLanduse(landuse_scen = "default", type = "total")
 }
 \arguments{
 \item{landuse_scen}{landuse configuration}
+
+\item{type}{"total" or "change"}
 }
 \value{
 List of magpie object with results on country or cellular level, weight, unit and description.

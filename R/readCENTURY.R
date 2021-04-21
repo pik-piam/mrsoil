@@ -36,8 +36,8 @@ readCENTURY <- function(subtype="tree"){
     cratio[,,"lg"]   <- unlist(colsplit(trimws(tmp)[c(89:93)], " .", names=c("value","name"))[1])
 
     tmp_out <- new.magpie("GLO",NULL, names = paste(header[1],c("nc_ratio","lgc_ratio"),sep="."))
-    tmp_out[,,"nc_ratio"]  <- mean(cratio[,,c("nmin","nmax")])
-    tmp_out[,,"lgc_ratio"] <- mean(cratio[,,"lg"])
+    #tmp_out[,,"nc_ratio"]  <- mean(cratio[,,c("nmin","nmax")])
+    #tmp_out[,,"lgc_ratio"] <- mean(cratio[,,"lg"])
 
     out  <- mbind(out, tmp_out)
     full <- mbind(full, add_dimension(cratio, add="type", nm=header[1]))

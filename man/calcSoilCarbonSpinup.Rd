@@ -4,10 +4,10 @@
 \alias{calcSoilCarbonSpinup}
 \title{calcSoilCarbonSpinup}
 \usage{
-calcSoilCarbonSpinup(model_start = 1901, cfg_default = NULL)
+calcSoilCarbonSpinup(spinup_start = 1510, cfg_default = NULL)
 }
 \arguments{
-\item{model_start}{start year}
+\item{spinup_start}{start year of spinup (model_start-1-spinup_start has to be a multiple of recycling length)}
 
 \item{cfg_default}{run configuration for default setup (used for spinup setup)}
 }

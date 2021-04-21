@@ -17,10 +17,22 @@ calcCarbonLitter <- function(litter_param="CenturyAverage", climate_scen="defaul
 
   if(is.null(litter_param)) litter_param <- "CenturyAverage"
 
-  litfallc <- readSource("LPJmL", subtype="LPJmL4:CRU_4.alitterfallc", convert="onlycorrect")[,sort(findset("past_soc")),]
+  # load and convert LPjmL data
+  litfallc      <- readSource("LPJmL_new", subtype="LPJmL4_for_MAgPIE_84a69edd:CRU4:historical:alitterfallc",        convert="onlycorrect")[,sort(findset("past_soc")),]*0.01
+  litburnc      <- readSource("LPJmL_new", subtype="LPJmL4_for_MAgPIE_84a69edd:CRU4:historical:alitterburnc",        convert="onlycorrect")[,sort(findset("past_soc")),]*0.01
+  litfallc_wood <- readSource("LPJmL_new", subtype="LPJmL4_for_MAgPIE_84a69edd:CRU4:historical:alitterfallc_wood",   convert="onlycorrect")[,sort(findset("past_soc")),]*0.01
+  litburnc_wood <- readSource("LPJmL_new", subtype="LPJmL4_for_MAgPIE_84a69edd:CRU4:historical:alitterburnc_wood",   convert="onlycorrect")[,sort(findset("past_soc")),]*0.01
+
+  litfallc      <- toolConditionalReplace(litfallc-litburnc,           "<0", 0)
+  litfallc_wood <- toolConditionalReplace(litfallc_wood-litburnc_wood, "<0", 0)
+  rm(litburnc, litburnc_wood)
+
+  litfallc      <- mbind(setNames(litfallc-litfallc_wood, "leaf"),
+                         setNames(litfallc_wood,          "wood"))
+  rm(litfallc_wood)
 
   attributes   <- c("c","LC","NC")
-  names        <- as.vector(outer("litfall", attributes, paste, sep="."))
+  names        <- as.vector(outer(getNames(litfallc), attributes, paste, sep="."))
   out          <- new.magpie(getCells(litfallc), getYears(litfallc), names, fill = 0)
   getSets(out) <- c("iso","cell","t","inputs","attributes")
 
@@ -41,14 +53,15 @@ calcCarbonLitter <- function(litter_param="CenturyAverage", climate_scen="defaul
     param.litter <- signif(collapseNames(readSource("CENTURY", subtype="tree", convert=FALSE)[,,litter_param]),2)
   }
 
-  out[,,"LC"] <- param.litter[,,"lgc_ratio"]
-  out[,,"NC"] <- param.litter[,,"nc_ratio"]
-  out[,,"c"]  <- litfallc
+  out[,,"wood.LC"] <- 0.25
+  out[,,"wood.NC"] <- 0.0126/0.44
+  out[,,"wood.c"]  <- litfallc[,,"wood"]
+
+  out[,,"leaf.LC"] <- 0.049/0.44
+  out[,,"leaf.NC"] <- 0.0126/0.44
+  out[,,"leaf.c"]  <- litfallc[,,"leaf"]
 
   out <- toolConditionalReplace(out, conditions = c("is.na()","<0", "is.infinite()"), replaceby = 0)
-
-  ## Cut high input values at 95%-percentil
-  #out[,,"NC"] <- toolConditionalReplace(out[,,"NC"], conditions = '> quantile(x, probs=0.95)', replaceby=eval(quantile(out[,,"NC"], probs=0.95)))
 
   if(grepl("freeze", climate_scen)){
     freeze_year <- as.integer(gsub("freeze","",climate_scen))

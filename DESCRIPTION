@@ -1,8 +1,8 @@
 Package: mrsoil
 Type: Package
 Title: MadRat Soil Organic Carbon Budget Library
-Version: 1.7.6
-Date: 2021-04-17
+Version: 1.8.0
+Date: 2021-04-21
 Authors@R: c(person("Kristine", "Karstens", email = "karstens@pik-potsdam.de", role = c("aut","cre")),
              person("Jan Philipp", "Dietrich", email = "dietrich@pik-potsdam.de", role = "aut"))
 Description: This packages provides functions for soil organic carbon budget for mineral soils using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories.

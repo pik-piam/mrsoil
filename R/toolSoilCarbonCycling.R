@@ -1,31 +1,41 @@
 #' @title toolSoilCarbonCycling
 #' @description This function cycles the carbon on an annual basis between the different soil pools
 #'
-#' @param SoilCarbon soil carbon to be filled
+#' @param SoilCarbonInit soil carbon initialization
 #' @param SoilCarbonSteadyState steadystates
 #' @param Decay decay rates
 #' @param Landuse landuse
-#' @param LanduseChange landuse change
 #'
 #' @return magpie object with global parameters
 #' @author Kristine Karstens
 #'
 #' @export
 
-toolSoilCarbonCycling <- function(SoilCarbon, SoilCarbonSteadyState, Decay, Landuse, LanduseChange) {
+toolSoilCarbonCycling <- function(SoilCarbonInit, SoilCarbonSteadyState, Decay, Landuse) {
 
-  years <- getYears(SoilCarbon, as.integer = TRUE)
+  years         <- getYears(SoilCarbonSteadyState, as.integer = TRUE)
+  LanduseChange <- toolLanduseChange(Landuse)
 
-  #Clear cells with no Landuse -> no Soil
+  # correct SteadyStates for bo cropland -> no cropland soil
+  noCropCells           <- which(Landuse[,,"crop"]==0)
+  for(sub in getNames(SoilCarbonSteadyState, dim=2)){
+    SoilCarbonSteadyState[,,"crop"][,,sub][noCropCells] <- 0  #Clear cells with no Cropland
+  }
+
+  # clear cells with no land use -> no Soil
   noSoilCells               <- where(dimSums(Landuse[,1,], dim=3)==0)$true$regions
-  SoilCarbon[noSoilCells,,]            <- 0
   SoilCarbonSteadyState[noSoilCells,,] <- 0
 
-  #Initialize outputs
-  SoilCarbonTransfer      <- SoilCarbonInter        <- SoilCarbonNatural    <- SoilCarbon
-  SoilCarbonTransfer[,1,] <- SoilCarbonInter[,1,]   <- 0
+  # cut decay rates above 1
+  Decay[Decay>1]        <- 1
 
-  for(year_x in years[-1]){
+  #Initialize outputs
+  SoilCarbon             <- mbind(SoilCarbonInit, SoilCarbonSteadyState)
+  SoilCarbon[,years,]    <- 0
+  SoilCarbonTransfer     <- SoilCarbonInter   <-  SoilCarbonNatural     <- SoilCarbon
+  SoilCarbonTransfer[]   <- SoilCarbonInter[] <- 0
+
+  for(year_x in years){
 
     # Calculate carbon transfer between landuse types
     SoilCarbonTransfer[,year_x,] <- (setYears(mbind(add_dimension(collapseNames(SoilCarbon[,year_x-1 ,"crop"]),  nm="natveg"),
