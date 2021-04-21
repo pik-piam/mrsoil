@@ -1,7 +1,7 @@
 Package: mrsoil
 Type: Package
 Title: MadRat Soil Organic Carbon Budget Library
-Version: 1.8.1
+Version: 1.8.2
 Date: 2021-04-21
 Authors@R: c(person("Kristine", "Karstens", email = "karstens@pik-potsdam.de", role = c("aut","cre")),
              person("Jan Philipp", "Dietrich", email = "dietrich@pik-potsdam.de", role = "aut"))

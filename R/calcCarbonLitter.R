@@ -64,7 +64,7 @@ calcCarbonLitter <- function(litter_param="CenturyAverage", climate_scen="defaul
     out[,reset_years,] <- setYears(out[,rep(freeze_year,sum(reset_years)),], getYears(out[,reset_years,]))
   }
 
-  out <- out[,findset("past_soc"),]
+  out <- out[,sort(findset("past_soc")),]
 
   return(list(x=out,
               weight=NULL,
