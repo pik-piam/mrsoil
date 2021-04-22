@@ -102,7 +102,7 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
   }
 
   ### historic & scenario output
-  calcOutput("Landuse", aggregate=FALSE, landuse_scen=cfg$landuse,                years=years, file="Landuse.rds")
-  calcOutput("Landuse", aggregate=FALSE, landuse_scen=cfg$landuse, type="change", years=years, file="LanduseChange.rds")
+  calcOutput("Landuse", aggregate=FALSE, landuse_scen=cfg$landuse,                  years=years, file="Landuse.rds")
+  calcOutput("Landuse", aggregate=FALSE, landuse_scen=cfg$landuse, output="change", years=years, file="LanduseChange.rds")
   calcOutput("SoilCarbon",    output="full", init=cfg$soilinit, cfg=cfg, cfg_default=cfg_default, aggregate=FALSE, years=years, file="SoilCarbon.rds")
 }
