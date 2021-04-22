@@ -10,7 +10,7 @@
 #' \dontrun{
 #' calcOutput("SoilCarbon")
 #' }
-#' @importFrom magclass setNames
+#' @importFrom magclass setNames collapseDim
 #' @importFrom magpiesets findset
 
 calcSoilCarbonSpinup <- function(spinup_start=1510, cfg_default=NULL){
@@ -37,7 +37,7 @@ calcSoilCarbonSpinup <- function(spinup_start=1510, cfg_default=NULL){
                                      setYears(SoilCarbonSteadyState, tmp_years),
                                      setYears(Decay,                 tmp_years),
                                      Landuse)
-    SoilCarbonInit <- tmp[,tail(tmp_years,1),"actualstate"]
+    SoilCarbonInit <- collapseDim(tmp[,tail(tmp_years,1),"actualstate"], keepdim = 2)
   }
 
   return(list( x            = SoilCarbonInit,
