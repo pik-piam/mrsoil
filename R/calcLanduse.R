@@ -2,7 +2,7 @@
 #' @description Calculates the cellular MAgPIE landuse area based on LUH2v2 or LanduseInitialisation data.
 #'
 #' @param landuse_scen landuse configuration
-#' @param type "total" or "change"
+#' @param output "total" or "change"
 #' @return List of magpie object with results on country or cellular level, weight, unit and description.
 #' @author Kristine Karstens
 #' @examples
@@ -14,7 +14,7 @@
 #' @importFrom stringr str_match
 
 
-calcLanduse <- function(landuse_scen="default", type="total"){
+calcLanduse <- function(landuse_scen="default", output="total"){
 
   if(grepl("spinup", landuse_scen)) states <- paste0("states", str_match(landuse_scen, "_\\d+to\\d+"))
   else                              states <- "states_1900to2010"
@@ -31,7 +31,7 @@ calcLanduse <- function(landuse_scen="default", type="total"){
     Landuse[,reset_years,] <- setYears(Landuse[,rep(freeze_year,sum(reset_years)),], getYears(Landuse[,reset_years,]))
   }
 
-  if(type=="change"){
+  if(output=="change"){
     Landuse <- toolLanduseChange(calcOutput("Landuse", landuse_scen=landuse_scen, aggregate=FALSE))
   }
 
