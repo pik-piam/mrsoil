@@ -4,12 +4,10 @@
 \alias{toolLanduseChange}
 \title{toolLanduseChange}
 \usage{
-toolLanduseChange(landuse, landuse_scen)
+toolLanduseChange(landuse)
 }
 \arguments{
 \item{landuse}{landuse data}
-
-\item{landuse_scen}{landuse configuration}
 }
 \value{
 List of magpie object with results on cellular level
