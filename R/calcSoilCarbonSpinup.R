@@ -24,7 +24,12 @@ calcSoilCarbonSpinup <- function(spinup_start=1510, cfg_default=NULL){
   Decay                 <- calcOutput("Decay", tillage=cfg_default$tillage, climate_scen=cfg_default$climate,
                                       years=recycling_years, aggregate = FALSE)
 
-  SoilCarbonInit        <- setYears(SoilCarbonSteadyState[,1,], spinup_start)
+  SoilCarbonInit        <- setYears(mbind(setNames(SoilCarbonSteadyState[,1,"natveg"],
+                                                   gsub("natveg","crop",getNames(SoilCarbonSteadyState[,,"natveg"]))),
+                                          SoilCarbonSteadyState[,1,"natveg"]), spinup_start)
+
+
+    setNames(SoilCarbonSteadyState[,1,], spinup_start)
 
   for(i in 1:((model_start-1-spinup_start)/recycling_length)){
 
