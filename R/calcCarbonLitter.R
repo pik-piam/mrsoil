@@ -36,24 +36,25 @@ calcCarbonLitter <- function(litter_param="CenturyAverage", climate_scen="defaul
   out          <- new.magpie(getCells(litfallc), getYears(litfallc), names, fill = 0)
   getSets(out) <- c("iso","cell","t","inputs","attributes")
 
-  # if(litter_param=="CenturyAverage"){
-  #
-  #   tmp          <- readSource("CENTURY", subtype="tree", convert=FALSE)
-  #   param.litter <- collapseNames(tmp[,,1:2])
-  #   param.litter[,,"nc_ratio"]  <- signif(mean(tmp[,,"nc_ratio"]),2)
-  #   param.litter[,,"lgc_ratio"] <- signif(mean(tmp[,,"lgc_ratio"]),2)
-  #
-  # } else {
-  #
-  #   param.litter <- signif(collapseNames(readSource("CENTURY", subtype="tree", convert=FALSE)[,,litter_param]),2)
-  # }
+  tmp          <- readSource("CENTURY", subtype="tree", convert=FALSE)
+  names        <- as.vector(outer(c("leaf","wood"), getItems(tmp, dim=3.3), FUN = "paste", sep="."))
+  param.litter <- new.magpie("GLO",NULL, names, fill = 0)
+  woody_parts  <- c("coarse_roots","large_wood","fine_branches")
+  soft_tissue  <- c("leaves","fine_roots")
 
-  out[,,"wood.LC"] <- 0.25
-  out[,,"wood.NC"] <- 0.0126/0.44
+  if(!litter_param=="CenturyAverage") tmp <- collapseNames(tmp[,,litter_param])
+
+  param.litter[,,"leaf.nc_ratio"]  <- signif(mean(tmp[,,"nc_ratio"][,,soft_tissue]),2)
+  param.litter[,,"leaf.lgc_ratio"] <- signif(mean(tmp[,,"lgc_ratio"][,,soft_tissue]),2)
+  param.litter[,,"wood.nc_ratio"]  <- signif(mean(tmp[,,"nc_ratio"][,,woody_parts]),2)
+  param.litter[,,"wood.lgc_ratio"] <- signif(mean(tmp[,,"lgc_ratio"][,,woody_parts]),2)
+
+  out[,,"wood.LC"] <- param.litter[,,"wood.lgc_ratio"]
+  out[,,"wood.NC"] <- 1/1025    #param.litter[,,"wood.nc_ratio"] - CENTURY nitrogen too high, using LPJmL estimates
   out[,,"wood.c"]  <- litfallc[,,"wood"]
 
-  out[,,"leaf.LC"] <- 0.049/0.44
-  out[,,"leaf.NC"] <- 0.0126/0.44
+  out[,,"leaf.LC"] <- param.litter[,,"leaf.lgc_ratio"]
+  out[,,"leaf.NC"] <- 1/68      #param.litter[,,"leaf.nc_ratio"] - CENTURY nitrogen too high, using LPJmL estimates
   out[,,"leaf.c"]  <- litfallc[,,"leaf"]
 
   out <- toolConditionalReplace(out, conditions = c("is.na()","<0", "is.infinite()"), replaceby = 0)
