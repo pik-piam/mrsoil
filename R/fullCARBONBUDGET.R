@@ -35,7 +35,7 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
                 climate      = "default",
                 tillage      = "histtill",
                 litter_param = "CenturyAverage",
-                soilinit     = "spinup")
+                soilinit     =  1510)
 
     if(grepl("constManure-",   name))  cfg$manure   <- gsub(".*(constManure-)(\\d{4}).*",  "freeze\\2",name)
     if(grepl("constResidues-", name))  cfg$residue  <- gsub(".*(constResidues-)(\\d{4}).*","freeze\\2",name)
@@ -56,19 +56,12 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
       cfg$residue  <- gsub(".*(constManagement-)(\\d{4}).*", "freeze\\2",name)
       cfg$manure   <- gsub(".*(constManagement-)(\\d{4}).*", "freeze\\2",name)
     }
-    if(grepl("Initial-", name))    cfg$soilinit     <- gsub(".*(Initial-)(.[^_]*).*","\\2",name)
+    if(grepl("Initial-", name))    cfg$soilinit     <- as.numeric(gsub(".*(Initial-)(.[^_]*).*","\\2",name))
     if(grepl("LitterPNV-", name))  cfg$litter_param <- gsub(".*(LitterPNV-)(.[^_]*).*","\\2",name)
     return(cfg)
   }
   cfg         <- .cfg(dev)
   cfg_default <- .cfg("")
-
-  if(grepl("ResAllom", dev)){
-
-    version <- gsub("(.*)ResAllom_(.*)$","\\2", dev)
-    options(prodatt_folder=paste0("Version_",version,"/"))
-    options(hi_folder=paste0("Version_",version,"/"))
-  }
 
   ### historic output only
   if(grepl("histManagement",dev)){
@@ -104,5 +97,5 @@ fullCARBONBUDGET <- function(rev=0.1, dev=""){
   ### historic & scenario output
   calcOutput("Landuse", aggregate=FALSE, landuse_scen=cfg$landuse,                  years=years, file="Landuse.rds")
   calcOutput("Landuse", aggregate=FALSE, landuse_scen=cfg$landuse, output="change", years=years, file="LanduseChange.rds")
-  calcOutput("SoilCarbon",    output="full", cfg=cfg, cfg_default=cfg_default, aggregate=FALSE, years=years, file="SoilCarbon.rds")
+  calcOutput("SoilCarbon", output="full", cfg=cfg, cfg_default=cfg_default, aggregate=FALSE, years=years, file="SoilCarbon.rds")
 }

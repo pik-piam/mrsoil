@@ -4,16 +4,9 @@
 \alias{calcSoilCarbon}
 \title{calcSoilCarbon}
 \usage{
-calcSoilCarbon(
-  spinup_start = "1510",
-  output = "full",
-  cfg = NULL,
-  cfg_default = NULL
-)
+calcSoilCarbon(output = "full", cfg = NULL, cfg_default = NULL)
 }
 \arguments{
-\item{spinup_start}{start of initialization with natural vegetation stocks}
-
 \item{output}{'full' - all important soil related values, 'reduced' - just SOC state values}
 
 \item{cfg}{run configuration}
