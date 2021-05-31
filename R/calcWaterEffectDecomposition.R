@@ -31,9 +31,8 @@ calcWaterEffectDecomposition <- function(irrigation="mixedirrig", climate_scen="
 
     if(grepl("freeze", climate_scen)){
       freeze_year <- as.integer(gsub("freeze","", climate_scen))
-      reset_years <- getYears(cell.prep, as.integer=TRUE) >= freeze_year
-      cell.prep[,reset_years,] <- setYears(cell.prep[,rep(freeze_year,sum(reset_years)),], getYears(cell.prep[,reset_years,]))
-      cell.pet[,reset_years,]  <- setYears(cell.pet[,rep(freeze_year,sum(reset_years)),],  getYears(cell.pet[,reset_years,]))
+      cell.prep   <- toolFreezeAverage(cell.prep, freeze_year)
+      cell.pet    <- toolFreezeAverage(cell.pet,  freeze_year)
     }
 
     cell.mappet                   <- cell.prep/cell.pet

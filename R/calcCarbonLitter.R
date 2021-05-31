@@ -61,8 +61,7 @@ calcCarbonLitter <- function(litter_param="CenturyAverage", climate_scen="defaul
 
   if(grepl("freeze", climate_scen)){
     freeze_year <- as.integer(gsub("freeze","",climate_scen))
-    reset_years <- getYears(out, as.integer=TRUE) >= freeze_year
-    out[,reset_years,] <- setYears(out[,rep(freeze_year,sum(reset_years)),], getYears(out[,reset_years,]))
+    out         <- toolFreezeAverage(out, freeze_year)
   }
 
   out <- out[,sort(findset("past_soc")),]

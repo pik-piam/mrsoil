@@ -30,9 +30,8 @@ calcTempEffectDecomposition <- function(climate_scen="default") {
   cell.t_Factor       <- dimSums(cell.t_monthFactor, dim=3)/12
 
   if(grepl("freeze", climate_scen)){
-    freeze_year <- as.integer(gsub("freeze","", climate_scen))
-    reset_years <- getYears(cell.t_Factor, as.integer=TRUE) >= freeze_year
-    cell.t_Factor[,reset_years,] <- setYears(cell.t_Factor[,rep(freeze_year,sum(reset_years)),], getYears(cell.t_Factor[,reset_years,]))
+    freeze_year   <- as.integer(gsub("freeze","", climate_scen))
+    cell.t_Factor <- toolFreezeAverage (cell.t_Factor, freeze_year)
   }
 
   return(list(
