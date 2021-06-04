@@ -38,8 +38,8 @@ calcSoilCarbon <- function(output="full", cfg=NULL, cfg_default=NULL){
 
   } else if(cfg$soilinit<1){
 
-    years <- getYears(Landuse, as.integer=TRUE)
-    SoilCarbonInit        <- setYears(SoilCarbonSteadyState[,years[1],],years[1]-1)
+
+    SoilCarbonInit        <- setYears(SoilCarbonSteadyState[,"y1901",],"y1900")
 
   } else {
 
