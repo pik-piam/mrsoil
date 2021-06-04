@@ -29,10 +29,17 @@ calcSoilCarbon <- function(output="full", cfg=NULL, cfg_default=NULL){
 
     years <- getYears(Landuse, as.integer=TRUE)
     years <- years[years >= cfg$soilinit]
-    SoilCarbonInit        <- setYears(SoilCarbonSteadyState[,years[1],],years[1]-1)
+    SoilCarbonInit        <- mbind(setNames(setYears(SoilCarbonSteadyState[,years[1],"natveg"],years[1]-1),
+                                            paste0("crop.",getNames(SoilCarbonSteadyState[,,"natveg"], dim=2))),
+                                   setYears(SoilCarbonSteadyState[,years[1],"natveg"],years[1]-1))
     SoilCarbonSteadyState <- SoilCarbonSteadyState[,years,]
     Decay                 <- Decay[,years,]
     Landuse               <- Landuse[,c(years[1]-1,years),]
+
+  } else if(cfg$soilinit<1){
+
+    years <- getYears(Landuse, as.integer=TRUE)
+    SoilCarbonInit        <- setYears(SoilCarbonSteadyState[,years[1],],years[1]-1)
 
   } else {
 
