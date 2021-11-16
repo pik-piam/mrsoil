@@ -16,7 +16,7 @@ Function that produces the complete cellular data set of the SOC budget
 }
 \examples{
 \dontrun{
-  retrieveData("CARBONBUDGET", rev=0, mainfolder="pathtowhereallfilesarestored")
+retrieveData("CARBONBUDGET", rev = 0, mainfolder = "pathtowhereallfilesarestored")
 }
 }
 \seealso{

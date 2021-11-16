@@ -96,8 +96,13 @@ fullCARBONBUDGET <- function(rev = 0.1, dev = "") {
     calcOutput("ValidGridSOCStocks", datasource = "GSOC", aggregate = "IPCC", file = "GSOC.rds")
     calcOutput("ValidGridSOCStocks", datasource = "SoilGrids", aggregate = "IPCC", file = "SoilGrids.rds")
     calcOutput("ValidGridSOCStocks", datasource = "LPJmL4Paper", aggregate = "IPCC", file = "LPJmL4.rds")
-    calcOutput("ValidGridSOCStocks", datasource = "SoilGrids2",
+    calcOutput("ValidGridSOCStocks", datasource = "SoilGrids2:new",
                intensive = TRUE, aggregate = FALSE, file = "SoilGrids2.rds")
+    calcOutput("ValidGridSOCStocks", datasource = "SoilGrids2:q05_new",
+               intensive = TRUE, aggregate = FALSE, file = "SoilGrids2_Q0p05.rds")
+    calcOutput("ValidGridSOCStocks", datasource = "SoilGrids2:q95_new",
+               intensive = TRUE, aggregate = FALSE, file = "SoilGrids2_Q0p95.rds")
+
     calcOutput("ValidGridSOCStocks", datasource = "LPJmL4_for_MAgPIE_84a69edd:CRU4:historical",
                intensive = TRUE, aggregate = FALSE, file = "LPJmL4_CRU.rds")
     calcOutput("ClimateClass", source = "IPCC_reduced", aggregate = FALSE, file = "IPCC_reduced.rds")
