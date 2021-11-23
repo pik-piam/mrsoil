@@ -20,7 +20,7 @@ retrieveData("CARBONBUDGET", rev = 0, mainfolder = "pathtowhereallfilesarestored
 }
 }
 \seealso{
-\code{\link{readSource}},\code{\link{getCalculations}},\code{\link{calcOutput}},\code{\link{setConfig}}
+\code{\link{readSource}},\code{\link{getCalculations}},\code{\link{calcOutput}}
 }
 \author{
 Kristine Karstens
