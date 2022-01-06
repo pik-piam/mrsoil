@@ -4,13 +4,13 @@
 #' @return magpie object in cellular resolution
 #' @author Kristine Karstens
 #'
-#' @param tillage 'historicNoTill' (default) or 'ruleBased'; 'histroricNoTill' is based on the same assunmptions as 'ruleBased',
+2#' @param tillage 'historicNoTill' (default) or 'ruleBased'; 'histroricNoTill' is based on the same assunmptions as 'ruleBased',
 #'                 but additionally accounts for historic data on no tillage areas based on Porwolliks datasets.
 #'                 'ruleBased' assumes full tillage for annual crops, and reduced tillage for perennials.
 #' @examples
 #' \dontrun{ calcOutput("TillageArea", aggregate = FALSE) }
 #'
-#'@importFrom magpiesets findset
+#' @importFrom magpiesets findset
 
 calcTillageArea <- function(tillage="historicNoTill") {
 
