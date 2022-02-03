@@ -47,7 +47,7 @@ calcCarbonLitter <- function(litter_param = "Century:Average:toC", climate_scen 
                                                       config   = c("toDM", "toC", "ligRoot1",
                                                                    "ligRoot1p5", "ligRoot2")))
 
-  if (litter_param$source == "Centrury") {
+  if (litter_param$source == "Century") {
 
     # Use Average or specified plant functional type of CENTURY
 
