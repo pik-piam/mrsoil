@@ -12,7 +12,7 @@
 
 calcSOCDebt <- function() {
 
-  x  <- readSource("SoilCarbonDebt", convert = "onlycorrect")
+  x <- toolCoord2Isocell(readSource("SoilCarbonDebt", convert = "onlycorrect"))
   x <- x[ , , "SOCS_noLU", invert = TRUE] - x[ , , "SOCS_noLU"]
 
   area  <- calcOutput("LUH2v2", landuse_types = "LUH2v2", irrigation = FALSE, cellular = TRUE, aggregate = FALSE)

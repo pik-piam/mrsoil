@@ -31,7 +31,7 @@ fullCARBONBUDGET <- function(rev = 0.1, dev = "") {
                 landuse      = "default",
                 climate      = "default",
                 tillage      = "histtill",
-                litter_param = "CenturyAverage",
+                litter_param = "Century:Average:toC",
                 soilinit     =  1510)
 
     if (grepl("constManure-",   name)) cfg$manure   <- gsub(".*(constManure-)(\\d{4}).*",  "freeze\\2", name)
@@ -54,10 +54,11 @@ fullCARBONBUDGET <- function(rev = 0.1, dev = "") {
       cfg$manure   <- gsub(".*(constManagement-)(\\d{4}).*", "freeze\\2", name)
     }
     if (grepl("Initial-", name)) cfg$soilinit     <- as.numeric(gsub(".*(Initial-)(.[^_]*).*", "\\2", name))
-    if (grepl("LitterPNV-", name)) cfg$litter_param <- gsub(".*(LitterPNV-)(.[^_]*).*", "\\2", name) # nolint
+    if (grepl("LitterPNV-", name)) cfg$litter_param <- gsub(".*(LitterPNV-)(.[^_]*).*", "\\2", name)
+
     return(cfg)
   }
-  cfg         <- .cfg(dev)
+  cfg        <- .cfg(dev)
   cfgDefault <- .cfg("")
 
   ### historic output only

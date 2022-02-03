@@ -1,8 +1,8 @@
 Package: mrsoil
 Type: Package
 Title: MadRat Soil Organic Carbon Budget Library
-Version: 1.16.0
-Date: 2022-01-06
+Version: 1.17.0
+Date: 2022-02-03
 Authors@R: c(person("Kristine", "Karstens", email = "karstens@pik-potsdam.de", role = c("aut","cre")),
              person("Jan Philipp", "Dietrich", email = "dietrich@pik-potsdam.de", role = "aut"))
 Description: This packages provides functions for soil organic carbon budget for mineral soils using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories.
@@ -21,7 +21,8 @@ Imports:
     ncdf4,
     utils,
     xml2,
-    stringr
+    stringr,
+    jsonlite
 License: LGPL-3 | file LICENSE
 URL: https://github.com/pik-piam/mrsoil, https://doi.org/10.5281/zenodo.4317933
 BugReports: https://github.com/pik-piam/mrsoil/issues

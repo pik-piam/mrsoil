@@ -4,7 +4,10 @@
 \alias{calcCarbonLitter}
 \title{calcCarbonLitter}
 \usage{
-calcCarbonLitter(litter_param = "CenturyAverage", climate_scen = "default")
+calcCarbonLitter(
+  litter_param = "Century:Average:toC",
+  climate_scen = "default"
+)
 }
 \arguments{
 \item{litter_param}{litter scenario}
@@ -18,9 +21,8 @@ List of magpie object with results on cellular level, weight on cellular level, 
 Calculates Carbon Input from litter
 }
 \examples{
-
 \dontrun{
-  calcOutput("CarbonLitter")
+calcOutput("CarbonLitter")
 }
 }
 \author{
