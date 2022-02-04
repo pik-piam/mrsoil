@@ -30,9 +30,10 @@ toolSoilCarbonCycling <- function(SoilCarbonInit, SoilCarbonSteadyState, Decay, 
   Decay[Decay>1]        <- 1
 
   #Initialize outputs
-  SoilCarbon             <- mbind(SoilCarbonInit, SoilCarbonSteadyState)
+  SoilCarbon             <- mbind(collapseDim(SoilCarbonInit[, , "actualstate"]), SoilCarbonSteadyState)
+  SoilCarbonNatural      <- mbind(collapseDim(SoilCarbonInit[, , "naturalstate"]), SoilCarbonSteadyState)
   SoilCarbon[,years,]    <- 0
-  SoilCarbonTransfer     <- SoilCarbonInter   <-  SoilCarbonNatural     <- SoilCarbon
+  SoilCarbonTransfer     <- SoilCarbonInter   <- SoilCarbon
   SoilCarbonTransfer[]   <- SoilCarbonInter[] <- 0
 
   for(year_x in years){

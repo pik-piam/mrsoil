@@ -27,6 +27,7 @@ calcSoilCarbon <- function(output="full", cfg=NULL, cfg_default=NULL){
 
   if(cfg$soilinit>1900){
 
+    #change: add natural
     years <- getYears(Landuse, as.integer=TRUE)
     years <- years[years >= cfg$soilinit]
     SoilCarbonInit        <- mbind(setNames(setYears(SoilCarbonSteadyState[,years[1],"natveg"],years[1]-1),
@@ -38,7 +39,7 @@ calcSoilCarbon <- function(output="full", cfg=NULL, cfg_default=NULL){
 
   } else if(cfg$soilinit<1){
 
-
+    #change: add natural
     SoilCarbonInit        <- setYears(SoilCarbonSteadyState[,"y1901",],"y1900")
 
   } else {

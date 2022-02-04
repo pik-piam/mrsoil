@@ -24,9 +24,14 @@ calcSoilCarbonSpinup <- function(spinup_start=1510, cfg_default=NULL){
   Decay                 <- calcOutput("Decay", tillage=cfg_default$tillage, climate_scen=cfg_default$climate,
                                       years=recycling_years, aggregate = FALSE)
 
-  SoilCarbonInit        <- setYears(mbind(setNames(SoilCarbonSteadyState[,1,"natveg"],
-                                                   gsub("natveg","crop",getNames(SoilCarbonSteadyState[,,"natveg"]))),
-                                          SoilCarbonSteadyState[,1,"natveg"]), spinup_start)
+  names                 <- as.vector(outer(c("actualstate", "naturalstate"),
+                                           getItems(Decay, dim = 3),
+                                           paste, sep = "."))
+  SoilCarbonInit        <- new.magpie(getItems(Decay), spinup_start, names)
+  SoilCarbonInit[, , "actualstate.crop"]   <- SoilCarbonSteadyState[, 1, "natveg"]
+  SoilCarbonInit[, , "actualstate.natveg"] <- SoilCarbonSteadyState[, 1, "natveg"]
+  SoilCarbonInit[, , "naturalstate.crop"]  <- SoilCarbonSteadyState[, 1, "natveg"]
+  SoilCarbonInit[, , "naturalstate.crop"]  <- SoilCarbonSteadyState[, 1, "natveg"]
 
   for(i in 1:((model_start-1-spinup_start)/recycling_length)){
 
@@ -39,7 +44,7 @@ calcSoilCarbonSpinup <- function(spinup_start=1510, cfg_default=NULL){
                                      setYears(SoilCarbonSteadyState, tmp_years),
                                      setYears(Decay,                 tmp_years),
                                      Landuse)
-    SoilCarbonInit <- collapseDim(tmp[,tail(tmp_years,1),"actualstate"], keepdim = 2)
+    SoilCarbonInit <- collapseDim(tmp[, tail(tmp_years, 1), c("actualstate", "naturalstate")], keepdim = 2)
   }
 
   return(list( x            = SoilCarbonInit,
