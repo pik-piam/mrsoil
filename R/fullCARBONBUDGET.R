@@ -22,7 +22,7 @@ fullCARBONBUDGET <- function(rev = 0.1, dev = "") {
 
   years <- sort(findset("past_all"))
 
-  .cfg <- function(name) {
+  .cfg <- function(name, init = FALSE) {
     ### Management Scenarios
     cfg <- list(manure       = "default",
                 residue      = "default",
@@ -34,32 +34,36 @@ fullCARBONBUDGET <- function(rev = 0.1, dev = "") {
                 litter_param = "Century:Average:toC",
                 soilinit     =  1510)
 
-    if (grepl("constManure-",   name)) cfg$manure   <- gsub(".*(constManure-)(\\d{4}).*",  "freeze\\2", name)
-    if (grepl("constResidues-", name)) cfg$residue  <- gsub(".*(constResidues-)(\\d{4}).*", "freeze\\2", name)
-    if (grepl("constYield-",    name)) cfg$yield    <- gsub(".*(constYield-)(\\d{4}).*",   "freeze\\2", name)
-    if (grepl("constTillage-",  name)) cfg$tillage  <- gsub(".*(constTillage-)(.[^_]*).*", "\\2", name)
-    if (grepl("constResrate-",  name)) cfg$rrecycle <- gsub(".*(constResrate-)(\\d{4}).*", "freeze\\2", name)
-    if (grepl("constLanduse-",  name)) cfg$landuse  <- gsub(".*(constLanduse-)(\\d{4}).*", "freeze\\2", name)
-    if (grepl("constClimate-",  name)) cfg$climate  <- gsub(".*(constClimate-)(\\d{4}).*", "freeze\\2", name)
-
-    if (grepl("constManagement2-",    name)) {
-      cfg$tillage  <- "mixedtill"
-      cfg$rrecycle <- gsub(".*(constManagement2-)(\\d{4}).*", "freeze\\2", name)
-      cfg$manure   <- gsub(".*(constManagement2-)(\\d{4}).*", "freeze\\2", name)
-      cfg$yield    <- gsub(".*(constManagement2-)(\\d{4}).*", "freeze\\2", name)
-    }
-    if (grepl("constManagement-",   name)) {
-      cfg$tillage  <- "mixedtill"
-      cfg$residue  <- gsub(".*(constManagement-)(\\d{4}).*", "freeze\\2", name)
-      cfg$manure   <- gsub(".*(constManagement-)(\\d{4}).*", "freeze\\2", name)
-    }
-    if (grepl("Initial-", name)) cfg$soilinit     <- as.numeric(gsub(".*(Initial-)(.[^_]*).*", "\\2", name))
     if (grepl("LitterPNV-", name)) cfg$litter_param <- gsub(".*(LitterPNV-)(.[^_]*).*", "\\2", name)
+
+    if (!init){ # ignore settings for spinup
+      if (grepl("constManure-",   name)) cfg$manure   <- gsub(".*(constManure-)(\\d{4}).*",  "freeze\\2", name)
+      if (grepl("constResidues-", name)) cfg$residue  <- gsub(".*(constResidues-)(\\d{4}).*", "freeze\\2", name)
+      if (grepl("constYield-",    name)) cfg$yield    <- gsub(".*(constYield-)(\\d{4}).*",   "freeze\\2", name)
+      if (grepl("constTillage-",  name)) cfg$tillage  <- gsub(".*(constTillage-)(.[^_]*).*", "\\2", name)
+      if (grepl("constResrate-",  name)) cfg$rrecycle <- gsub(".*(constResrate-)(\\d{4}).*", "freeze\\2", name)
+      if (grepl("constLanduse-",  name)) cfg$landuse  <- gsub(".*(constLanduse-)(\\d{4}).*", "freeze\\2", name)
+      if (grepl("constClimate-",  name)) cfg$climate  <- gsub(".*(constClimate-)(\\d{4}).*", "freeze\\2", name)
+
+      if (grepl("constManagement2-",    name)) {
+        cfg$tillage  <- "mixedtill"
+        cfg$rrecycle <- gsub(".*(constManagement2-)(\\d{4}).*", "freeze\\2", name)
+        cfg$manure   <- gsub(".*(constManagement2-)(\\d{4}).*", "freeze\\2", name)
+        cfg$yield    <- gsub(".*(constManagement2-)(\\d{4}).*", "freeze\\2", name)
+      }
+      if (grepl("constManagement-",   name)) {
+        cfg$tillage  <- "mixedtill"
+        cfg$residue  <- gsub(".*(constManagement-)(\\d{4}).*", "freeze\\2", name)
+        cfg$manure   <- gsub(".*(constManagement-)(\\d{4}).*", "freeze\\2", name)
+      }
+      if (grepl("Initial-", name)) cfg$soilinit     <- as.numeric(gsub(".*(Initial-)(.[^_]*).*", "\\2", name))
+    }
 
     return(cfg)
   }
+
   cfg        <- .cfg(dev)
-  cfgDefault <- .cfg("")
+  cfgInit <- .cfg(dev, init = TRUE)
 
   ### historic output only
   if (grepl("histManagement", dev)) {
@@ -90,7 +94,7 @@ fullCARBONBUDGET <- function(rev = 0.1, dev = "") {
                file = "SteadyState.rds")
     calcOutput("SteadyState",      cfg = cfg, aggregate = FALSE, output = "alpha_in", years = years,
                file = "CarbonInflow.rds")
-    calcOutput("SoilCarbonSpinup", cfg_default = cfgDefault, file = "SoilCarbonSpinup.rds")
+    calcOutput("SoilCarbonSpinup", cfg_default = cfgInit, file = "SoilCarbonSpinup.rds")
 
     ### validation and post-processing
     calcOutput("ValidGridSOCStocks", datasource = "WISE", aggregate = "IPCC", file = "WISE.rds")
@@ -119,6 +123,6 @@ fullCARBONBUDGET <- function(rev = 0.1, dev = "") {
              years = years, file = "Landuse.rds")
   calcOutput("Landuse", aggregate = FALSE, landuse_scen = cfg$landuse, output = "change",
              years = years, file = "LanduseChange.rds")
-  calcOutput("SoilCarbon", output = "full", cfg = cfg, cfg_default = cfgDefault,
+  calcOutput("SoilCarbon", output = "full", cfg = cfg, cfg_default = cfgInit,
              aggregate = FALSE, years = years, file = "SoilCarbon.rds")
 }

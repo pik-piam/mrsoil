@@ -27,7 +27,7 @@ calcSoilCarbonSpinup <- function(spinup_start=1510, cfg_default=NULL){
   names                 <- as.vector(outer(c("actualstate", "naturalstate"),
                                            getItems(Decay, dim = 3),
                                            paste, sep = "."))
-  SoilCarbonInit        <- new.magpie(getItems(Decay), spinup_start, names)
+  SoilCarbonInit        <- new.magpie(getItems(Decay, dim = 1), spinup_start, names)
   SoilCarbonInit[, , "actualstate.crop"]   <- SoilCarbonSteadyState[, 1, "natveg"]
   SoilCarbonInit[, , "actualstate.natveg"] <- SoilCarbonSteadyState[, 1, "natveg"]
   SoilCarbonInit[, , "naturalstate.crop"]  <- SoilCarbonSteadyState[, 1, "natveg"]
