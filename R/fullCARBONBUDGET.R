@@ -31,7 +31,7 @@ fullCARBONBUDGET <- function(rev = 0.1, dev = "") {
                 landuse      = "default",
                 climate      = "default",
                 tillage      = "histtill",
-                litter_param = "Century:Average:toC",
+                litter_param = "Brovkin-LPJmLFPC",
                 soilinit     =  1510)
 
     if (grepl("LitterPNV-", name)) cfg$litter_param <- gsub(".*(LitterPNV-)(.[^_]*).*", "\\2", name)
@@ -62,7 +62,7 @@ fullCARBONBUDGET <- function(rev = 0.1, dev = "") {
     return(cfg)
   }
 
-  cfg        <- .cfg(dev)
+  cfg     <- .cfg(dev)
   cfgInit <- .cfg(dev, init = TRUE)
 
   ### historic output only
@@ -96,14 +96,18 @@ fullCARBONBUDGET <- function(rev = 0.1, dev = "") {
                file = "CarbonInflow.rds")
     calcOutput("SoilCarbonSpinup", cfg_default = cfgInit, file = "SoilCarbonSpinup.rds")
 
-    ### validation and post-processing
+    # validation and post-processing
+    ### climate zone specific data
     calcOutput("ValidGridSOCStocks", datasource = "WISE", aggregate = "IPCC", file = "WISE.rds")
     calcOutput("ValidGridSOCStocks", datasource = "GSOC", aggregate = "IPCC", file = "GSOC.rds")
     calcOutput("ValidGridSOCStocks", datasource = "SoilGrids", aggregate = "IPCC", file = "SoilGrids.rds")
     calcOutput("ValidGridSOCStocks", datasource = "LPJmL4Paper", aggregate = "IPCC", file = "LPJmL4.rds")
+    calcOutput("ValidGridSOCStocks", datasource = "SoilGrids2:new", aggregate = "IPCC", file = "SoilGrids2.rds")
     calcOutput("ValidGridSOCStocks", datasource = "SOCDebtPaper", aggregate = "IPCC", file = "SOCDebtPaperC.rds")
+
+    ### grid level data
     calcOutput("ValidGridSOCStocks", datasource = "SoilGrids2:new",
-               intensive = TRUE, aggregate = FALSE, file = "SoilGrids2.rds")
+               intensive = TRUE, aggregate = FALSE, file = "SoilGrids2_grid.rds")
     calcOutput("ValidGridSOCStocks", datasource = "SoilGrids2:q05_new",
                intensive = TRUE, aggregate = FALSE, file = "SoilGrids2_Q0p05.rds")
     calcOutput("ValidGridSOCStocks", datasource = "SoilGrids2:q95_new",
@@ -112,8 +116,12 @@ fullCARBONBUDGET <- function(rev = 0.1, dev = "") {
                intensive = TRUE, aggregate = FALSE, file = "LPJmL4_CRU.rds")
     calcOutput("SOCDebt", aggregate = FALSE, file = "SOCDebtSanderman.rds")
 
+    ### point data
+    calcOutput("calcSOCPointData", aggregate = FALSE, file = "calcSOCPointData.cs2")
+
     calcOutput("ClimateClass", source = "IPCC_reduced", aggregate = FALSE, file = "IPCC_reduced.rds")
     calcOutput("ClimateClass", source = "IPCC",         aggregate = FALSE, file = "IPCC.rds")
+
     calcOutput("LPJmL", version = "LPJmL4", climatetype = "CRU_4", subtype = "vegc",
                years = years, aggregate = FALSE, round = 4, file = "CarbonVegetation.rds")
   }

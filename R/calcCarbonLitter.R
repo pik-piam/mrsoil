@@ -13,7 +13,7 @@
 #' @importFrom stats quantile
 #' @importFrom stringr str_split
 
-calcCarbonLitter <- function(litter_param = "Century:Average:toC", climate_scen = "default") {
+calcCarbonLitter <- function(litter_param = "Century-Average", climate_scen = "default") {
 
   # load and convert LPjmL data
   litfallc      <- readSource("LPJmL_new", subtype = "LPJmL4_for_MAgPIE_84a69edd:CRU4:historical:alitterfallc",
@@ -43,9 +43,7 @@ calcCarbonLitter <- function(litter_param = "Century:Average:toC", climate_scen 
   out[, , "leaf.c"]  <- litfallc[, , "leaf"]
 
   litter_param <- toolSplitSubtype(litter_param, list(source = c("Century", "Brovkin"),
-                                                      type   = NULL,
-                                                      config   = c("toDM", "toC", "ligRoot1",
-                                                                   "ligRoot1p5", "ligRoot2")))
+                                                      type   = NULL), sep = "-")
 
   if (litter_param$source == "Century") {
 
@@ -57,14 +55,14 @@ calcCarbonLitter <- function(litter_param = "Century:Average:toC", climate_scen 
 
     if (!(litter_param$type == "Average")) century <- collapseNames(century[, , str_split(litter_param$type, "_",
                                                                                           simplify = TRUE)[1]])
-    unitTrans <- ifelse(litter_param$config == "toDM", 0.45, 1)
+    c_concentration <- 0.45 #from lpjml
 
     out[, , "leaf.NC"] <- 1 / 68   # signif(mean(century[, , "nc_ratio"][, , soft_tissue]), 2)
     # CENTURY nitrogen too high, using LPJmL estimates
     out[, , "wood.NC"] <- 1 / 1025 # signif(mean(century[, , "nc_ratio"][, , woody_parts]), 2)
     # CENTURY nitrogen too high, using LPJmL estimates
-    out[, , "leaf.LC"] <- signif(mean(century[, , "lgc_ratio"][, , soft_tissue]), 2) / unitTrans
-    out[, , "wood.LC"] <- signif(mean(century[, , "lgc_ratio"][, , woody_parts]), 2) / unitTrans
+    out[, , "leaf.LC"] <- signif(mean(century[, , "lgc_ratio"][, , soft_tissue]), 2) / c_concentration
+    out[, , "wood.LC"] <- signif(mean(century[, , "lgc_ratio"][, , woody_parts]), 2) / c_concentration
 
   } else if (litter_param$source == "Brovkin") {
 
@@ -88,11 +86,11 @@ calcCarbonLitter <- function(litter_param = "Century:Average:toC", climate_scen 
     brovkin   <- collapseDim(readSource("Brovkin", convert = FALSE),
                              dim = "LPJ_plant_functional_type")[, , "concentration", pmatch = TRUE]
 
-    # Translate leaf parameters to fine root and wood parameters (including switch for lignin via litter_param)
-    root2leaf_lig <-  c(ligRoot1 = 1,
-                        ligRoot1p5 = 1.5,
-                        ligRoot2 = 2)[litter_param$config]
+    # Translate leaf parameters to fine root and wood parameters
+    # Following Guo. et al., 2021 (extracted from Fig. 5(e))
+    root2leaf_lig <-  function(leaf_lig) return(13 + 0.9 * leaf_lig) # leaf_lig as fraction
 
+    # Following LPJmL parameter specification
     root2leaf_n   <- 1 / 1.16 #from lpjml (par.pft - "ratio" for "root")
     wood2leaf_n   <- 1 / 13.5 #from lpjml (par.pft - "ratio" for "sapwood")
 
@@ -111,7 +109,7 @@ calcCarbonLitter <- function(litter_param = "Century:Average:toC", climate_scen 
                                   dim = 3.1) / c_concentration
 
     out[, , "leaf.LC"] <- dimSums(fpc * (    leaf_fraction  * brovkin[, , "lig_concentration"] / 100 +
-                                        (1 - leaf_fraction) * brovkin[, , "lig_concentration"] / 100 * root2leaf_lig),
+                                        (1 - leaf_fraction) * root2leaf_lig(brovkin[, , "lig_concentration"]) / 100),
                                   dim = 3.1) / c_concentration
 
     out[, , "wood.NC"] <- dimSums(fpc[, , woody_pfts] / tree_frac *

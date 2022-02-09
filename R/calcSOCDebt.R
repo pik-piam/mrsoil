@@ -22,6 +22,6 @@ calcSOCDebt <- function() {
     x            = x,
     weight       = area,
     unit         = "tons C per ha",
-    description  = "Soil Carbon Debt according to Sanderman et al.",
+    description  = "Soil Carbon Debt according to Sanderman et al., 2017",
     isocountries = FALSE))
 }
