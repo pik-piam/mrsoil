@@ -86,7 +86,7 @@ fullCARBONBUDGET <- function(rev = 0.1, dev = "") {
                res.scenario = cfg$residue, aggregate = FALSE, file = "CarbonResidues.nc")
     calcOutput("CarbonManure",     scenario = cfg$manure, aggregate = FALSE, file = "CarbonManure.nc")
     calcOutput("CarbonLitter",     litter_param = cfg$litter_param, climate_scen = cfg$climate,
-               aggregate = FALSE, years = years, file = "CarbonLitter.c")
+               aggregate = FALSE, years = years, file = "CarbonLitter.nc")
     calcOutput("CarbonInput",      cfg = cfg, aggregate = FALSE, years = years, file = "CarbonInput.nc")
     calcOutput("Decay",            tillage = cfg$tillage, climate_scen = cfg$climate, aggregate = FALSE,
                years = years, file = "Decay.nc")
