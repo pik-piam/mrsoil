@@ -70,67 +70,67 @@ fullCARBONBUDGET <- function(rev = 0.1, dev = "") {
 
     ### from mrcommons
     calcOutput("ResFieldBalancePast", cellular = TRUE, products = "kres", aggregate = FALSE,
-               scenario = cfg$yield, file = "ResiduesAg_FieldBalance.nc")
+               scenario = cfg$yield, file = "ResiduesAg_FieldBalance.rds")
     calcOutput("ResBiomass",          cellular = TRUE, aggregate = FALSE,
-               scenario = cfg$yield, file = "Residue_Biomass.nc")
+               scenario = cfg$yield, file = "Residue_Biomass.rds")
     calcOutput("Production",     products = "kcr",  cellular = TRUE, calibrated = TRUE,
-               attributes = "c", aggregate = FALSE, file = "Crop_Harvest.nc")
-    calcOutput("FAOmassbalance",      aggregate = FALSE, file = "FAOmassbalance_ISO.csv")
+               attributes = "c", aggregate = FALSE, file = "Crop_Harvest.rds")
+    calcOutput("FAOmassbalance",      aggregate = FALSE, file = "FAOmassbalance_ISO.rds")
     calcOutput("ManureRecyclingCroplandPast",     products = "kli", cellular = TRUE,
-               aggregate = FALSE, file = "Manure_recycled.nc")
+               aggregate = FALSE, file = "Manure_recycled.rds")
     calcOutput("Excretion",           cellular = TRUE,   attributes = "npkc",
-               aggregate = FALSE, file = "Manure_excreted.nc")
+               aggregate = FALSE, file = "Manure_excreted.rds")
 
     ### from mrsoil
     calcOutput("CarbonResidues",   yieldscenario = cfg$yield, rec.scenario = cfg$rrecycle,
-               res.scenario = cfg$residue, aggregate = FALSE, file = "CarbonResidues.nc")
-    calcOutput("CarbonManure",     scenario = cfg$manure, aggregate = FALSE, file = "CarbonManure.nc")
+               res.scenario = cfg$residue, aggregate = FALSE, file = "CarbonResidues.rds")
+    calcOutput("CarbonManure",     scenario = cfg$manure, aggregate = FALSE, file = "CarbonManure.rds")
     calcOutput("CarbonLitter",     litter_param = cfg$litter_param, climate_scen = cfg$climate,
-               aggregate = FALSE, years = years, file = "CarbonLitter.nc")
-    calcOutput("CarbonInput",      cfg = cfg, aggregate = FALSE, years = years, file = "CarbonInput.nc")
+               aggregate = FALSE, years = years, file = "CarbonLitter.rds")
+    calcOutput("CarbonInput",      cfg = cfg, aggregate = FALSE, years = years, file = "CarbonInput.rds")
     calcOutput("Decay",            tillage = cfg$tillage, climate_scen = cfg$climate, aggregate = FALSE,
-               years = years, file = "Decay.nc")
+               years = years, file = "Decay.rds")
     calcOutput("SteadyState",      cfg = cfg, aggregate = FALSE, output = "reduced", years = years,
-               file = "SteadyState.nc")
+               file = "SteadyState.rds")
     calcOutput("SteadyState",      cfg = cfg, aggregate = FALSE, output = "alpha_in", years = years,
-               file = "CarbonInflow.nc")
-    calcOutput("SoilCarbonSpinup", cfg_default = cfgInit, aggregate = FALSE, file = "SoilCarbonSpinup.nc")
+               file = "CarbonInflow.rds")
+    calcOutput("SoilCarbonSpinup", cfg_default = cfgInit, aggregate = FALSE, file = "SoilCarbonSpinup.rds")
 
     # validation and post-processing
     ### climate zone specific data
-    calcOutput("ValidGridSOCStocks", datasource = "WISE", aggregate = "IPCC", file = "WISE.csv")
-    calcOutput("ValidGridSOCStocks", datasource = "GSOC", aggregate = "IPCC", file = "GSOC.csv")
-    calcOutput("ValidGridSOCStocks", datasource = "SoilGrids", aggregate = "IPCC", file = "SoilGrids.csv")
-    calcOutput("ValidGridSOCStocks", datasource = "LPJmL4Paper", aggregate = "IPCC", file = "LPJmL4.csv")
-    calcOutput("ValidGridSOCStocks", datasource = "SoilGrids2:new", aggregate = "IPCC", file = "SoilGrids2.csv")
-    calcOutput("ValidGridSOCStocks", datasource = "SOCDebtPaper", aggregate = "IPCC", file = "SOCDebtPaperC.csv")
+    calcOutput("ValidGridSOCStocks", datasource = "WISE", aggregate = "IPCC", file = "WISE.rds")
+    calcOutput("ValidGridSOCStocks", datasource = "GSOC", aggregate = "IPCC", file = "GSOC.rds")
+    calcOutput("ValidGridSOCStocks", datasource = "SoilGrids", aggregate = "IPCC", file = "SoilGrids.rds")
+    calcOutput("ValidGridSOCStocks", datasource = "LPJmL4Paper", aggregate = "IPCC", file = "LPJmL4.rds")
+    calcOutput("ValidGridSOCStocks", datasource = "SoilGrids2:new", aggregate = "IPCC", file = "SoilGrids2.rds")
+    calcOutput("ValidGridSOCStocks", datasource = "SOCDebtPaper", aggregate = "IPCC", file = "SOCDebtPaperC.rds")
 
     ### grid level data
     calcOutput("ValidGridSOCStocks", datasource = "SoilGrids2:new",
-               intensive = TRUE, aggregate = FALSE, file = "SoilGrids2_grid.nc")
+               intensive = TRUE, aggregate = FALSE, file = "SoilGrids2_grid.rds")
     calcOutput("ValidGridSOCStocks", datasource = "SoilGrids2:q05_new",
-               intensive = TRUE, aggregate = FALSE, file = "SoilGrids2_Q0p05.nc")
+               intensive = TRUE, aggregate = FALSE, file = "SoilGrids2_Q0p05.rds")
     calcOutput("ValidGridSOCStocks", datasource = "SoilGrids2:q95_new",
-               intensive = TRUE, aggregate = FALSE, file = "SoilGrids2_Q0p95.nc")
+               intensive = TRUE, aggregate = FALSE, file = "SoilGrids2_Q0p95.rds")
     calcOutput("ValidGridSOCStocks", datasource = "LPJmL4_for_MAgPIE_84a69edd:CRU4:historical",
-               intensive = TRUE, aggregate = FALSE, file = "LPJmL4_CRU.nc")
-    calcOutput("SOCDebt", aggregate = FALSE, file = "SOCDebtSanderman.nc")
+               intensive = TRUE, aggregate = FALSE, file = "LPJmL4_CRU.rds")
+    calcOutput("SOCDebt", aggregate = FALSE, file = "SOCDebtSanderman.rds")
 
     ### point data
-    calcOutput("SOCPointData", aggregate = FALSE, file = "calcSOCPointData.cs2")
+    calcOutput("SOCPointData", aggregate = FALSE, file = "calcSOCPointData.rds")
 
-    calcOutput("ClimateClass", source = "IPCC_reduced", aggregate = FALSE, file = "IPCC_reduced.nc")
-    calcOutput("ClimateClass", source = "IPCC",         aggregate = FALSE, file = "IPCC.nc")
+    calcOutput("ClimateClass", source = "IPCC_reduced", aggregate = FALSE, file = "IPCC_reduced.rds")
+    calcOutput("ClimateClass", source = "IPCC",         aggregate = FALSE, file = "IPCC.rds")
 
     calcOutput("LPJmL", version = "LPJmL4", climatetype = "CRU_4", subtype = "vegc",
-               years = years, aggregate = FALSE, round = 4, file = "CarbonVegetation.nc")
+               years = years, aggregate = FALSE, round = 4, file = "CarbonVegetation.rds")
   }
 
   ### historic & scenario output
   calcOutput("Landuse", aggregate = FALSE, landuse_scen = cfg$landuse,
-             years = years, file = "Landuse.nc")
+             years = years, file = "Landuse.rds")
   calcOutput("Landuse", aggregate = FALSE, landuse_scen = cfg$landuse, output = "change",
-             years = years, file = "LanduseChange.nc")
+             years = years, file = "LanduseChange.rds")
   calcOutput("SoilCarbon", output = "full", cfg = cfg, cfg_default = cfgInit,
-             aggregate = FALSE, years = years, file = "SoilCarbon.nc")
+             aggregate = FALSE, years = years, file = "SoilCarbon.rds")
 }
