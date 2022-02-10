@@ -94,7 +94,7 @@ fullCARBONBUDGET <- function(rev = 0.1, dev = "") {
                file = "SteadyState.nc")
     calcOutput("SteadyState",      cfg = cfg, aggregate = FALSE, output = "alpha_in", years = years,
                file = "CarbonInflow.nc")
-    calcOutput("SoilCarbonSpinup", cfg_default = cfgInit, file = "SoilCarbonSpinup.nc")
+    calcOutput("SoilCarbonSpinup", cfg_default = cfgInit, aggregate = FALSE, file = "SoilCarbonSpinup.nc")
 
     # validation and post-processing
     ### climate zone specific data

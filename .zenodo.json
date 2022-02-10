@@ -1,6 +1,6 @@
 {
   "title": "mrsoil: MadRat Soil Organic Carbon Budget Library",
-  "version": "1.17.6",
+  "version": "1.17.7",
   "description": "<p>This packages provides functions for soil organic carbon budget for mineral soils using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories.<\/p>",
   "creators": [
     {
