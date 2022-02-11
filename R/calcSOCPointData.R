@@ -16,7 +16,7 @@ calcSOCPointData <- function() {
 
   return(list(
     x            = x,
-    weight       = 0,
+    weight       = NULL,
     unit         = "tons C per ha",
     description  = "SOC point data for validation from Sanderman et al., 2017",
     isocountries = FALSE))
