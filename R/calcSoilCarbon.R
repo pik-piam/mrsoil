@@ -27,20 +27,33 @@ calcSoilCarbon <- function(output="full", cfg=NULL, cfg_default=NULL){
 
   if(cfg$soilinit>1900){
 
-    #change: add natural
     years <- getYears(Landuse, as.integer=TRUE)
     years <- years[years >= cfg$soilinit]
-    SoilCarbonInit        <- mbind(setNames(setYears(SoilCarbonSteadyState[,years[1],"natveg"],years[1]-1),
-                                            paste0("crop.",getNames(SoilCarbonSteadyState[,,"natveg"], dim=2))),
-                                   setYears(SoilCarbonSteadyState[,years[1],"natveg"],years[1]-1))
+
+    names                 <- as.vector(outer(c("actualstate", "naturalstate"),
+                                             getItems(Decay, dim = 3),
+                                             paste, sep = "."))
+
+    SoilCarbonInit        <- new.magpie(getItems(Decay, dim = 1), years[1]-1, names)
+    SoilCarbonInit[, , "actualstate.crop"]    <- SoilCarbonSteadyState[,years[1],"natveg"]
+    SoilCarbonInit[, , "actualstate.natveg"]  <- SoilCarbonSteadyState[,years[1],"natveg"]
+    SoilCarbonInit[, , "naturalstate.crop"]   <- SoilCarbonSteadyState[,years[1],"natveg"]
+    SoilCarbonInit[, , "naturalstate.natveg"] <- SoilCarbonSteadyState[,years[1],"natveg"]
+
     SoilCarbonSteadyState <- SoilCarbonSteadyState[,years,]
     Decay                 <- Decay[,years,]
     Landuse               <- Landuse[,c(years[1]-1,years),]
 
   } else if(cfg$soilinit<1){
 
-    #change: add natural
-    SoilCarbonInit        <- setYears(SoilCarbonSteadyState[,"y1901",],"y1900")
+    names                 <- as.vector(outer(c("actualstate", "naturalstate"),
+                                             getItems(Decay, dim = 3),
+                                             paste, sep = "."))
+
+    SoilCarbonInit        <- new.magpie(getItems(Decay, dim = 1), "y1900", names)
+
+    SoilCarbonInit[, , "actualstate"]    <- SoilCarbonSteadyState[, "y1901", ]
+    SoilCarbonInit[, , "naturalstate"]   <- SoilCarbonSteadyState[, "y1901", ]
 
   } else {
 
