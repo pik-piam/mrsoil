@@ -18,4 +18,3 @@ toolLanduseChange <- function(landuse){
 
   return(LanduseChange)
 }
-

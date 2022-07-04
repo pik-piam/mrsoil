@@ -17,4 +17,3 @@ toolFreezeAverage <- function(x, freeze_year){
 
   return(x)
 }
-

@@ -55,4 +55,3 @@ calcSoilCarbonSpinup <- function(spinup_start=1510, cfg_default=NULL){
                isocountries = FALSE)
   )
 }
-
