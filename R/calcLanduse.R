@@ -43,4 +43,3 @@ calcLanduse <- function(landuse_scen="default", output="total"){
   )
 
 }
-

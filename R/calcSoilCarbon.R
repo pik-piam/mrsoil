@@ -79,4 +79,3 @@ calcSoilCarbon <- function(output="full", cfg=NULL, cfg_default=NULL){
                isocountries = FALSE)
     )
 }
-
