@@ -1,80 +1,102 @@
 #' @title calcWaterEffectDecomposition
-#' @description This function calculates the water effect on decomposition for mineral soils
-#' using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines
-#' for National Greenhouse Gas Inventories for rainfed and irrigated systems
+#' @description This function calculates the water effect on decomposition
+#'              for mineral soils using the steady-state method (Tier 2) of the 2019
+#'              Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories
+#'              for rainfed and irrigated systems
 #'
 #' @return magpie object in cellular resolution
 #' @author Kristine Karstens
 #'
-#' @param irrigation irrigation type to de considered. Default (mixedirrig) is historic irrigation area shares
-#'                   to calculate area weighted mean over rainfed and irrigated factors. Other options: rainfed, irrigated
-#' @param climate_scen climate configuration
-#' @examples
-#' \dontrun{ calcOutput("WaterEffectDecomposition", aggregate = FALSE) }
+#' @param irrigation  irrigation type to de considered. Default (mixedirrig) is historic
+#'                    irrigation area shares to calculate area weighted mean over rainfed
+#'                    and irrigated factors. Other options: rainfed, irrigated
+#' @param lpjml       Switch between LPJmL natveg versionstop
+#' @param climatetype Switch between different climate scenarios
 #'
-#' @import madrat
-#' @import magclass
-#' @import mrcommons
+#' @examples
+#' \dontrun{
+#' calcOutput("WaterEffectDecomposition", aggregate = FALSE)
+#' }
+#'
 #' @importFrom magpiesets findset
 
-calcWaterEffectDecomposition <- function(irrigation="mixedirrig", climate_scen="default") {
+calcWaterEffectDecomposition <- function(irrigation  = "mixedirrig",
+                                         lpjml       = "ggcmi_phase3_nchecks_9ca735cb",
+                                         climatetype = "GSWP3-W5E5:historical") {
 
-  if(irrigation=="rainfed"){
+  stage <- ifelse(grepl("historical", climatetype),
+                  yes = "smoothed",
+                  no  = "harmonized2020")
 
-    param <- readSource("IPCCSoil", convert=FALSE)
-    param.w_intercept <- setYears(param[,,"wfacpar1"], NULL)
-    param.w_slope     <- setYears(param[,,"wfacpar2"], NULL)
-    param.w_slope2    <- setYears(param[,,"wfacpar3"], NULL)
+  if (irrigation == "rainfed") {
 
-    cell.prep   <- readSource("CRU", subtype="precipitation", convert = "onlycorrect")[,sort(findset("past_soc")),]
-    cell.pet    <- readSource("CRU", subtype="potential_evap", convert = "onlycorrect")[,sort(findset("past_soc")),]
+    param           <- readSource("IPCCSoil", convert = FALSE)
+    paramWintercept <- setYears(param[, , "wfacpar1"], NULL)
+    paramWslope     <- setYears(param[, , "wfacpar2"], NULL)
+    paramWslope2    <- setYears(param[, , "wfacpar3"], NULL)
 
-    if(grepl("freeze", climate_scen)){
-      freeze_year <- as.integer(gsub("freeze","", climate_scen))
-      cell.prep   <- toolFreezeAverage(cell.prep, freeze_year)
-      cell.pet    <- toolFreezeAverage(cell.pet,  freeze_year)
-    }
+    cellPrep   <- calcOutput("LPJmLClimateInput", climatetype  = climatetype,
+                             variable     = "precipitation:monthlySum",
+                             stage        = stage,
+                             lpjmlVersion = lpjml,
+                             aggregate    = FALSE)
 
-    cell.mappet                   <- cell.prep/cell.pet
-    cell.mappet[cell.mappet>1.25] <- 1.25
-    cell.mappet                   <- toolConditionalReplace(cell.mappet, "is.na()", 0)
+    cellPet    <- calcOutput(type = "LPJmL_new", climatetype = climatetype,
+                             subtype   = "mpet",
+                             stage     = stage,
+                             version   = lpjml,
+                             aggregate = FALSE)
 
-    cell.w_monthFactor  <- param.w_intercept + param.w_slope  * cell.mappet - param.w_slope2 * cell.mappet**2
-    cell.w_monthFactor  <- add_dimension(collapseNames(cell.w_monthFactor), dim=3.1, add="irrigation", nm="rainfed")
+    cellMappet                    <- cellPrep / cellPet
+    cellMappet[cellMappet > 1.25] <- 1.25
+    cellMappet                    <- toolConditionalReplace(cellMappet, "is.na()", 0)
 
-    cell.w_Factor       <- 1.5 * dimSums(cell.w_monthFactor, dim=3.2)/12
+    cellWmonthFactor  <- paramWintercept + paramWslope  * cellMappet -
+                           paramWslope2 * cellMappet**2
+    cellWmonthFactor  <- add_dimension(collapseNames(cellWmonthFactor),
+                                       dim = 3.1, add = "irrigation", nm = "rainfed")
 
-  } else if(irrigation=="irrigated"){
+    cellWfactor       <- 1.5 * dimSums(cellWmonthFactor, dim = 3.2) / 12
 
+  } else if (irrigation == "irrigated") {
     # irrigation for every month of the year
     # improve later by using just growing month
-    # days_per_month <- calcOutput("GrowingPeriod", aggregate = FALSE)
+    # days_per_month <- calcOutput("GrowingPeriod", aggregate = FALSE)???
 
-    years <- sort(findset("past_soc"))
-    cells <- rownames(magpie_coord)
-    cell.w_monthFactor <- new.magpie(cells, years, c("jan","feb","mar","apr","mai","jun","jul","aug","sep","oct","nov","dec"))
-    cell.w_monthFactor <- add_dimension(collapseNames(cell.w_monthFactor), dim=3.1, add="irrigation", nm="irrigated")
-    cell.w_monthFactor[,,"irrigated"] <- 0.775
+    map   <- toolGetMappingCoord2Country()
+    cells <- paste(map$coords, map$iso, sep = ".")
 
-    cell.w_Factor       <- 1.5 * dimSums(cell.w_monthFactor, dim=3.2)/12
+    cellWmonthFactor <- new.magpie(cells, NULL, c("jan", "feb", "mar", "apr", "mai", "jun",
+                                                   "jul", "aug", "sep", "oct", "nov", "dec"))
+    cellWmonthFactor <- add_dimension(collapseNames(cellWmonthFactor), dim = 3.1,
+                                      add = "irrigation", nm = "irrigated")
+    cellWmonthFactor[, , "irrigated"] <- 0.775
 
-  } else if(irrigation=="mixedirrig") {
+    cellWfactor       <- 1.5 * dimSums(cellWmonthFactor, dim = 3.2) / 12
 
-    cell.ir_areaShr    <- toolCoord2Isocell(readSource("LUH2v2", subtype="irrigation", convert="onlycorrect"))[,sort(findset("past_soc")),]
-    cell.ir_areaShr    <- dimSums(cell.ir_areaShr, dim=3)
+  } else if (irrigation == "mixedirrig") {
 
-    cell.w_Factor      <- mbind(calcOutput("WaterEffectDecomposition", irrigation="rainfed",   climate_scen=climate_scen, aggregate = FALSE),
-                                calcOutput("WaterEffectDecomposition", irrigation="irrigated", climate_scen=climate_scen, aggregate = FALSE))
+    cellIrAreaShr    <- toolCoord2Isocell(readSource("LUH2v2", subtype = "irrigation",
+                                                     convert = "onlycorrect")) # unsure here
+    cellIrAreaShr    <- dimSums(cellIrAreaShr, dim = 3)
 
-    cell.w_Factor      <- setNames(cell.w_Factor[,,"irrigated"] * cell.ir_areaShr, "mixed") +
-                          setNames(cell.w_Factor[,,"rainfed"] * (1 - cell.ir_areaShr), "mixed")
+    cellWrainfed      <- calcOutput("WaterEffectDecomposition",
+                                         climatetype = climatetype, lpjml = lpjml,
+                                         irrigation = "rainfed",  aggregate = FALSE)
+    cellWirrigated    <- calcOutput("WaterEffectDecomposition",
+                                         climatetype = climatetype, lpjml = lpjml,
+                                         irrigation = "irrigated", aggregate = FALSE)
 
-  } else {stop("Irrigation setting is unknown. Please use: 'mixedirrig','rainfed' or 'irrigated'.")}
+    cellWfactor      <- setNames(cellWirrigated * cellIrAreaShr, "mixed") +
+                        setNames(cellWrainfed * (1 - cellIrAreaShr), "mixed")
 
-  return(list(
-    x=cell.w_Factor,
-    weight=NULL,
-    unit="",
-    description="Water effect on decomposition for mineral soils (unitless)",
-    isocountries=FALSE))
+  } else {
+    stop("Irrigation setting is unknown. Please use: 'mixedirrig','rainfed' or 'irrigated'.")
+  }
+
+  return(list(x            = cellWfactor,
+              weight       = NULL, # only cellular level supported
+              unit         = "",
+              description  = "Water effect on decomposition for mineral soils (unitless)",
+              isocountries = FALSE))
 }

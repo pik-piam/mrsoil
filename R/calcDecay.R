@@ -1,54 +1,98 @@
 #' @title calcDecay
-#' @description This function wraps together the decay rate for allSOC sub-pool per year for mineral soils
-#' using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines
-#' for National Greenhouse Gas Inventories
-#' @param tillage tillage type to de considered.
-#'                   Default (histill) is historic tillage area shares based on no tillage areas from Porwollik together with rule based assumption;
-#'                   'mixedtill' includes pure rule based assumptions.
-#' @param climate_scen climate configuration
+#' @description This function wraps together the decay rate for all SOC sub-pool per year
+#'              for mineral soils using the steady-state method (Tier 2) of the 2019
+#'              Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories
+#'
+#' @param lpjml       Switch between LPJmL natveg versionstop
+#' @param climatetype Switch between different climate scenarios
+#' @param mode       "historicalSpinup" for historical period and
+#'                   "magpieInput" for future
+#'
 #' @return magpie object in cellular resolution
 #' @author Kristine Karstens
 #'
 #' @examples
-#' \dontrun{ calcOutput("Decay", aggregate = FALSE) }
+#' \dontrun{
+#' calcOutput("Decay", aggregate = FALSE)
+#' }
 #'
 #' @import madrat
 #' @import magclass
 
-calcDecay <- function(tillage="histtill", climate_scen="default") {
+calcDecay <- function(lpjml       = "ggcmi_phase3_nchecks_9ca735cb",
+                      climatetype = "GSWP3-W5E5:historical",
+                      mode        = "historicalSpinup") {
+  # need two modi
+  # - hisoricalSpinup which handsover crop + natveg
+  # - magpieInput
 
-  if(is.null(tillage)) tillage <- "histtill"
-
-  param <- readSource("IPCCSoil", convert=FALSE)
+  param <- readSource("IPCCSoil", convert = FALSE)
   # kfaca = decay rate under optimum condition for active (k3)
   # kfacs = decay rate under optimum condition for slow (k4)
   # kfacp = decay rate under optimum condition for passive (k5)
   # k3par1 = sand intercept
   # k3par2 = sand slope
 
-  cell.w_Factor    <- mbind(setNames(calcOutput("WaterEffectDecomposition", climate_scen=climate_scen, irrigation = "mixedirrig", aggregate = FALSE),"crop"),
-                            setNames(calcOutput("WaterEffectDecomposition", climate_scen=climate_scen, irrigation = "rainfed", aggregate = FALSE),"natveg"))
-  cell.till_Factor <- setNames(calcOutput("TillageEffectDecomposition", tillage = tillage, aggregate = FALSE)[,,rep(1,2)],c("crop","natveg"))
-  cell.till_Factor[,,"natveg"] <- calcOutput("TillageEffectDecomposition", tillage = "notill", aggregate = FALSE)[,,]
+  .clean <- function(x, name) {
+    return(add_dimension(collapseNames(x), dim = 3.2, add = "subpool", nm = name))
+  }
 
-  cell.t_Factor    <- calcOutput("TempEffectDecomposition", climate_scen=climate_scen, aggregate = FALSE)
-  cell.sand_frac   <- calcOutput("SandFrac", aggregate = FALSE)
+  .bundle <- function(funcName, staticSet, switchType, switchSet) {
+    out <- NULL
+    for (i in seq_along(switchType)) {
+      out <- mbind(out, .clean(do.call("calcOutput", c(type = funcName, staticSet, switchSet[i])),
+                               switchType[i]))
+    }
+    return(out)
+  }
 
-  ActiveDecay    <-  param[,,"kfaca"] * cell.w_Factor * cell.t_Factor * cell.till_Factor *
-                      ( param[,,"k3par1"] +  param[,,"k3par2"] * cell.sand_frac )
-  SlowDecay      <- param[,,"kfacs"] * cell.w_Factor * cell.t_Factor * cell.till_Factor
-  PassiveDecay   <- param[,,"kfacp"] * cell.w_Factor * cell.t_Factor
+  if (mode == "historicalSpinup") {
 
-  .clean <- function(x,name) return(add_dimension(collapseNames(x),dim=3.2,add="subpool",nm=name))
+  cellWfactor <- .bundle(funcName   = "WaterEffectDecomposition",
+                         switchType = c("crop",                    "natveg"),
+                         switchSet  = c(irrigation = "mixedirrig", irrigation = "rainfed"),
+                         staticSet  = list(lpjml = lpjml, climatetype = climatetype, aggregate = FALSE))
 
-  decay <- magpiesort(mbind(.clean(ActiveDecay,"active"),
-                            .clean(SlowDecay,"slow"),
-                            .clean(PassiveDecay,"passive")))
+  cellTillFactor <- .bundle(funcName   = "TillageEffectDecomposition",
+                            switchType = c("crop",               "natveg"),
+                            switchSet  = c(tillage = "histtill", tillage = "notill"),
+                            staticSet  = list(aggregate = FALSE))
+
+  } else if (mode == "magpieInput") {
+
+    cellWfactor <- .bundle(funcName   = "WaterEffectDecomposition",
+                           switchType = c("rainfed",                "irrigated"),
+                           switchSet  = c(irrigation = "rainfed", irrigation = "irrigated"),
+                           staticSet  = list(lpjml = lpjml, climatetype = climatetype, aggregate = FALSE))
+
+    cellTillFactor <- .bundle(funcName   = "TillageEffectDecomposition",
+                              switchType = c("notill", "reducedtill", "fulltill"),
+                              switchSet  = c(tillage = "notill",
+                                             tillage = "reducedtill",
+                                             tillage = "fulltill"),
+                              staticSet  = list(aggregate = FALSE))
+  } else {
+
+    stop("Mode setting unknown. Possible types: 'magpieInput' or 'historicalSpinup'") # add message here
+  }
+
+  cellTempFactor <- calcOutput("TempEffectDecomposition",
+                               lpjml = lpjml, climatetype = climatetype, aggregate = FALSE)
+  cellSandFrac   <- calcOutput("SandFrac", aggregate = FALSE)
+
+  activeDecay    <-  param[, , "kfaca"] * cellWfactor * cellTempFactor * cellTillFactor *
+                      (param[, , "k3par1"] +  param[, , "k3par2"] * cellSandFrac)
+  slowDecay      <- param[, , "kfacs"] * cellWfactor * cellTempFactor * cellTillFactor
+  passiveDecay   <- param[, , "kfacp"] * cellWfactor * cellTempFactor
+
+  decay <- magpiesort(mbind(.clean(activeDecay,  "active"),
+                            .clean(slowDecay,    "slow"),
+                            .clean(passiveDecay, "passive")))
 
   return(list(
-    x=decay,
-    weight=NULL,
-    unit="per yr",
-    description="Decay rate for all SOC sub-pool per year",
-    isocountries=FALSE))
+    x = decay,
+    weight = NULL,
+    unit = "per yr",
+    description = "Decay rate for all SOC sub-pool per year",
+    isocountries = FALSE))
 }

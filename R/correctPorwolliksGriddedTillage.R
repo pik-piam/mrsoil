@@ -7,19 +7,17 @@
 #' \code{\link[mrcommons]{readLPJmL}},
 #' \code{\link[lpjclass]{read.LPJ_input}}
 #' @examples
-#'
 #' \dontrun{
-#'   readSource("PorwolliksGriddedTillage", convert="onlycorrect")
+#' readSource("PorwolliksGriddedTillage", convert = "onlycorrect")
 #' }
 #'
 #' @import madrat
 #' @import magclass
 #' @importFrom lpjclass read.LPJ_input
 
-correctPorwolliksGriddedTillage <- function(x){
+correctPorwolliksGriddedTillage <- function(x) {
 
   x <- toolConditionalReplace(x, conditions = c("is.na()", "<0"), replaceby = 0)
-  x <- toolCell2isoCell(x)
 
   return(x)
 }
