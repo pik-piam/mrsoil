@@ -7,8 +7,9 @@
 calcTillageArea(tillage = "historicNoTill")
 }
 \arguments{
-\item{tillage}{'historicNoTill' (default) or 'ruleBased'; 'histroricNoTill' is based on the same assunmptions as 'ruleBased',
-but additionally accounts for historic data on no tillage areas based on Porwolliks datasets.
+\item{tillage}{'historicNoTill' (default) or 'ruleBased'; histroricNoTill' is based
+on the same assunmptions as 'ruleBased', but additionally accounts for
+historic data on no tillage areas based on Porwolliks datasets.
 'ruleBased' assumes full tillage for annual crops, and reduced tillage for perennials.}
 }
 \value{
@@ -18,7 +19,9 @@ magpie object in cellular resolution
 This function calculates the tillage area shares for different tillage types
 }
 \examples{
-\dontrun{ calcOutput("TillageArea", aggregate = FALSE) }
+\dontrun{
+calcOutput("TillageArea", aggregate = FALSE)
+}
 
 }
 \author{

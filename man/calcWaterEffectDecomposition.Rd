@@ -6,25 +6,32 @@
 \usage{
 calcWaterEffectDecomposition(
   irrigation = "mixedirrig",
-  climate_scen = "default"
+  lpjml = "ggcmi_phase3_nchecks_9ca735cb",
+  climatetype = "GSWP3-W5E5:historical"
 )
 }
 \arguments{
-\item{irrigation}{irrigation type to de considered. Default (mixedirrig) is historic irrigation area shares
-to calculate area weighted mean over rainfed and irrigated factors. Other options: rainfed, irrigated}
+\item{irrigation}{irrigation type to de considered. Default (mixedirrig) is historic
+irrigation area shares to calculate area weighted mean over rainfed
+and irrigated factors. Other options: rainfed, irrigated}
 
-\item{climate_scen}{climate configuration}
+\item{lpjml}{Switch between LPJmL natveg versionstop}
+
+\item{climatetype}{Switch between different climate scenarios}
 }
 \value{
 magpie object in cellular resolution
 }
 \description{
-This function calculates the water effect on decomposition for mineral soils
-using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines
-for National Greenhouse Gas Inventories for rainfed and irrigated systems
+This function calculates the water effect on decomposition
+             for mineral soils using the steady-state method (Tier 2) of the 2019
+             Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories
+             for rainfed and irrigated systems
 }
 \examples{
-\dontrun{ calcOutput("WaterEffectDecomposition", aggregate = FALSE) }
+\dontrun{
+calcOutput("WaterEffectDecomposition", aggregate = FALSE)
+}
 
 }
 \author{

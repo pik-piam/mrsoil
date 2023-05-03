@@ -10,11 +10,13 @@ calcSandFrac()
 magpie object in cellular resolution
 }
 \description{
-This function calculates the fraction of 0-30cm soil mass that is sand (0.050 - 2mm particles)
+This function calculates the fraction of 0 - 30 cm soil mass that
+             is sand (0.050 - 2mm particles)
 }
 \examples{
-\dontrun{ calcOutput("SandFrac", aggregate = FALSE) }
-
+\dontrun{
+calcOutput("SandFrac", aggregate = FALSE)
+}
 }
 \seealso{
 \code{\link[mrcommons]{readSoilGrids}}

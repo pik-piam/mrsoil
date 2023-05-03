@@ -4,25 +4,32 @@
 \alias{calcDecay}
 \title{calcDecay}
 \usage{
-calcDecay(tillage = "histtill", climate_scen = "default")
+calcDecay(
+  lpjml = "ggcmi_phase3_nchecks_9ca735cb",
+  climatetype = "GSWP3-W5E5:historical",
+  mode = "historicalSpinup"
+)
 }
 \arguments{
-\item{tillage}{tillage type to de considered.
-Default (histill) is historic tillage area shares based on no tillage areas from Porwollik together with rule based assumption;
-'mixedtill' includes pure rule based assumptions.}
+\item{lpjml}{Switch between LPJmL natveg versionstop}
 
-\item{climate_scen}{climate configuration}
+\item{climatetype}{Switch between different climate scenarios}
+
+\item{mode}{"historicalSpinup" for historical period and
+"magpieInput" for future}
 }
 \value{
 magpie object in cellular resolution
 }
 \description{
-This function wraps together the decay rate for allSOC sub-pool per year for mineral soils
-using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines
-for National Greenhouse Gas Inventories
+This function wraps together the decay rate for all SOC sub-pool per year
+             for mineral soils using the steady-state method (Tier 2) of the 2019
+             Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories
 }
 \examples{
-\dontrun{ calcOutput("Decay", aggregate = FALSE) }
+\dontrun{
+calcOutput("Decay", aggregate = FALSE)
+}
 
 }
 \author{

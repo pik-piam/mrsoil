@@ -4,21 +4,28 @@
 \alias{calcTempEffectDecomposition}
 \title{calcTempEffectDecomposition}
 \usage{
-calcTempEffectDecomposition(climate_scen = "default")
+calcTempEffectDecomposition(
+  lpjml = "ggcmi_phase3_nchecks_9ca735cb",
+  climatetype = "GSWP3-W5E5:historical"
+)
 }
 \arguments{
-\item{climate_scen}{climate configuration}
+\item{lpjml}{Switch between LPJmL natveg versionstop}
+
+\item{climatetype}{Switch between different climate scenarios}
 }
 \value{
 magpie object in cellular resolution
 }
 \description{
-This function calculates the temperature effect on decomposition for mineral soils
-using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines
-for National Greenhouse Gas Inventories
+This function calculates the temperature effect on decomposition
+             for mineral soils using the steady-state method (Tier 2) of the 2019
+             Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories
 }
 \examples{
-\dontrun{ calcOutput("TempEffectDecomposition", aggregate = FALSE) }
+\dontrun{
+calcOutput("TempEffectDecomposition", aggregate = FALSE)
+}
 
 }
 \author{

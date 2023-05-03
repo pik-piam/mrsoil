@@ -20,7 +20,6 @@ Imports:
     lpjclass,
     ncdf4,
     utils,
-    xml2,
     stringr,
     jsonlite
 License: LGPL-3 | file LICENSE

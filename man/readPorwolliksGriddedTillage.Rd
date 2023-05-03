@@ -13,9 +13,8 @@ List of magpie objects with results on cellular level, weight, unit and descript
 Read historical tillage data set based on (https://www.earth-syst-sci-data.net/11/823/2019/)
 }
 \examples{
-
 \dontrun{
-  readSource("PorwolliksGriddedTillage")
+readSource("PorwolliksGriddedTillage")
 }
 
 }

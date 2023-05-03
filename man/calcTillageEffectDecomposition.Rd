@@ -8,20 +8,23 @@ calcTillageEffectDecomposition(tillage = "histtill")
 }
 \arguments{
 \item{tillage}{tillage type to de considered.
-Default (histill) is historic tillage area shares based on no tillage areas from Porwollik together with rule based assumption;
-'mixedtill' includes pure rule based assumptions. Other options: fulltill, notill, reducedtill}
+'histtill' (default) is historic tillage area shares based on no
+tillage areas from Porwollik together with rule based assumption;
+'mixedtill' includes pure rule based assumptions.
+Other options: 'fulltill', 'notill', 'reducedtill'}
 }
 \value{
 magpie object in cellular resolution
 }
 \description{
-This function calculates the tillage effect on decomposition for mineral soils
-using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines
-for National Greenhouse Gas Inventories
+This function calculates the tillage effect on decomposition
+             for mineral soils using the steady-state method (Tier 2) of the 2019
+             Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories
 }
 \examples{
-\dontrun{ calcOutput("TillageEffectDecomposition", aggregate = FALSE) }
-
+\dontrun{
+  calcOutput("TillageEffectDecomposition", aggregate = FALSE)
+}
 }
 \author{
 Kristine Karstens

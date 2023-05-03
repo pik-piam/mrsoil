@@ -8,3 +8,4 @@
 ^workflow$
 ^.lintr$
 ^tests/.lintr$
+^Makefile$
