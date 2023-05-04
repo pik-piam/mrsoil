@@ -47,7 +47,9 @@ calcWaterEffectDecomposition <- function(irrigation  = "mixedirrig",
                              version   = lpjml,
                              aggregate = FALSE)
 
-    cellMappet                    <- cellPrep / cellPet
+    years      <- intersect(getYears(cellPet), getYears(cellPrep))
+
+    cellMappet                    <- cellPrep[, years, ] / cellPet[, years, ]
     cellMappet[cellMappet > 1.25] <- 1.25
     cellMappet                    <- toolConditionalReplace(cellMappet, "is.na()", 0)
 
