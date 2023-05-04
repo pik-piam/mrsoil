@@ -19,7 +19,7 @@
 #' @import madrat
 #' @import magclass
 
-calcDecay <- function(lpjml       = "ggcmi_phase3_nchecks_9ca735cb",
+calcDecay <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
                       climatetype = "GSWP3-W5E5:historical",
                       mode        = "historicalSpinup") {
   # need two modi
