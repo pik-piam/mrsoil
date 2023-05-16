@@ -23,7 +23,6 @@ calcDecayRaw <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
                          climatetype = "GSWP3-W5E5:historical",
                          mode        = "historicalSpinup") {
 
-  years <- i
   # need two modi
   # - hisoricalSpinup which handsover crop + natveg
   # - magpieInput
