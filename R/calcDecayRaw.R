@@ -1,4 +1,4 @@
-#' @title calcDecay
+#' @title calcDecayRaw
 #' @description This function wraps together the decay rate for all SOC sub-pool per year
 #'              for mineral soils using the steady-state method (Tier 2) of the 2019
 #'              Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories
@@ -19,9 +19,11 @@
 #' @import madrat
 #' @import magclass
 
-calcDecay <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
-                      climatetype = "GSWP3-W5E5:historical",
-                      mode        = "historicalSpinup") {
+calcDecayRaw <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
+                         climatetype = "GSWP3-W5E5:historical",
+                         mode        = "historicalSpinup") {
+
+  years <- i
   # need two modi
   # - hisoricalSpinup which handsover crop + natveg
   # - magpieInput
@@ -34,7 +36,7 @@ calcDecay <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
   # k3par2 = sand slope
 
   .clean <- function(x, name) {
-    return(add_dimension(collapseNames(x), dim = 3.2, add = "subpool", nm = name))
+    return(add_dimension(collapseNames(x), dim = 3.2, add = "sub", nm = name))
   }
 
   .bundle <- function(funcName, staticSet, switchType, switchSet) {
@@ -43,8 +45,11 @@ calcDecay <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
 
       tmp <- .clean(do.call("calcOutput", c(type = funcName, staticSet, switchSet[i])),
                     switchType[i])
-      #check years and dims
-
+      # check years and dims
+      if (!is.null(out) && (is.null(getYears(out)) || is.null(getYears(tmp)))) {
+        tmp <- setNames(magpie_expand(tmp, out), getNames(tmp))
+        out <- setNames(magpie_expand(out, tmp), getNames(out))
+      }
       out <- mbind(out, tmp)
     }
     return(out)
@@ -52,15 +57,15 @@ calcDecay <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
 
   if (mode == "historicalSpinup") {
 
-  cellWfactor <- .bundle(funcName   = "WaterEffectDecomposition",
-                         switchType = c("crop",                    "natveg"),
-                         switchSet  = c(irrigation = "mixedirrig", irrigation = "rainfed"),
-                         staticSet  = list(lpjml = lpjml, climatetype = climatetype, aggregate = FALSE))
+    cellWfactor <- .bundle(funcName   = "WaterEffectDecomposition",
+                           switchType = c("crop",                    "natveg"),
+                           switchSet  = c(irrigation = "mixedirrig", irrigation = "rainfed"),
+                           staticSet  = list(lpjml = lpjml, climatetype = climatetype, aggregate = FALSE))
 
-  cellTillFactor <- .bundle(funcName   = "TillageEffectDecomposition",
-                            switchType = c("crop",               "natveg"),
-                            switchSet  = c(tillage = "histtill", tillage = "notill"),
-                            staticSet  = list(aggregate = FALSE))
+    cellTillFactor <- .bundle(funcName   = "TillageEffectDecomposition",
+                              switchType = c("crop",               "natveg"),
+                              switchSet  = c(tillage = "histtill", tillage = "notill"),
+                              staticSet  = list(aggregate = FALSE))
 
   } else if (mode == "magpieInput") {
 
@@ -85,7 +90,7 @@ calcDecay <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
   cellSandFrac   <- calcOutput("SandFrac", aggregate = FALSE)
 
   activeDecay    <-  param[, , "kfaca"] * cellWfactor * cellTempFactor * cellTillFactor *
-                      (param[, , "k3par1"] +  param[, , "k3par2"] * cellSandFrac)
+    (param[, , "k3par1"] +  param[, , "k3par2"] * cellSandFrac)
   slowDecay      <- param[, , "kfacs"] * cellWfactor * cellTempFactor * cellTillFactor
   passiveDecay   <- param[, , "kfacp"] * cellWfactor * cellTempFactor
 

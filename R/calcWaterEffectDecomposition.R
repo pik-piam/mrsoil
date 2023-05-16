@@ -25,8 +25,8 @@ calcWaterEffectDecomposition <- function(irrigation  = "mixedirrig",
                                          climatetype = "GSWP3-W5E5:historical") {
 
   stage <- ifelse(grepl("historical", climatetype),
-                  yes = "smoothed",
-                  no  = "harmonized2020")
+                  yes = "raw1901",
+                  no  = "raw")
 
   if (irrigation == "rainfed") {
 
@@ -69,7 +69,7 @@ calcWaterEffectDecomposition <- function(irrigation  = "mixedirrig",
     cells <- paste(map$coords, map$iso, sep = ".")
 
     cellWmonthFactor <- new.magpie(cells, NULL, c("jan", "feb", "mar", "apr", "mai", "jun",
-                                                   "jul", "aug", "sep", "oct", "nov", "dec"))
+                                                  "jul", "aug", "sep", "oct", "nov", "dec"))
     cellWmonthFactor <- add_dimension(collapseNames(cellWmonthFactor), dim = 3.1,
                                       add = "irrigation", nm = "irrigated")
     cellWmonthFactor[, , "irrigated"] <- 0.775
@@ -78,19 +78,24 @@ calcWaterEffectDecomposition <- function(irrigation  = "mixedirrig",
 
   } else if (irrigation == "mixedirrig") {
 
-    cellIrAreaShr    <- toolCoord2Isocell(readSource("LUH2v2", subtype = "irrigation",
-                                                     convert = "onlycorrect")) # unsure here
-    cellIrAreaShr    <- dimSums(cellIrAreaShr, dim = 3)
+    if (!grepl("historical", climatetype)) {
+      stop("'mixedirrig' is only supported for the historical period")
+    }
 
-    cellWrainfed      <- calcOutput("WaterEffectDecomposition",
+    cellIrAreaShr  <- readSource("LUH2v2", subtype = "irrigation", convert = "onlycorrect")
+    cellIrAreaShr  <- dimSums(cellIrAreaShr, dim = 3)
+
+    cellWrainfed   <- calcOutput("WaterEffectDecomposition",
                                          climatetype = climatetype, lpjml = lpjml,
                                          irrigation = "rainfed",  aggregate = FALSE)
-    cellWirrigated    <- calcOutput("WaterEffectDecomposition",
+    cellWirrigated <- calcOutput("WaterEffectDecomposition",
                                          climatetype = climatetype, lpjml = lpjml,
                                          irrigation = "irrigated", aggregate = FALSE)
 
-    cellWfactor      <- setNames(cellWirrigated * cellIrAreaShr, "mixed") +
-                        setNames(cellWrainfed * (1 - cellIrAreaShr), "mixed")
+    years          <- intersect(getYears(cellIrAreaShr), getYears(cellWrainfed))
+
+    cellWfactor    <- setNames(cellWirrigated * cellIrAreaShr[, years, ], "mixed") +
+                        setNames(cellWrainfed[, years, ] * (1 - cellIrAreaShr[, years, ]), "mixed")
 
   } else {
     stop("Irrigation setting is unknown. Please use: 'mixedirrig','rainfed' or 'irrigated'.")

@@ -20,8 +20,8 @@ calcTempEffectDecomposition <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93d
                                         climatetype = "GSWP3-W5E5:historical") {
 
   stage <- ifelse(grepl("historical", climatetype),
-                  yes = "smoothed",
-                  no  = "harmonized2020")
+                  yes = "raw1901",
+                  no  = "raw")
 
   param     <- readSource("IPCCSoil", convert = FALSE)
   paramTmax <- param[, , "tmax"]
