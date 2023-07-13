@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it using the metadata from this file.
+type: software
+title: 'mrsoil: MadRat Soil Organic Carbon Budget Library'
+version: 1.17.12
+date-released: '2023-07-13'
+abstract: This packages provides functions for soil organic carbon budget for mineral
+  soils using the steady-state method (Tier 2) of the 2019 Refinement to the 2006
+  IPP Guidelines for National Greenhouse Gas Inventories.
+authors:
+- family-names: Karstens
+  given-names: Kristine
+  email: karstens@pik-potsdam.de
+- family-names: Dietrich
+  given-names: Jan Philipp
+  email: dietrich@pik-potsdam.de
+license: LGPL-3.0
+repository-code: https://github.com/pik-piam/mrsoil
+doi: 10.5281/zenodo.4317933
+
