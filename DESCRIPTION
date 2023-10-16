@@ -30,8 +30,7 @@ Imports:
     readxl,
     reshape2,
     stringr,
-    utils,
-    xml2
+    utils
 Suggests: 
     covr,
     ggplot2,
