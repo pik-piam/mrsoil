@@ -1,37 +1,44 @@
-Package: mrsoil
 Type: Package
+Package: mrsoil
 Title: MadRat Soil Organic Carbon Budget Library
-Version: 1.17.11
-Date: 2022-02-11
-Authors@R: c(person("Kristine", "Karstens", email = "karstens@pik-potsdam.de", role = c("aut","cre")),
-             person("Jan Philipp", "Dietrich", email = "dietrich@pik-potsdam.de", role = "aut"))
-Description: This packages provides functions for soil organic carbon budget for mineral soils using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories.
+Version: 1.17.12
+Date: 2023-07-13
+Authors@R: c(
+    person("Kristine", "Karstens", , "karstens@pik-potsdam.de", role = c("aut", "cre")),
+    person("Jan Philipp", "Dietrich", , "dietrich@pik-potsdam.de", role = "aut")
+  )
+Description: This packages provides functions for soil organic carbon
+    budget for mineral soils using the steady-state method (Tier 2) of the
+    2019 Refinement to the 2006 IPP Guidelines for National Greenhouse Gas
+    Inventories.
+License: LGPL-3 | file LICENSE
+URL: https://github.com/pik-piam/mrsoil,
+    https://doi.org/10.5281/zenodo.4317933
+BugReports: https://github.com/pik-piam/mrsoil/issues
 Depends:
-    R(>= 2.10.0),
-    magclass(>= 5.15.4),
-    madrat(>= 1.86.0),
-    mrcommons(>= 0.11.9),
-    mrvalidation(>= 2.4.3),
-    mrmagpie (>= 0.35.0)
+    R (>= 2.10.0),
+    madrat (>= 1.86.0),
+    magclass (>= 5.15.4),
+    mrcommons (>= 0.11.9),
+    mrmagpie (>= 0.35.0),
+    mrvalidation (>= 2.4.3)
 Imports:
+    jsonlite,
+    lpjclass,
     magpiesets,
+    ncdf4,
     readxl,
     reshape2,
-    lpjclass,
-    ncdf4,
-    utils,
-    xml2,
     stringr,
-    jsonlite
-License: LGPL-3 | file LICENSE
-URL: https://github.com/pik-piam/mrsoil, https://doi.org/10.5281/zenodo.4317933
-BugReports: https://github.com/pik-piam/mrsoil/issues
+    utils,
+    xml2
+Suggests: 
+    covr,
+    ggplot2,
+    knitr,
+    rmarkdown
+VignetteBuilder: 
+    knitr
 Encoding: UTF-8
 LazyData: no
-RoxygenNote: 7.1.2
-Suggests: 
-    knitr,
-    rmarkdown,
-    ggplot2,
-    covr
-VignetteBuilder: knitr
+RoxygenNote: 7.2.3

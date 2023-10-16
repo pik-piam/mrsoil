@@ -20,7 +20,7 @@ calcLanduse <- function(landuse_scen="default", output="total"){
   else                              states <- "states_1900to2010"
 
   Landuse    <- toolCoord2Isocell(readSource("LUH2v2", subtype = states, convert="onlycorrect"))
-  mapping    <- toolGetMapping(type = "sectoral", name = "LUH2v2.csv")
+  mapping    <- toolGetMapping(type = "sectoral", name = "LUH2v2.csv", where = "mappingfolder")
   mapping$land[mapping$land!="crop"] <- "natveg"
   Landuse    <- toolAggregate(Landuse, mapping, dim = 3.1, from="luh2v2", to="land")
   Landuse    <- Landuse[,sort(getItems(Landuse, dim=2)),]

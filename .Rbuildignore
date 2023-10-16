@@ -6,3 +6,7 @@
 ^codecov\.yml$
 ^\.pre-commit-config\.yaml$
 ^workflow$
+^Makefile$
+^.lintr$
+^tests/.lintr$
+^.*CITATION.cff$
