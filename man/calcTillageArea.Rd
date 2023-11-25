@@ -4,13 +4,14 @@
 \alias{calcTillageArea}
 \title{calcTillageArea}
 \usage{
-calcTillageArea(tillage = "historicNoTill")
+calcTillageArea(tillage = "default")
 }
 \arguments{
-\item{tillage}{'historicNoTill' (default) or 'ruleBased'; histroricNoTill' is based
-on the same assunmptions as 'ruleBased', but additionally accounts for
-historic data on no tillage areas based on Porwolliks datasets.
-'ruleBased' assumes full tillage for annual crops, and reduced tillage for perennials.}
+\item{tillage}{'histtill' or 'mixedtill';
+'mixedtill' assumes full tillage for annual crops, and reduced tillage for perennials.
+'histtill' is based on the same assunmptions as 'mixedtill', but additionally accounts for
+historic data on no tillage areas based on Porwolliks datasets for annual no tillage areas
+(other option 'default' for using the current default)}
 }
 \value{
 magpie object in cellular resolution

@@ -4,23 +4,22 @@
 \alias{calcLanduse}
 \title{calcLanduse}
 \usage{
-calcLanduse(landuse_scen = "default", output = "total")
+calcLanduse(period = "states_1900to2010", output = "total")
 }
 \arguments{
-\item{landuse_scen}{landuse configuration}
+\item{period}{select historical period (handed over to readLUH2v2)}
 
 \item{output}{"total" or "change"}
 }
 \value{
-List of magpie object with results on country or cellular level, weight, unit and description.
+List of magpie object with results on cellular level, weight, unit and description.
 }
 \description{
-Calculates the cellular MAgPIE landuse area based on LUH2v2 or LanduseInitialisation data.
+Calculates the cellular MAgPIE landuse area based on LUH2v2
 }
 \examples{
-
 \dontrun{
-calcOutput("Landuse")
+calcOutput("Landuse", aggregate = FALSE)
 }
 
 }

@@ -1,140 +1,92 @@
 #' @title calcSteadyState
 #' @description This function wraps together the steady state for all sub-pool SOC stock for mineral soils
-#' using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines
-#' for National Greenhouse Gas Inventories
-#' @param cfg general configuration
-#' @param output 'full' - all important soil related values, 'reduced' - just SOC state values
+#'              using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines
+#'              for National Greenhouse Gas Inventories
+#'
+#' @param lpjml       Switch between LPJmL natveg versionstop
+#' @param climatetype Switch between different climate scenarios
 #' @return magpie object in cellular resolution
 #' @author Kristine Karstens
 #'
 #' @examples
-#' \dontrun{ calcOutput("SteadyState", aggregate = FALSE) }
+#' \dontrun{
+#' calcOutput("SteadyState", aggregate = FALSE)
+#' }
 #'
-#' @import madrat
-#' @import magclass
 
-calcSteadyState <- function(cfg=NULL, output="reduced") {
+calcSteadyState <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
+                            climatetype = "GSWP3-W5E5:historical") {
 
-  .steadystate <- function(alpha,decay,name) {
-    x <- toolConditionalReplace(alpha/decay[,,name], "is.na()", 0)
-    return(add_dimension(collapseNames(x),dim=3.2,add="subpool",nm=name))
+  ###############################################################
+  ######## Load carbon input based on InputMultiplier ###########
+
+  # Load soil parameter collection
+  soilParam          <- readSource("IPCCSoil", convert = FALSE)
+
+  # Load fractional transfer coefficients for active to slow (sand fraction depending)
+  f4act2slo      <- calcOutput("TransferActive2Slow", aggregate = FALSE)
+
+  # Load fractional transfer coefficient for structual input component to active pool (tillage depending)
+  tillage2param  <- c(fulltill    = "f2_ft",
+                      reducedtill = "f2_rt",
+                      notill      = "f2_nt")
+  f2              <- setNames(soilParam[, , tillage2param], names(tillage2param))
+  ### stabilization efficiencies for structural decay products entering the active pool
+  ### for cropland are calculated using tillage area information
+  tillAreaShr     <- calcOutput("TillageArea", aggregate = FALSE)
+  f2struc2actCrop <- dimSums(f2 * tillAreaShr, dim = 3)
+  ### backup: set all cell with no area info to full tillage (just in case it is needed)
+  f2struc2actCrop[f2struc2actCrop == 0] <- f2[, , "fulltill"]
+  f2struc2actCrop       <- setNames(f2struc2actCrop, "crop")
+  ### stabilization efficiencies for structural decay products entering the active pool
+  ### for natural vegetation is no tillage
+  f2struc2actNatveg       <- setNames(f2struc2actCrop, "natveg")
+  f2struc2actNatveg[, , ] <- f2[, , "notill"]
+  f2struc2act <- mbind(f2struc2actCrop, f2struc2actNatveg)
+
+  # Load carbon input from different sources
+  .prep <- function(x, landtype, ...) {
+    return(toolFillYears(add_dimension(x, dim = 3.3, nm = landtype, add = "landtype"),
+                         sort(findset("past_soc"))))
   }
 
-  # Load fractional transfer coefficients and more parameters
-  param <- readSource("IPCCSoil", convert=FALSE)
-  # f1 = stabilization efficiencies for metabolic decay products entering the active pool
-  # f3 = stabilization efficiencies for structural decay products entering the slow pool
-  # f5 = stabilization efficiencies for active pool decay products entering the passive pool
-  # f6 = stabilization efficiencies for slow pool decay products entering the passive pool
-  # f7 = stabilization efficiencies for slow pool decay products entering the active pool
-  # f8 = stabilization efficiencies for passive pool decay products entering the active pool
+  residues   <- .prep(calcOutput("CarbonResidues", aggregate = FALSE), "crop")
+  manure     <- .prep(calcOutput("CarbonManure",   aggregate = FALSE), "crop")
+  litter     <- .prep(calcOutput("CarbonLitter",   lpjml = lpjml, climatetype = climatetype,
+                                 mode = "historicalSpinup", aggregate = FALSE), "natveg")
+  cellInput  <- mbind(residues[, , "c"],           manure[, , "c"],           litter[, , "c"])
+  inputProp  <- mbind(residues[, , c("LC", "NC")], manure[, , c("LC", "NC")], litter[, , c("LC", "NC")])
+  rm(litter, manure, residues)
 
-  cell.f4_a2s      <- calcOutput("TransferActive2Slow", aggregate = FALSE)
-
-  f2_struc2a <- function(param, tillage) {
-    if(is.null(tillage)) tillage <- "histtill"
-    tillage2param  <- c(fulltill    = "f2_ft",
-                        reducedtill = "f2_rt",
-                        notill      = "f2_nt")
-    tillage2area   <- c(mixedtill    = "ruleBased",
-                        histtill     = "historicNoTill")
-
-    f2              <- setNames(param[,,tillage2param], names(tillage2param))
-
-    cell.till_areaShr <- calcOutput("TillageArea", tillage=tillage2area[tillage], aggregate = FALSE)
-    # stabilization efficiencies for structural decay products entering the active pool if tillage is not known
-    f2_struc2a.crop   <- dimSums(f2*cell.till_areaShr, dim=3)
-    # backup: set all cell with no area info to full tillage (just in case it is needed)
-    f2_struc2a.crop[f2_struc2a.crop==0] <- param[,,"f2_ft"]
-    f2_struc2a.crop       <- setNames(f2_struc2a.crop,"crop")
-    f2_struc2a.natveg     <- setNames(f2_struc2a.crop,"natveg")
-    # stabilization efficiencies for structural decay products entering the active pool if tillage is not known
-    f2_struc2a.natveg[,,] <- param[,,"f2_nt"]
-    return(mbind(f2_struc2a.crop,f2_struc2a.natveg))
-  }
-  param.f2_struc2a   <- f2_struc2a(param,cfg$tillage)
-
-  cell.input <- calcOutput("CarbonInput", cfg=cfg, aggregate = FALSE)
-  decay      <- calcOutput("Decay", tillage=cfg$tillage, climate_scen=cfg$climate, aggregate = FALSE)
+  ### NOT FINSIHED YET HERE!!!!
+  alpha <- dimSums(toolCarbonInputMultiplier(inputProp = inputProp,
+                                     soilParam = soilParam,
+                                     f4act2slo = f4act2slo,
+                                     f2struc2act = f2struc2act) * cellInput, dim = 3.2) #CLARIFY
 
 
-  #################################################
-  ### ActiveAlpha calculations ###
-  ## Calculate all parts of carbon inflows to active pool
-  # metabolic dead organic matter transferred to active SOC sub-pool
-  cell.metabDOC_in <- cell.input[,,"metabDOC"] * param[,,"f1"]
-  # structural dead organic matter transferred to active SOC sub-pool
-  cell.strucDOC_in <- cell.input[,,"strucDOC"] * param.f2_struc2a
-  # lignin carbon in slow and passive SOC sub-pool transferred back to active SOC sub-pool
-  cell.lign_reflow <- cell.input[,,"ligninC"]  * param[,,"f3"] * (param[,,"f7"] + param[,,"f6"]*param[,,"f8"])
-  # 1 - fraction of re-transferred SOC to active SOC sub-pool
-  cell.frac_reflow <- 1 - cell.f4_a2s  * param[,,"f7"] -  param[,,"f5"] * param[,,"f8"] -
-                          cell.f4_a2s  * param[,,"f6"] * param[,,"f8"]
+  ###############################################################
+  ######## Load decay rates & calc steaty states ################
 
-  # Bring all carbon input to the active SOC sub-pool together
-  ActiveAlpha <- dimSums(collapseNames((cell.metabDOC_in + cell.strucDOC_in + cell.lign_reflow) / cell.frac_reflow), dim=3.1)
-  ActiveSteadyState <- .steadystate(ActiveAlpha,  decay, "active")
+  decay     <- calcOutput("DecayRaw", lpjml = lpjml, climatetype = climatetype,
+                          mode = "historicalSpinup", aggregate = FALSE)
 
-  ### SlowAlpha calculations ###
-  ## Calculate all parts of carbon inflows
-  # lignin carbon from carbon inputs transferred to slow SOC sub pool
-  cell.lign_in   <- cell.input[,,"ligninC"] * param[,,"f3"]
-  # SOC transferred from active to slow SOC sub-pool
-  cell.aSOC_in   <- ActiveSteadyState * decay[,,"active"] * cell.f4_a2s
-  # Bring all carbon input to the slow SOC sub-pool together
-  SlowAlpha <- collapseNames(dimSums(cell.lign_in, dim=3.1) + cell.aSOC_in)
-  SlowSteadyState <- .steadystate(SlowAlpha,  decay, "slow")
-
-  ### PassiveAlpha calculations ###
-  ## Calculate all parts of carbon inflows
-  # SOC transferred from active to passive SOC sub-pool
-  cell.aSOC_in2   <- ActiveSteadyState * decay[,,"active"] * param[,,"f5"]
-  # SOC transferred from slow to passive SOC sub-pool
-  cell.sSOC_in    <- SlowSteadyState * decay[,,"slow"] * param[,,"f6"]
-  # Bring all carbon input to the slow SOC sub-pool together
-  PassiveAlpha     <- collapseNames(cell.aSOC_in2 + cell.sSOC_in)
-  PassiveSteadyState <- .steadystate(PassiveAlpha,  decay, "passive")
-
-
-  SoilCarbonSteadyState <-magpiesort(mbind(ActiveSteadyState,
-                                           SlowSteadyState,
-                                           PassiveSteadyState))
-
-  if(output%in%c("full","alpha_in")){
-
-    .alpha <- function(alpha,name,name2) {
-      return(add_dimension(add_dimension(collapseNames(alpha),
-                                         dim=3.2,add="subpool",nm=name),
-                           dim=3.1,add="output",nm=name2))
-    }
-
-    if(output=="full"){    Alpha <- magpiesort(mbind(.alpha(ActiveAlpha, "active","alpha"),
-                                                      .alpha(SlowAlpha, "slow","alpha"),
-                                                      .alpha(PassiveAlpha, "passive","alpha")))
-
-     tmp   <- PassiveAlpha
-     tmp[] <- 0
-     Alpha_in <- magpiesort(mbind(.alpha(dimSums(cell.metabDOC_in + cell.strucDOC_in, dim=3.1),"active","alpha_in"),
-                                  .alpha(dimSums(cell.lign_in, dim=3.1), "slow","alpha_in"),
-                                  .alpha(tmp,"passive","alpha_in")))
-
-     SoilCarbonSteadyState <- add_dimension(SoilCarbonSteadyState,
-                                            dim=3.1,add="output",nm="steadystate")
-     SoilCarbonSteadyState <- mbind(SoilCarbonSteadyState, Alpha, Alpha_in)
-
-     } else if(output=="alpha_in"){
-
-       Alpha_in <- magpiesort(mbind(.alpha(cell.metabDOC_in + cell.strucDOC_in,"active","alpha_in"),
-                                    .alpha(cell.lign_in, "slow","alpha_in")))
-
-       SoilCarbonSteadyState <- Alpha_in
-     }
+  .steadystate <- function(alpha, decay, name) {
+    x <- toolConditionalReplace(alpha / decay[, , name], "is.na()", 0)
+    return(add_dimension(collapseNames(x), dim = 3.2, add = "subpool", nm = name))
   }
 
-  return(list(
-    x=SoilCarbonSteadyState,
-    weight=NULL,
-    unit="per yr",
-    description="Steady-state for all SOC sub-pool per year",
-    isocountries=FALSE))
+  activeSteadyState  <- .steadystate(alpha[,,"active"],  decay, "active")
+  slowSteadyState    <- .steadystate(alpha[,,"slow"],    decay, "slow")
+  passiveSteadyState <- .steadystate(alpha[,,"passive"], decay, "passive")
+  soilCarbonSteadyState <- magpiesort(mbind(activeSteadyState,
+                                            slowSteadyState,
+                                            passiveSteadyState))
+  ###############################################################
+
+  return(list(x      = soilCarbonSteadyState,
+              weight = NULL,
+              unit   = "per yr",
+              description  = "Steady-state for all SOC sub-pool per year",
+              isocountries = FALSE))
 }

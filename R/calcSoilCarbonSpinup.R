@@ -4,8 +4,9 @@
 #' @return magpie object in cellular resolution
 #' @author Kristine Karstens
 #'
-#' @param cfg_default run configuration for default setup (used for spinup setup)
-#' @param spinup_start start year of spinup (model_start-1-spinup_start has to be a multiple of recycling length)
+#' @param lpjml       Switch between LPJmL natveg versionstop
+#' @param climatetype Switch between different climate scenarios
+#'
 #' @examples
 #' \dontrun{
 #' calcOutput("SoilCarbon")
@@ -13,46 +14,49 @@
 #' @importFrom magclass setNames collapseDim
 #' @importFrom magpiesets findset
 
-calcSoilCarbonSpinup <- function(spinup_start=1510, cfg_default=NULL){
+calcSoilCarbonSpinup <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
+                                 climatetype = "GSWP3-W5E5:historical") {
 
-  recycling_length     <- 30
-  model_start          <- 1901
-  recycling_years      <- c(model_start:(model_start+recycling_length-1))
+  spinupStart         <- 1510
+  recyclingLength     <- 30
+  modelStart          <- 1901
+  recyclingYears      <- c(modelStart:(modelStart + recyclingLength - 1))
 
   # Load steady states and decay
-  SoilCarbonSteadyState <- calcOutput("SteadyState", cfg=cfg_default, years=recycling_years, aggregate = FALSE)
-  Decay                 <- calcOutput("Decay", tillage=cfg_default$tillage, climate_scen=cfg_default$climate,
-                                      years=recycling_years, aggregate = FALSE)
+  soilCarbonSteadyState <- calcOutput("SteadyState", lpjml = lpjml, climatetype = climatetype,
+                                      years = recyclingYears, aggregate = FALSE)
+  decay                 <- calcOutput("DecayRaw",    lpjml = lpjml, climatetype = climatetype,
+                                      mode = "historicalSpinup",
+                                      years = recyclingYears, aggregate = FALSE)
 
   names                 <- as.vector(outer(c("actualstate", "naturalstate"),
-                                           getItems(Decay, dim = 3),
+                                           getItems(decay, dim = 3),
                                            paste, sep = "."))
-  SoilCarbonInit        <- new.magpie(getItems(Decay, dim = 1), spinup_start, names)
-  SoilCarbonInit[, , "actualstate.crop"]    <- SoilCarbonSteadyState[, 1, "natveg"]
-  SoilCarbonInit[, , "actualstate.natveg"]  <- SoilCarbonSteadyState[, 1, "natveg"]
-  SoilCarbonInit[, , "naturalstate.crop"]   <- SoilCarbonSteadyState[, 1, "natveg"]
-  SoilCarbonInit[, , "naturalstate.natveg"] <- SoilCarbonSteadyState[, 1, "natveg"]
+  soilCarbonInit        <- new.magpie(getItems(decay, dim = 1), spinupStart, names)
+  soilCarbonInit[, , "actualstate.crop"]    <- soilCarbonSteadyState[, 1, "natveg"]
+  soilCarbonInit[, , "actualstate.natveg"]  <- soilCarbonSteadyState[, 1, "natveg"]
+  soilCarbonInit[, , "naturalstate.crop"]   <- soilCarbonSteadyState[, 1, "natveg"]
+  soilCarbonInit[, , "naturalstate.natveg"] <- soilCarbonSteadyState[, 1, "natveg"]
 
-  for(i in 1:((model_start-1-spinup_start)/recycling_length)){
+  for (i in 1:((modelStart - 1 - spinupStart) / recyclingLength)) {
 
-    tmp_years    <- (spinup_start+1):(spinup_start+recycling_length)+(i-1)*recycling_length
+    tmpYears    <- (spinupStart + 1):(spinupStart + recyclingLength) + (i - 1) * recyclingLength
 
-    # Load Landuse dta for spinup period
-    scen    <- paste0("spinup_", tmp_years[1]-1, "to", tmp_years[recycling_length])
-    Landuse <- calcOutput("Landuse", landuse_scen=scen, aggregate=FALSE)
-    tmp     <- toolSoilCarbonCycling(SoilCarbonInit,
-                                     setYears(SoilCarbonSteadyState, tmp_years),
-                                     setYears(Decay,                 tmp_years),
-                                     Landuse)
-    SoilCarbonInit <- tmp[, tail(tmp_years, 1), c("actualstate", "naturalstate")]
+    # Load Landuse data for spinup period
+    period  <- paste0("states_", tmpYears[1] - 1, "to", tmpYears[recyclingLength])
+    landuse <- calcOutput("Landuse", period = period, aggregate = FALSE)
+    tmp     <- toolSoilCarbonCycling(soilCarbonInit,
+                                     setYears(soilCarbonSteadyState, tmpYears),
+                                     setYears(decay,                 tmpYears),
+                                     landuse)
+    soilCarbonInit <- tmp[, tail(tmpYears, 1), c("actualstate", "naturalstate")]
   }
 
-  return(list( x            = SoilCarbonInit,
-               weight       = NULL,
-               unit         = "Mt C",
-               min          = 0,
-               description  = "Soil carbon stocks on croplands for starting of the modelling period",
-               isocountries = FALSE)
+  return(list(x            = soilCarbonInit,
+              weight       = NULL,
+              unit         = "Mt C",
+              min          = 0,
+              description  = "Soil carbon stocks on croplands for starting of the modelling period",
+              isocountries = FALSE)
   )
 }
-

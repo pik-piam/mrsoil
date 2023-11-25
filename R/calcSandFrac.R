@@ -19,10 +19,11 @@ calcSandFrac <- function() {
   sandfrac15 <- readSource("SoilGrids", subtype = "sandfrac_15", convert = "onlycorrect")
   sandfrac30 <- readSource("SoilGrids", subtype = "sandfrac_30", convert = "onlycorrect")
 
-  sandfrac0to30 <- sandfrac0  * 1 / 12 +
-                   sandfrac5  * 3 / 12 +
-                   sandfrac15 * 5 / 12 +
-                   sandfrac30 * 3 / 12
+  sandfrac0to30 <-
+    sandfrac0  * 1 / 12 +
+    sandfrac5  * 3 / 12 +
+    sandfrac15 * 5 / 12 +
+    sandfrac30 * 3 / 12
 
   # percent to dimensionless
   sandfrac0to30 <- sandfrac0to30 / 100

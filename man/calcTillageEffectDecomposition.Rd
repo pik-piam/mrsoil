@@ -4,14 +4,14 @@
 \alias{calcTillageEffectDecomposition}
 \title{calcTillageEffectDecomposition}
 \usage{
-calcTillageEffectDecomposition(tillage = "histtill")
+calcTillageEffectDecomposition(tillage = "default")
 }
 \arguments{
 \item{tillage}{tillage type to de considered.
-'histtill' (default) is historic tillage area shares based on no
+'histtill' is historic tillage area shares based on no
 tillage areas from Porwollik together with rule based assumption;
 'mixedtill' includes pure rule based assumptions.
-Other options: 'fulltill', 'notill', 'reducedtill'}
+Other options: 'fulltill', 'notill', 'reducedtill', 'default'}
 }
 \value{
 magpie object in cellular resolution

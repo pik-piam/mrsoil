@@ -4,14 +4,14 @@
 #'              Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories
 #'              for rainfed and irrigated systems
 #'
-#' @return magpie object in cellular resolution
-#' @author Kristine Karstens
-#'
 #' @param irrigation  irrigation type to de considered. Default (mixedirrig) is historic
 #'                    irrigation area shares to calculate area weighted mean over rainfed
 #'                    and irrigated factors. Other options: rainfed, irrigated
 #' @param lpjml       Switch between LPJmL natveg versionstop
 #' @param climatetype Switch between different climate scenarios
+#'
+#' @return magpie object in cellular resolution
+#' @author Kristine Karstens
 #'
 #' @examples
 #' \dontrun{
@@ -53,8 +53,8 @@ calcWaterEffectDecomposition <- function(irrigation  = "mixedirrig",
     cellMappet[cellMappet > 1.25] <- 1.25
     cellMappet                    <- toolConditionalReplace(cellMappet, "is.na()", 0)
 
-    cellWmonthFactor  <- paramWintercept + paramWslope  * cellMappet -
-                           paramWslope2 * cellMappet**2
+    cellWmonthFactor  <- (paramWintercept + paramWslope  * cellMappet -
+                            paramWslope2 * cellMappet**2)
     cellWmonthFactor  <- add_dimension(collapseNames(cellWmonthFactor),
                                        dim = 3.1, add = "irrigation", nm = "rainfed")
 
@@ -86,16 +86,16 @@ calcWaterEffectDecomposition <- function(irrigation  = "mixedirrig",
     cellIrAreaShr  <- dimSums(cellIrAreaShr, dim = 3)
 
     cellWrainfed   <- calcOutput("WaterEffectDecomposition",
-                                         climatetype = climatetype, lpjml = lpjml,
-                                         irrigation = "rainfed",  aggregate = FALSE)
+                                 climatetype = climatetype, lpjml = lpjml,
+                                 irrigation = "rainfed",  aggregate = FALSE)
     cellWirrigated <- calcOutput("WaterEffectDecomposition",
-                                         climatetype = climatetype, lpjml = lpjml,
-                                         irrigation = "irrigated", aggregate = FALSE)
+                                 climatetype = climatetype, lpjml = lpjml,
+                                 irrigation = "irrigated", aggregate = FALSE)
 
     years          <- intersect(getYears(cellIrAreaShr), getYears(cellWrainfed))
 
-    cellWfactor    <- setNames(cellWirrigated * cellIrAreaShr[, years, ], "mixed") +
-                        setNames(cellWrainfed[, years, ] * (1 - cellIrAreaShr[, years, ]), "mixed")
+    cellWfactor    <- (setNames(cellWirrigated * cellIrAreaShr[, years, ], "mixed") +
+                         setNames(cellWrainfed[, years, ] * (1 - cellIrAreaShr[, years, ]), "mixed"))
 
   } else {
     stop("Irrigation setting is unknown. Please use: 'mixedirrig','rainfed' or 'irrigated'.")

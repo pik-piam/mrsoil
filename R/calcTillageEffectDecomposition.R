@@ -7,17 +7,20 @@
 #' @author Kristine Karstens
 #'
 #' @param tillage tillage type to de considered.
-#'                'histtill' (default) is historic tillage area shares based on no
+#'                'histtill' is historic tillage area shares based on no
 #'                tillage areas from Porwollik together with rule based assumption;
 #'                'mixedtill' includes pure rule based assumptions.
-#'                Other options: 'fulltill', 'notill', 'reducedtill'
+#'                Other options: 'fulltill', 'notill', 'reducedtill', 'default'
 #'
 #' @examples
 #' \dontrun{
 #'   calcOutput("TillageEffectDecomposition", aggregate = FALSE)
 #' }
 
-calcTillageEffectDecomposition <- function(tillage = "histtill") {
+calcTillageEffectDecomposition <- function(tillage = "default") {
+
+  default <- "mixedtill" #to be better align with magpie simulations as long as not till is not included
+  tillage <- ifelse(tillage == "default", default, tillage)
 
   paramTill     <- readSource("IPCCSoil", convert = FALSE)[, , "tillfac", pmatch = TRUE]
   tillage2param <- c(fulltill    = "tillfac_ft",
@@ -31,10 +34,7 @@ calcTillageEffectDecomposition <- function(tillage = "histtill") {
 
   } else if (tillage %in% c("mixedtill", "histtill")) {
 
-    tillage2area     <- c(mixedtill   = "ruleBased",
-                          histtill    = "historicNoTill")
-
-    cellTillAreaShr  <- calcOutput("TillageArea", tillage = tillage2area[tillage], aggregate = FALSE)
+    cellTillAreaShr  <- calcOutput("TillageArea", tillage = tillage, aggregate = FALSE)
     paramTill        <- setNames(paramTill[, , tillage2param], names(tillage2param))
     cellTillFactor   <- setNames(dimSums(paramTill * cellTillAreaShr, dim = 3), tillage)
 

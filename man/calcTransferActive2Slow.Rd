@@ -15,7 +15,9 @@ transferred to the slow SOC sub-pool for mineral soils using the steady-state me
 of the 2019 Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories
 }
 \examples{
-\dontrun{ calcOutput("TransferActive2Slow", aggregate = FALSE) }
+\dontrun{
+calcOutput("TransferActive2Slow", aggregate = FALSE)
+}
 
 }
 \author{

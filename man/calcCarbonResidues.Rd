@@ -4,18 +4,7 @@
 \alias{calcCarbonResidues}
 \title{calcCarbonResidues}
 \usage{
-calcCarbonResidues(
-  yieldscenario = "default",
-  rec.scenario = "default",
-  res.scenario = "default"
-)
-}
-\arguments{
-\item{yieldscenario}{yield scenario}
-
-\item{rec.scenario}{recycling scenario}
-
-\item{res.scenario}{residue scenario}
+calcCarbonResidues()
 }
 \value{
 List of magpie object with results on cellular level, weight on cellular level, unit and description.
@@ -24,7 +13,6 @@ List of magpie object with results on cellular level, weight on cellular level, 
 Calculates carbon input from residues for cropland soils.
 }
 \examples{
-
 \dontrun{
 calcOutput("CarbonResidues")
 }

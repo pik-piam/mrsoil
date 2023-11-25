@@ -5,7 +5,7 @@
 \title{calcTempEffectDecomposition}
 \usage{
 calcTempEffectDecomposition(
-  lpjml = "ggcmi_phase3_nchecks_9ca735cb",
+  lpjml = "LPJmL4_for_MAgPIE_44ac93de",
   climatetype = "GSWP3-W5E5:historical"
 )
 }

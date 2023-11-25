@@ -4,14 +4,18 @@
 \alias{calcSoilCarbon}
 \title{calcSoilCarbon}
 \usage{
-calcSoilCarbon(output = "full", cfg = NULL, cfg_default = NULL)
+calcSoilCarbon(
+  output = "actualstate",
+  lpjml = "LPJmL4_for_MAgPIE_44ac93de",
+  climatetype = "GSWP3-W5E5:historical"
+)
 }
 \arguments{
-\item{output}{'full' - all important soil related values, 'reduced' - just SOC state values}
+\item{output}{"actualstate" (default), "carbontransfer", "interstate", "naturalstate"}
 
-\item{cfg}{run configuration}
+\item{lpjml}{Switch between LPJmL natveg versionstop}
 
-\item{cfg_default}{run configuration for default setup (used for spinup setup)}
+\item{climatetype}{Switch between different climate scenarios}
 }
 \value{
 magpie object in cellular resolution

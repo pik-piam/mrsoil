@@ -4,12 +4,20 @@
 \alias{calcCarbonLitter}
 \title{calcCarbonLitter}
 \usage{
-calcCarbonLitter(litter_param = "Century-Average", climate_scen = "default")
+calcCarbonLitter(
+  lpjml = "LPJmL4_for_MAgPIE_44ac93de",
+  climatetype = "GSWP3-W5E5:historical",
+  mode = "historicalSpinup"
+)
 }
 \arguments{
-\item{litter_param}{litter scenario}
+\item{lpjml}{Switch between LPJmL natveg versionstop}
 
-\item{climate_scen}{climate configuration}
+\item{climatetype}{Switch between different climate scenarios}
+
+\item{mode}{"historicalSpinup" for historical period and
+"magpieInput" for future
+"magpieInput+fixedFPC" for future but given data restriction on fpc data}
 }
 \value{
 List of magpie object with results on cellular level, weight on cellular level, unit and description.
@@ -19,7 +27,7 @@ Calculates Carbon Input from litter
 }
 \examples{
 \dontrun{
-calcOutput("CarbonLitter")
+calcOutput("CarbonLitter", aggregate = FALSE)
 }
 }
 \author{

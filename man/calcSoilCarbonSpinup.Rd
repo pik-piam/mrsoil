@@ -4,12 +4,15 @@
 \alias{calcSoilCarbonSpinup}
 \title{calcSoilCarbonSpinup}
 \usage{
-calcSoilCarbonSpinup(spinup_start = 1510, cfg_default = NULL)
+calcSoilCarbonSpinup(
+  lpjml = "LPJmL4_for_MAgPIE_44ac93de",
+  climatetype = "GSWP3-W5E5:historical"
+)
 }
 \arguments{
-\item{spinup_start}{start year of spinup (model_start-1-spinup_start has to be a multiple of recycling length)}
+\item{lpjml}{Switch between LPJmL natveg versionstop}
 
-\item{cfg_default}{run configuration for default setup (used for spinup setup)}
+\item{climatetype}{Switch between different climate scenarios}
 }
 \value{
 magpie object in cellular resolution

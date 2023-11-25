@@ -4,10 +4,12 @@
 #' @return magpie object in cellular resolution
 #' @author Kristine Karstens
 #'
-#' @param tillage 'historicNoTill' (default) or 'ruleBased'; histroricNoTill' is based
-#'                on the same assunmptions as 'ruleBased', but additionally accounts for
-#'                historic data on no tillage areas based on Porwolliks datasets.
-#'                'ruleBased' assumes full tillage for annual crops, and reduced tillage for perennials.
+#' @param tillage 'histtill' or 'mixedtill';
+#'                 'mixedtill' assumes full tillage for annual crops, and reduced tillage for perennials.
+#'                 'histtill' is based on the same assunmptions as 'mixedtill', but additionally accounts for
+#'                 historic data on no tillage areas based on Porwolliks datasets for annual no tillage areas
+#'                 (other option 'default' for using the current default)
+#'
 #' @examples
 #' \dontrun{
 #' calcOutput("TillageArea", aggregate = FALSE)
@@ -15,7 +17,10 @@
 #'
 #' @importFrom magpiesets findset
 
-calcTillageArea <- function(tillage = "historicNoTill") {
+calcTillageArea <- function(tillage = "default") {
+
+  default <- "mixedtill" #to be better align with magpie simulations as long as not till is not included
+  tillage <- ifelse(tillage == "default", default, tillage)
 
   cropland            <- toolFillYears(calcOutput("Croparea", cellular = TRUE, aggregate = FALSE),
                                        sort(findset("past_soc")))
@@ -51,7 +56,7 @@ calcTillageArea <- function(tillage = "historicNoTill") {
     cellTillAreaShr[, , missingTillage] <- 0
   }
 
-  if (tillage == "historicNoTill") {
+  if (tillage == "histtill") {
 
     noTillAreas <- readSource("PorwolliksGriddedTillage", convert = "onlycorrect")
     noTillAreas <- toolFillYears(noTillAreas, getYears(cellTillAreaShr))
@@ -60,8 +65,8 @@ calcTillageArea <- function(tillage = "historicNoTill") {
     cellTillAreaShr[, , "reducedtill"][noTillAreas == 1]         <- 0
     cellTillAreaShr[, , "fulltill"][noTillAreas == 1]            <- 0
 
-  } else if (tillage != "ruleBased") {
-    stop("tillage setting is unknown. Please use: 'ruleBased' or 'historicNoTill'.")
+  } else if (tillage != "mixedtill") {
+    stop("tillage setting is unknown. Please use: 'mixedtill' or 'histtill'.")
   }
 
   return(list(x            = cellTillAreaShr,

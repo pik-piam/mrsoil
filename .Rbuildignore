@@ -9,3 +9,4 @@
 ^.lintr$
 ^tests/.lintr$
 ^Makefile$
+^.*CITATION.cff$

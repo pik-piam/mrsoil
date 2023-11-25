@@ -5,8 +5,8 @@
 #'
 #' @param lpjml       Switch between LPJmL natveg versionstop
 #' @param climatetype Switch between different climate scenarios
-#' @param mode       "historicalSpinup" for historical period and
-#'                   "magpieInput" for future
+#' @param mode        "historicalSpinup" for historical period and
+#'                    "magpieInput" for future
 #'
 #' @return magpie object in cellular resolution
 #' @author Kristine Karstens
@@ -22,10 +22,6 @@
 calcDecayRaw <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
                          climatetype = "GSWP3-W5E5:historical",
                          mode        = "historicalSpinup") {
-
-  # need two modi
-  # - hisoricalSpinup which handsover crop + natveg
-  # - magpieInput
 
   param <- readSource("IPCCSoil", convert = FALSE)
   # kfaca = decay rate under optimum condition for active (k3)
@@ -63,7 +59,7 @@ calcDecayRaw <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
 
     cellTillFactor <- .bundle(funcName   = "TillageEffectDecomposition",
                               switchType = c("crop",               "natveg"),
-                              switchSet  = c(tillage = "histtill", tillage = "notill"),
+                              switchSet  = c(tillage = "default", tillage = "notill"),
                               staticSet  = list(aggregate = FALSE))
 
   } else if (mode == "magpieInput") {
@@ -97,10 +93,9 @@ calcDecayRaw <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
                             .clean(slowDecay,    "slow"),
                             .clean(passiveDecay, "passive")))
 
-  return(list(
-    x = decay,
-    weight = NULL,
-    unit = "per yr",
-    description = "Decay rate for all SOC sub-pool per year",
-    isocountries = FALSE))
+  return(list(x      = decay,
+              weight = NULL,
+              unit   = "per yr",
+              description  = "Decay rate for all SOC sub-pool per year",
+              isocountries = FALSE))
 }

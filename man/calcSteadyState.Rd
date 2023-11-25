@@ -4,23 +4,28 @@
 \alias{calcSteadyState}
 \title{calcSteadyState}
 \usage{
-calcSteadyState(cfg = NULL, output = "reduced")
+calcSteadyState(
+  lpjml = "LPJmL4_for_MAgPIE_44ac93de",
+  climatetype = "GSWP3-W5E5:historical"
+)
 }
 \arguments{
-\item{cfg}{general configuration}
+\item{lpjml}{Switch between LPJmL natveg versionstop}
 
-\item{output}{'full' - all important soil related values, 'reduced' - just SOC state values}
+\item{climatetype}{Switch between different climate scenarios}
 }
 \value{
 magpie object in cellular resolution
 }
 \description{
 This function wraps together the steady state for all sub-pool SOC stock for mineral soils
-using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines
-for National Greenhouse Gas Inventories
+             using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines
+             for National Greenhouse Gas Inventories
 }
 \examples{
-\dontrun{ calcOutput("SteadyState", aggregate = FALSE) }
+\dontrun{
+calcOutput("SteadyState", aggregate = FALSE)
+}
 
 }
 \author{
