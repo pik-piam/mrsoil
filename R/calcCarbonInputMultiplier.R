@@ -24,7 +24,7 @@ calcCarbonInputMultiplier <- function(input = "generic") {
   tillage2param  <- c(fulltill    = "f2_ft",
                       reducedtill = "f2_rt",
                       notill      = "f2_nt")
-  f2struc2act <- setNames(param[, , tillage2param], names(tillage2param))
+  f2struc2act <- setNames(soilParam[, , tillage2param], names(tillage2param))
   f4act2slo   <- calcOutput("TransferActive2Slow", aggregate = FALSE)
 
   if(input == "residues") {
