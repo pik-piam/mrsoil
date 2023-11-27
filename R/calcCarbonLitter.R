@@ -57,7 +57,7 @@ calcCarbonLitter <-  function(lpjml       = c(natveg = "LPJmL4_for_MAgPIE_44ac93
   # Load foliage projected cover - fraction of pfts for each grid cell
   fixfpc <- ifelse(grepl("fixedFPC", mode), TRUE, FALSE)
   fpc <- calcOutput("LPJmL_new",
-                    lpjml       = ifelse(fixfpc, "LPJmL4_for_MAgPIE_84a69edd", lpjml),
+                    lpjml       = ifelse(fixfpc, "LPJmL4_for_MAgPIE_84a69edd", lpjml["natveg"]),
                     climatetype = ifelse(fixfpc, "GSWP3-W5E5:historical", climatetype),
                     stage       = ifelse(fixfpc, "smoothed", stage),
                     subtype = "fpc", aggregate = FALSE)[, , "fraction natural vegetation", invert = TRUE]
