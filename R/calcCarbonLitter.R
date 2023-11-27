@@ -15,7 +15,7 @@
 #' }
 #' @importFrom magpiesets findset
 
-calcCarbonLitter <-  function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
+calcCarbonLitter <-  function(lpjml       = c(natveg = "LPJmL4_for_MAgPIE_44ac93de"),
                               climatetype = "GSWP3-W5E5:historical",
                               mode        = "historicalSpinup") {
 
@@ -25,13 +25,13 @@ calcCarbonLitter <-  function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
   stage       <- mode2stage[mode]
 
   # load and convert LPjmL data
-  litfallc     <- calcOutput("LPJmL_new", version = lpjml, climatetype = climatetype, stage = stage,
+  litfallc     <- calcOutput("LPJmL_new", version = lpjml["natveg"], climatetype = climatetype, stage = stage,
                               subtype = "alitterfallc", aggregate = FALSE, )
-  litburnc     <- calcOutput("LPJmL_new", version = lpjml, climatetype = climatetype, stage = stage,
+  litburnc     <- calcOutput("LPJmL_new", version = lpjml["natveg"], climatetype = climatetype, stage = stage,
                               subtype = "alitterburnc", aggregate = FALSE)
-  litfallcWood <- calcOutput("LPJmL_new", version = lpjml, climatetype = climatetype, stage = stage,
+  litfallcWood <- calcOutput("LPJmL_new", version = lpjml["natveg"], climatetype = climatetype, stage = stage,
                               subtype = "alitterfallc_wood", aggregate = FALSE)
-  litburncWood <- calcOutput("LPJmL_new", version = lpjml, climatetype = climatetype, stage = stage,
+  litburncWood <- calcOutput("LPJmL_new", version = lpjml["natveg"], climatetype = climatetype, stage = stage,
                               subtype = "alitterburnc_wood", aggregate = FALSE)
 
   litfallc     <- toolConditionalReplace(litfallc - litburnc,         "<0", 0)
