@@ -7,7 +7,7 @@
 #' @param irrigation  irrigation type to de considered. Default (mixedirrig) is historic
 #'                    irrigation area shares to calculate area weighted mean over rainfed
 #'                    and irrigated factors. Other options: rainfed, irrigated
-#' @param lpjml       Switch between LPJmL natveg versionstop
+#' @param lpjmlNatveg Switch between LPJmL natveg versionstop
 #' @param climatetype Switch between different climate scenarios
 #'
 #' @return magpie object in cellular resolution
@@ -21,7 +21,7 @@
 #' @importFrom magpiesets findset
 
 calcWaterEffectDecomposition <- function(irrigation  = "mixedirrig",
-                                         lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
+                                         lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                                          climatetype = "GSWP3-W5E5:historical") {
 
   stage <- ifelse(grepl("historical", climatetype),
@@ -38,13 +38,13 @@ calcWaterEffectDecomposition <- function(irrigation  = "mixedirrig",
     cellPrep   <- calcOutput("LPJmLClimateInput", climatetype  = climatetype,
                              variable     = "precipitation:monthlySum",
                              stage        = stage,
-                             lpjmlVersion = lpjml,
+                             lpjmlVersion = lpjmlNatveg,
                              aggregate    = FALSE)
 
     cellPet    <- calcOutput(type = "LPJmL_new", climatetype = climatetype,
                              subtype   = "mpet",
                              stage     = stage,
-                             version   = lpjml,
+                             version   = lpjmlNatveg,
                              aggregate = FALSE)
 
     years      <- intersect(getYears(cellPet), getYears(cellPrep))
@@ -86,10 +86,10 @@ calcWaterEffectDecomposition <- function(irrigation  = "mixedirrig",
     cellIrAreaShr  <- dimSums(cellIrAreaShr, dim = 3)
 
     cellWrainfed   <- calcOutput("WaterEffectDecomposition",
-                                 climatetype = climatetype, lpjml = lpjml,
+                                 climatetype = climatetype, lpjmlNatveg = lpjmlNatveg,
                                  irrigation = "rainfed",  aggregate = FALSE)
     cellWirrigated <- calcOutput("WaterEffectDecomposition",
-                                 climatetype = climatetype, lpjml = lpjml,
+                                 climatetype = climatetype, lpjmlNatveg = lpjmlNatveg,
                                  irrigation = "irrigated", aggregate = FALSE)
 
     years          <- intersect(getYears(cellIrAreaShr), getYears(cellWrainfed))

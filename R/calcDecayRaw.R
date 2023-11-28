@@ -3,7 +3,7 @@
 #'              for mineral soils using the steady-state method (Tier 2) of the 2019
 #'              Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories
 #'
-#' @param lpjml       Switch between LPJmL natveg versionstop
+#' @param lpjmlNatveg Switch between LPJmL natveg versionstop
 #' @param climatetype Switch between different climate scenarios
 #' @param mode        "historicalSpinup" for historical period and
 #'                    "magpieInput" for future
@@ -19,7 +19,7 @@
 #' @import madrat
 #' @import magclass
 
-calcDecayRaw <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
+calcDecayRaw <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                          climatetype = "GSWP3-W5E5:historical",
                          mode        = "historicalSpinup") {
 
@@ -55,7 +55,7 @@ calcDecayRaw <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
     cellWfactor <- .bundle(funcName   = "WaterEffectDecomposition",
                            switchType = c("crop",                    "natveg"),
                            switchSet  = c(irrigation = "mixedirrig", irrigation = "rainfed"),
-                           staticSet  = list(lpjml = lpjml, climatetype = climatetype, aggregate = FALSE))
+                           staticSet  = list(lpjmlNatveg = lpjmlNatveg, climatetype = climatetype, aggregate = FALSE))
 
     cellTillFactor <- .bundle(funcName   = "TillageEffectDecomposition",
                               switchType = c("crop",               "natveg"),
@@ -67,7 +67,7 @@ calcDecayRaw <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
     cellWfactor <- .bundle(funcName   = "WaterEffectDecomposition",
                            switchType = c("rainfed",                "irrigated"),
                            switchSet  = c(irrigation = "rainfed", irrigation = "irrigated"),
-                           staticSet  = list(lpjml = lpjml, climatetype = climatetype, aggregate = FALSE))
+                           staticSet  = list(lpjmlNatveg = lpjmlNatveg, climatetype = climatetype, aggregate = FALSE))
 
     cellTillFactor <- .bundle(funcName   = "TillageEffectDecomposition",
                               switchType = c("notill", "reducedtill", "fulltill"),
@@ -81,7 +81,7 @@ calcDecayRaw <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
   }
 
   cellTempFactor <- calcOutput("TempEffectDecomposition",
-                               lpjml = lpjml, climatetype = climatetype, aggregate = FALSE)
+                               lpjmlNatveg = lpjmlNatveg, climatetype = climatetype, aggregate = FALSE)
   cellSandFrac   <- calcOutput("SandFrac", aggregate = FALSE)
 
   activeDecay    <-  param[, , "kfaca"] * cellWfactor * cellTempFactor * cellTillFactor *

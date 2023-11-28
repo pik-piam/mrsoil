@@ -4,7 +4,7 @@
 #' @return magpie object in cellular resolution
 #' @author Kristine Karstens
 #'
-#' @param lpjml       Switch between LPJmL natveg versionstop
+#' @param lpjmlNatveg Switch between LPJmL natveg versionstop
 #' @param climatetype Switch between different climate scenarios
 #'
 #' @examples
@@ -14,7 +14,7 @@
 #' @importFrom magclass setNames collapseDim
 #' @importFrom magpiesets findset
 
-calcSoilCarbonSpinup <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
+calcSoilCarbonSpinup <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                                  climatetype = "GSWP3-W5E5:historical") {
 
   spinupStart         <- 1510
@@ -23,9 +23,9 @@ calcSoilCarbonSpinup <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
   recyclingYears      <- c(modelStart:(modelStart + recyclingLength - 1))
 
   # Load steady states and decay
-  soilCarbonSteadyState <- calcOutput("SteadyState", lpjml = lpjml, climatetype = climatetype,
+  soilCarbonSteadyState <- calcOutput("SteadyState", lpjmlNatveg = lpjmlNatveg, climatetype = climatetype,
                                       years = recyclingYears, aggregate = FALSE)
-  decay                 <- calcOutput("DecayRaw",    lpjml = lpjml, climatetype = climatetype,
+  decay                 <- calcOutput("DecayRaw",    lpjmlNatveg = lpjmlNatveg, climatetype = climatetype,
                                       mode = "historicalSpinup",
                                       years = recyclingYears, aggregate = FALSE)
 

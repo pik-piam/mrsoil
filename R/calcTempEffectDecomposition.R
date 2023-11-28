@@ -6,7 +6,7 @@
 #' @return magpie object in cellular resolution
 #' @author Kristine Karstens
 #'
-#' @param lpjml       Switch between LPJmL natveg versionstop
+#' @param lpjmlNatveg Switch between LPJmL natveg versionstop
 #' @param climatetype Switch between different climate scenarios
 #'
 #' @examples
@@ -16,7 +16,7 @@
 #'
 #' @importFrom magpiesets findset
 
-calcTempEffectDecomposition <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
+calcTempEffectDecomposition <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                                         climatetype = "GSWP3-W5E5:historical") {
 
   stage <- ifelse(grepl("historical", climatetype),
@@ -31,7 +31,7 @@ calcTempEffectDecomposition <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93d
   cellTemp  <- calcOutput("LPJmLClimateInput", climatetype  = climatetype,
                           variable     = "temperature:monthlyMean",
                           stage        = stage,
-                          lpjmlVersion = lpjml,
+                          lpjmlVersion = lpjmlNatveg,
                           aggregate    = FALSE)
 
   tempFunc  <- function(x) x**paramTa * exp(0.076 * (1 - x**paramTb))

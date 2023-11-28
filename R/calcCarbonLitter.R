@@ -1,7 +1,7 @@
 #' @title calcCarbonLitter
 #' @description Calculates Carbon Input from litter
 #'
-#' @param lpjml       Switch between LPJmL natveg versionstop
+#' @param lpjmlNatveg Switch between LPJmL natveg versionstop
 #' @param climatetype Switch between different climate scenarios
 #' @param mode        "historicalSpinup" for historical period and
 #'                    "magpieInput" for future
@@ -15,7 +15,7 @@
 #' }
 #' @importFrom magpiesets findset
 
-calcCarbonLitter <-  function(lpjml       = c(natveg = "LPJmL4_for_MAgPIE_44ac93de"),
+calcCarbonLitter <-  function(lpjmlNatveg       = c(natveg = "LPJmL4_for_MAgPIE_44ac93de"),
                               climatetype = "GSWP3-W5E5:historical",
                               mode        = "historicalSpinup") {
 
@@ -25,13 +25,13 @@ calcCarbonLitter <-  function(lpjml       = c(natveg = "LPJmL4_for_MAgPIE_44ac93
   stage       <- mode2stage[mode]
 
   # load and convert LPjmL data
-  litfallc     <- calcOutput("LPJmL_new", version = lpjml["natveg"], climatetype = climatetype, stage = stage,
+  litfallc     <- calcOutput("LPJmL_new", version = lpjmlNatveg, climatetype = climatetype, stage = stage,
                               subtype = "alitterfallc", aggregate = FALSE, )
-  litburnc     <- calcOutput("LPJmL_new", version = lpjml["natveg"], climatetype = climatetype, stage = stage,
+  litburnc     <- calcOutput("LPJmL_new", version = lpjmlNatveg, climatetype = climatetype, stage = stage,
                               subtype = "alitterburnc", aggregate = FALSE)
-  litfallcWood <- calcOutput("LPJmL_new", version = lpjml["natveg"], climatetype = climatetype, stage = stage,
+  litfallcWood <- calcOutput("LPJmL_new", version = lpjmlNatveg, climatetype = climatetype, stage = stage,
                               subtype = "alitterfallc_wood", aggregate = FALSE)
-  litburncWood <- calcOutput("LPJmL_new", version = lpjml["natveg"], climatetype = climatetype, stage = stage,
+  litburncWood <- calcOutput("LPJmL_new", version = lpjmlNatveg, climatetype = climatetype, stage = stage,
                               subtype = "alitterburnc_wood", aggregate = FALSE)
 
   litfallc     <- toolConditionalReplace(litfallc - litburnc,         "<0", 0)
@@ -57,10 +57,11 @@ calcCarbonLitter <-  function(lpjml       = c(natveg = "LPJmL4_for_MAgPIE_44ac93
   # Load foliage projected cover - fraction of pfts for each grid cell
   fixfpc <- ifelse(grepl("fixedFPC", mode), TRUE, FALSE)
   fpc <- calcOutput("LPJmL_new",
-                    version     = ifelse(fixfpc, "LPJmL4_for_MAgPIE_84a69edd", lpjml["natveg"]),
+                    version     = ifelse(fixfpc, "LPJmL4_for_MAgPIE_84a69edd", lpjmlNatveg),
                     climatetype = ifelse(fixfpc, "GSWP3-W5E5:historical", climatetype),
                     stage       = ifelse(fixfpc, "smoothed", stage),
                     subtype = "fpc", aggregate = FALSE)[, , "fraction natural vegetation", invert = TRUE]
+  if(fixfpc) fpc <- toolFillYears(fpc, years = getYears(out))
 
   woodyPfts <- getNames(fpc[, , "grass", invert = TRUE, pmatch = TRUE])
   treeFrac  <- dimSums(fpc[, , woodyPfts], dim = 3)

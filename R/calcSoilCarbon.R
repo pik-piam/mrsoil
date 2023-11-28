@@ -5,7 +5,7 @@
 #' @author Kristine Karstens
 #'
 #' @param output "actualstate" (default), "carbontransfer", "interstate", "naturalstate"
-#' @param lpjml       Switch between LPJmL natveg versionstop
+#' @param lpjmlNatveg Switch between LPJmL natveg versionstop
 #' @param climatetype Switch between different climate scenarios
 #'
 #' @examples
@@ -16,7 +16,7 @@
 #' @importFrom magpiesets findset
 
 calcSoilCarbon <- function(output      = "actualstate",
-                           lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
+                           lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                            climatetype = "GSWP3-W5E5:historical") {
   #######################
   ### Load Data & Ini ###
@@ -24,8 +24,8 @@ calcSoilCarbon <- function(output      = "actualstate",
 
   # Load Landuse data
   landuse               <- calcOutput("Landuse", aggregate = FALSE)
-  soilCarbonSteadyState <- calcOutput("SteadyState", lpjml = lpjml, climatetype = climatetype, aggregate = FALSE)
-  decay                 <- calcOutput("DecayRaw",    lpjml = lpjml, climatetype = climatetype, aggregate = FALSE)
+  soilCarbonSteadyState <- calcOutput("SteadyState", lpjmlNatveg = lpjmlNatveg, climatetype = climatetype, aggregate = FALSE)
+  decay                 <- calcOutput("DecayRaw",    lpjmlNatveg = lpjmlNatveg, climatetype = climatetype, aggregate = FALSE)
   soilCarbonInit        <- calcOutput("SoilCarbonSpinup", aggregate = FALSE)
 
   ######################

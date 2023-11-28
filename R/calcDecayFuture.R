@@ -6,7 +6,7 @@
 #'              NOTE: This function only provides hamronized future climate scenario data used as
 #'              input to MAgPIE. For historical data use \link{calcDecayRaw}
 #'
-#' @param lpjml       Switch between LPJmL natveg versionstop
+#' @param lpjmlNatveg Switch between LPJmL natveg versionstop
 #' @param climatetype Switch between different climate scenarios
 #'
 #' @return magpie object in cellular or regional resolution for future climate scenarios
@@ -23,7 +23,7 @@
 #' @import madrat
 #' @import magclass
 
-calcDecayFuture <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
+calcDecayFuture <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                             climatetype = "GSWP3-W5E5:historical") {
   # only new mode on
   # - magpieInput
@@ -31,18 +31,18 @@ calcDecayFuture <- function(lpjml       = "LPJmL4_for_MAgPIE_44ac93de",
   # weightingen (weight total carbon stocks)
 
   # Create settings for LPJmL/GCM from version and climatetype argument
-  cfg   <- toolClimateInputVersion(lpjmlVersion = lpjml,
-                                   climatetype = climatetype)
+  cfg   <- toolClimateInputVersion(lpjmlVersion = lpjmlNatveg,
+                                   climatetype  = climatetype)
 
-  decayBaselineHist <- toolSmooth(calcOutput("DecayRaw", aggregate = FALSE, lpjml = lpjml,
+  decayBaselineHist <- toolSmooth(calcOutput("DecayRaw", aggregate = FALSE, lpjmlNatveg = lpjmlNatveg,
                                              climatetype = cfg$baselineHist, mode = "magpieInput"))
-  decayBaselineGcm  <- toolSmooth(calcOutput("DecayRaw", aggregate = FALSE, lpjml = lpjml,
+  decayBaselineGcm  <- toolSmooth(calcOutput("DecayRaw", aggregate = FALSE, lpjmlNatveg = lpjmlNatveg,
                                              climatetype = cfg$baselineGcm, mode = "magpieInput"))
   out <- toolHarmonize2Baseline(decayBaselineGcm, decayBaselineHist,
                                 ref_year = cfg$refYearHist, method = "limited")
 
   if (cfg$climatetype != cfg$baselineGcm) {
-    decayClimateScen <- toolSmooth(calcOutput("DecayRaw", aggregate = FALSE, lpjml = lpjml,
+    decayClimateScen <- toolSmooth(calcOutput("DecayRaw", aggregate = FALSE, lpjmlNatveg = lpjmlNatveg,
                                               climatetype = climatetype, mode = "magpieInput"))
     out <- toolHarmonize2Baseline(decayClimateScen, out,
                                   ref_year = cfg$refYearGcm, method = "limited")
