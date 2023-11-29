@@ -36,7 +36,7 @@ calcCarbonInputMultiplier <- function() {
   c2dm      <- 0.45
   inputProp <- mbind(inputProp,
                      setNames(param[, , generic] / c2dm,
-                              paste0("generic.", gsub("_dm", "", getNames(param, dim = 2)))))0
+                              paste0("generic.", gsub("_dm", "", getNames(param, dim = 2)))))
 
   # calculate carbon input multipliers
   out <- toolCarbonInputMultiplier(inputProp   = inputProp,
@@ -46,8 +46,8 @@ calcCarbonInputMultiplier <- function() {
 
   weight <- collapseNames(calcOutput("ResBiomass", cellular = TRUE, aggregate = FALSE)[, "y1995", "c"])
   weight <- mbind(dimSums(weight, dim = 3.1),
-                   setNames(dimSums(weight, dim = 3), "generic"),
-                   collapseNames(calcOutput("CarbonManure", aggregate = FALSE)[, "y1995", "c"]))
+                  setNames(dimSums(weight, dim = 3), "generic"),
+                  collapseNames(calcOutput("CarbonManure", aggregate = FALSE)[, "y1995", "c"]))
 
   return(list(x            = out,
               weight       = weights,
