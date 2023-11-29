@@ -104,7 +104,7 @@ calcCarbonInputMultiplier <- function() {
                                    f2struc2act = f2struc2act)
 
   weights <- collapseNames(calcOutput("ResBiomass", cellular = TRUE, aggregate = FALSE)[, "y1995", "c"])
-  weights <- mbind(weights,
+  weights <- mbind(dimSums(weights, dim = 3.1),
                    setNames(dimSums(weighs, dim = 3), "generic"),
                    collapseNames(calcOutput("CarbonManure", aggregate = FALSE)[, "y1995", "c"]))
 
