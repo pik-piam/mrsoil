@@ -35,7 +35,8 @@ calcCarbonInputMultiplier <- function() {
   generic   <- "Generic value for crops not indicated below"
   c2dm      <- 0.45
   inputProp <- mbind(inputProp,
-                     setNames(param[, , generic] / c2dm, gsub("_dm", "", getNames(param, dim = 2))))
+                     setNames(param[, , generic] / c2dm,
+                              paste0("generic.", gsub("_dm", "", getNames(param, dim = 2)))))
 
   # calculate carbon input multipliers
   out <- toolCarbonInputMultiplier(inputProp   = inputProp,
