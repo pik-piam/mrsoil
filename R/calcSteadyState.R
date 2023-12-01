@@ -53,7 +53,7 @@ calcSteadyState <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   residues   <- .prep(calcOutput("CarbonResidues", aggregate = FALSE), "crop")
   manure     <- .prep(calcOutput("CarbonManure",   aggregate = FALSE), "crop")
   litter     <- .prep(calcOutput("CarbonLitter",   lpjmlNatveg = lpjmlNatveg, climatetype = climatetype,
-                                 mode = "historicalSpinup", aggregate = FALSE), "natveg")
+                                 mode = "historicalSpinup", fixfpc = TRUE, aggregate = FALSE), "natveg")
   cellInput  <- mbind(residues[, , "c"],           manure[, , "c"],           litter[, , "c"])
   inputProp  <- mbind(residues[, , c("LC", "NC")], manure[, , c("LC", "NC")], litter[, , c("LC", "NC")])
   rm(litter, manure, residues)

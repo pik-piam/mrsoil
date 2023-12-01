@@ -5,7 +5,7 @@
 #' @param climatetype Switch between different climate scenarios
 #' @param mode        "historicalSpinup" for historical period and
 #'                    "magpieInput" for future
-#'                    "historicalSpinup+fixedFPC" and "magpieInput+fixedFPC" using fixed (old) fpc data
+#' @param fixFpc      if TRUE using fixed (old) fpc data
 #'
 #' @return List of magpie object with results on cellular level, weight on cellular level, unit and description.
 #' @author Kristine Karstens
@@ -17,11 +17,12 @@
 
 calcCarbonLitter <-  function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                               climatetype = "GSWP3-W5E5:historical",
-                              mode        = "historicalSpinup") {
+                              mode        = "historicalSpinup",
+                              fixFpc      = FALSE) {
 
   mode2stage  <- c(historicalSpinup     = "raw1901",
-                   magpieInput          = "harmonized2020",
-                   'magpieInput+fixedFPC' = "harmonized2020")
+                   magpieInput          = "harmonized2020")
+
   stage       <- mode2stage[mode]
 
   # load and convert LPjmL data
@@ -55,13 +56,12 @@ calcCarbonLitter <-  function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   # to calculate mean litter parameterization per grid cell
 
   # Load foliage projected cover - fraction of pfts for each grid cell
-  fixfpc <- ifelse(grepl("fixedFPC", mode), TRUE, FALSE)
   fpc <- calcOutput("LPJmL_new",
-                    version     = ifelse(fixfpc, "LPJmL4_for_MAgPIE_84a69edd", lpjmlNatveg),
-                    climatetype = ifelse(fixfpc, "GSWP3-W5E5:historical", climatetype),
-                    stage       = ifelse(fixfpc, "smoothed", stage),
+                    version     = ifelse(fixFpc, "LPJmL4_for_MAgPIE_84a69edd", lpjmlNatveg),
+                    climatetype = ifelse(fixFpc, "GSWP3-W5E5:historical", climatetype),
+                    stage       = ifelse(fixFpc & (mode != "historicalSpinup"), "smoothed", stage),
                     subtype = "fpc", aggregate = FALSE)[, , "fraction natural vegetation", invert = TRUE]
-  if(fixfpc) fpc <- toolFillYears(fpc, years = getYears(out))
+  if(fixFpc) fpc <- toolFillYears(fpc, years = getYears(out))
 
   woodyPfts <- getNames(fpc[, , "grass", invert = TRUE, pmatch = TRUE])
   treeFrac  <- dimSums(fpc[, , woodyPfts], dim = 3)
