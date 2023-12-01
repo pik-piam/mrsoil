@@ -15,7 +15,7 @@
 #' }
 #' @importFrom magpiesets findset
 
-calcCarbonLitter <-  function(lpjmlNatveg       = c(natveg = "LPJmL4_for_MAgPIE_44ac93de"),
+calcCarbonLitter <-  function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                               climatetype = "GSWP3-W5E5:historical",
                               mode        = "historicalSpinup") {
 
