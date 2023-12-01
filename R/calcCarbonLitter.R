@@ -5,7 +5,7 @@
 #' @param climatetype Switch between different climate scenarios
 #' @param mode        "historicalSpinup" for historical period and
 #'                    "magpieInput" for future
-#'                    "magpieInput+fixedFPC" for future but given data restriction on fpc data
+#'                    "historicalSpinup+fixedFPC" and "magpieInput+fixedFPC" using fixed (old) fpc data
 #'
 #' @return List of magpie object with results on cellular level, weight on cellular level, unit and description.
 #' @author Kristine Karstens
