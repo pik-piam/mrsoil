@@ -5,13 +5,13 @@
 \title{calcDecayRaw}
 \usage{
 calcDecayRaw(
-  lpjml = "LPJmL4_for_MAgPIE_44ac93de",
+  lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   climatetype = "GSWP3-W5E5:historical",
   mode = "historicalSpinup"
 )
 }
 \arguments{
-\item{lpjml}{Switch between LPJmL natveg versionstop}
+\item{lpjmlNatveg}{Switch between LPJmL natveg versionstop}
 
 \item{climatetype}{Switch between different climate scenarios}
 

@@ -5,12 +5,12 @@
 \title{calcSoilCarbonSpinup}
 \usage{
 calcSoilCarbonSpinup(
-  lpjml = "LPJmL4_for_MAgPIE_44ac93de",
+  lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   climatetype = "GSWP3-W5E5:historical"
 )
 }
 \arguments{
-\item{lpjml}{Switch between LPJmL natveg versionstop}
+\item{lpjmlNatveg}{Switch between LPJmL natveg versionstop}
 
 \item{climatetype}{Switch between different climate scenarios}
 }

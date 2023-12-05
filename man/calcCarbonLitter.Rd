@@ -5,19 +5,21 @@
 \title{calcCarbonLitter}
 \usage{
 calcCarbonLitter(
-  lpjml = "LPJmL4_for_MAgPIE_44ac93de",
+  lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   climatetype = "GSWP3-W5E5:historical",
-  mode = "historicalSpinup"
+  mode = "historicalSpinup",
+  fixFpc = FALSE
 )
 }
 \arguments{
-\item{lpjml}{Switch between LPJmL natveg versionstop}
+\item{lpjmlNatveg}{Switch between LPJmL natveg versionstop}
 
 \item{climatetype}{Switch between different climate scenarios}
 
 \item{mode}{"historicalSpinup" for historical period and
-"magpieInput" for future
-"magpieInput+fixedFPC" for future but given data restriction on fpc data}
+"magpieInput" for future}
+
+\item{fixFpc}{if TRUE using fixed (old) fpc data}
 }
 \value{
 List of magpie object with results on cellular level, weight on cellular level, unit and description.

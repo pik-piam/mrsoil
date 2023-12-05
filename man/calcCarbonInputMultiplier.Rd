@@ -4,18 +4,15 @@
 \alias{calcCarbonInputMultiplier}
 \title{calcCarbonInputMulitplier}
 \usage{
-calcCarbonInputMultiplier(input = "generic")
-}
-\arguments{
-\item{input}{switch between input types}
+calcCarbonInputMultiplier()
 }
 \value{
 magpie object on choosen resolution
 }
 \description{
 This function compiles carbon inputs multipliers for steady state calculations for mineral soils
-using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines
-for National Greenhouse Gas Inventories
+             using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines
+             for National Greenhouse Gas Inventories
 }
 \author{
 Kristine Karstens

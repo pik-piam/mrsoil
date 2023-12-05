@@ -6,7 +6,7 @@
 \usage{
 calcWaterEffectDecomposition(
   irrigation = "mixedirrig",
-  lpjml = "LPJmL4_for_MAgPIE_44ac93de",
+  lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   climatetype = "GSWP3-W5E5:historical"
 )
 }
@@ -15,7 +15,7 @@ calcWaterEffectDecomposition(
 irrigation area shares to calculate area weighted mean over rainfed
 and irrigated factors. Other options: rainfed, irrigated}
 
-\item{lpjml}{Switch between LPJmL natveg versionstop}
+\item{lpjmlNatveg}{Switch between LPJmL natveg versionstop}
 
 \item{climatetype}{Switch between different climate scenarios}
 }

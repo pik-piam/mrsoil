@@ -24,8 +24,10 @@ calcSoilCarbon <- function(output      = "actualstate",
 
   # Load Landuse data
   landuse               <- calcOutput("Landuse", aggregate = FALSE)
-  soilCarbonSteadyState <- calcOutput("SteadyState", lpjmlNatveg = lpjmlNatveg, climatetype = climatetype, aggregate = FALSE)
-  decay                 <- calcOutput("DecayRaw",    lpjmlNatveg = lpjmlNatveg, climatetype = climatetype, aggregate = FALSE)
+  soilCarbonSteadyState <- calcOutput("SteadyState", lpjmlNatveg = lpjmlNatveg,
+                                      climatetype = climatetype, aggregate = FALSE)
+  decay                 <- calcOutput("DecayRaw",    lpjmlNatveg = lpjmlNatveg,
+                                      climatetype = climatetype, aggregate = FALSE)
   soilCarbonInit        <- calcOutput("SoilCarbonSpinup", aggregate = FALSE)
 
   ######################

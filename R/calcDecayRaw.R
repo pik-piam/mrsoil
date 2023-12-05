@@ -45,7 +45,8 @@ calcDecayRaw <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
         tmp <- setNames(magpie_expand(tmp, out), getNames(tmp))
         out <- setNames(magpie_expand(out, tmp), getNames(out))
       }
-      out <- mbind(out, tmp)
+      years <- intersect(getYears(tmp), getYears(out))
+      out   <- mbind(out[, years, ], tmp[, years, ])
     }
     return(out)
   }
