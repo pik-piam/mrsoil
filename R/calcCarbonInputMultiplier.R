@@ -8,7 +8,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' calcOutput("CarbonInputMulitplier", aggregate = FALSE, input = generic")
+#' calcOutput("CarbonInputMulitplier", aggregate = FALSE, input = generic)
 #' }
 #'
 #' @importFrom magpiesets findset

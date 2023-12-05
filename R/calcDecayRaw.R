@@ -85,6 +85,14 @@ calcDecayRaw <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                                lpjmlNatveg = lpjmlNatveg, climatetype = climatetype, aggregate = FALSE)
   cellSandFrac   <- calcOutput("SandFrac", aggregate = FALSE)
 
+  # harmonize years
+  years          <- Reduce(intersect, list(getYears(cellTempFactor),
+                                           getYears(cellTillFactor),
+                                           getYears(cellWfactor)))
+  cellTempFactor <- cellTempFactor[, years, ]
+  cellTillFactor <- cellTillFactor[, years, ]
+  cellWfactor    <- cellWfactor[, years, ]
+
   activeDecay    <-  param[, , "kfaca"] * cellWfactor * cellTempFactor * cellTillFactor *
     (param[, , "k3par1"] +  param[, , "k3par2"] * cellSandFrac)
   slowDecay      <- param[, , "kfacs"] * cellWfactor * cellTempFactor * cellTillFactor
