@@ -30,16 +30,16 @@ calcDecayRaw <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   # k3par1 = sand intercept
   # k3par2 = sand slope
 
-  .clean <- function(x, name) {
-    return(add_dimension(collapseNames(x), dim = 3.2, add = "sub", nm = name))
+  .clean <- function(x, name, dimname) {
+    return(add_dimension(collapseNames(x), dim = 3.2, add = dimname, nm = name))
   }
 
-  .bundle <- function(funcName, staticSet, switchType, switchSet) {
+  .bundle <- function(funcName, staticSet, switchType, switchSet, dimname) {
     out <- NULL
     for (i in seq_along(switchType)) {
 
       tmp <- .clean(do.call("calcOutput", c(type = funcName, staticSet, switchSet[i])),
-                    switchType[i])
+                    name = switchType[i], dimname = dimname)
       # check years and dims
       if (!is.null(out) && (is.null(getYears(out)) || is.null(getYears(tmp)))) {
         tmp <- setNames(magpie_expand(tmp, out), getNames(tmp))
@@ -56,26 +56,30 @@ calcDecayRaw <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
     cellWfactor <- .bundle(funcName   = "WaterEffectDecomposition",
                            switchType = c("crop",                    "natveg"),
                            switchSet  = c(irrigation = "mixedirrig", irrigation = "rainfed"),
-                           staticSet  = list(lpjmlNatveg = lpjmlNatveg, climatetype = climatetype, aggregate = FALSE))
+                           staticSet  = list(lpjmlNatveg = lpjmlNatveg, climatetype = climatetype, aggregate = FALSE),
+                           dimname    = "lutype")
 
     cellTillFactor <- .bundle(funcName   = "TillageEffectDecomposition",
                               switchType = c("crop",               "natveg"),
                               switchSet  = c(tillage = "default", tillage = "notill"),
-                              staticSet  = list(aggregate = FALSE))
+                              staticSet  = list(aggregate = FALSE),
+                              dimname    = "lutype")
 
   } else if (mode == "magpieInput") {
 
     cellWfactor <- .bundle(funcName   = "WaterEffectDecomposition",
                            switchType = c("rainfed",                "irrigated"),
                            switchSet  = c(irrigation = "rainfed", irrigation = "irrigated"),
-                           staticSet  = list(lpjmlNatveg = lpjmlNatveg, climatetype = climatetype, aggregate = FALSE))
+                           staticSet  = list(lpjmlNatveg = lpjmlNatveg, climatetype = climatetype, aggregate = FALSE),
+                           dimname    = "irrigation")
 
     cellTillFactor <- .bundle(funcName   = "TillageEffectDecomposition",
                               switchType = c("notill", "reducedtill", "fulltill"),
                               switchSet  = c(tillage = "notill",
                                              tillage = "reducedtill",
                                              tillage = "fulltill"),
-                              staticSet  = list(aggregate = FALSE))
+                              staticSet  = list(aggregate = FALSE),
+                              dimname    = "tillage")
   } else {
 
     stop("Mode setting unknown. Possible types: 'magpieInput' or 'historicalSpinup'") # add message here
@@ -98,9 +102,9 @@ calcDecayRaw <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   slowDecay      <- param[, , "kfacs"] * cellWfactor * cellTempFactor * cellTillFactor
   passiveDecay   <- param[, , "kfacp"] * cellWfactor * cellTempFactor
 
-  decay <- magpiesort(mbind(.clean(activeDecay,  "active"),
-                            .clean(slowDecay,    "slow"),
-                            .clean(passiveDecay, "passive")))
+  decay <- magpiesort(mbind(.clean(activeDecay,  "active",  "sub"),
+                            .clean(slowDecay,    "slow",    "sub"),
+                            .clean(passiveDecay, "passive", "sub")))
 
   return(list(x      = decay,
               weight = NULL,
