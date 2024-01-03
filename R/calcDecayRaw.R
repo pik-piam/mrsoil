@@ -42,11 +42,16 @@ calcDecayRaw <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                     name = switchType[i], dimname = dimname)
       # check years and dims
       if (!is.null(out) && (is.null(getYears(out)) || is.null(getYears(tmp)))) {
-        tmp <- setNames(magpie_expand(tmp, out), getNames(tmp))
-        out <- setNames(magpie_expand(out, tmp), getNames(out))
+        tmp <- magpie_expand(tmp, collapseDim(out[, , 1], dim = 3))
+        out <- magpie_expand(out, collapseDim(tmp, dim =3))
       }
+
       years <- intersect(getYears(tmp), getYears(out))
-      out   <- mbind(out[, years, ], tmp[, years, ])
+      if(!is.null(years)){
+        out <- out[, years, ]
+        tmp <- tmp[, years, ]
+      }
+      out <- mbind(out, tmp)
     }
     return(out)
   }
