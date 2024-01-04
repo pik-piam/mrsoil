@@ -110,11 +110,11 @@ calcCarbonLitter <-  function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
 
   out <- toolConditionalReplace(out, conditions = c("is.na()", "<0", "is.infinite()"), replaceby = 0)
 
-  #weights -----> unclear!
-
+  weight <- calcOutput("LanduseInitialisation", aggregate = FALSE, cellular = TRUE, years = "y1995")
+  weight <- collapseDim(dimSums(weight[, , "crop", invert = TRUE], dim = 3))
 
   return(list(x            = out,
-              weight       = NULL,
+              weight       = weight,
               unit         = "tC per ha, tn per tc, tLn per tC",
               description  = paste0("Carbon Input from Litter for natural vegetation"),
               min          = 0,

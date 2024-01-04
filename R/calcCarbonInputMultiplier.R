@@ -50,6 +50,7 @@ calcCarbonInputMultiplier <- function() {
                   collapseNames(calcOutput("CarbonManure", aggregate = FALSE)[, "y1995", "c"]))
 
   return(list(x            = out,
+              weight       = weight,
               unit         = "tC per ha",
               description  = "Carbon input multiplier in tonnes carbon per hectare/ tonnes carbon per hectare
                               to all carbon subpools for different tillage and input types",
