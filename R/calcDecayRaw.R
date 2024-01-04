@@ -31,7 +31,7 @@ calcDecayRaw <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   # k3par2 = sand slope
 
   .clean <- function(x, name, dimname) {
-    return(add_dimension(collapseNames(x), dim = 3.2, add = dimname, nm = name))
+    return(add_dimension(collapseNames(x), dim = 3.1, add = dimname, nm = name))
   }
 
   .bundle <- function(funcName, staticSet, switchType, switchSet, dimname) {
@@ -95,21 +95,36 @@ calcDecayRaw <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   cellSandFrac   <- calcOutput("SandFrac", aggregate = FALSE)
 
   # harmonize years
-  years          <- Reduce(intersect, list(getYears(cellTempFactor),
-                                           getYears(cellTillFactor),
-                                           getYears(cellWfactor)))
-  cellTempFactor <- cellTempFactor[, years, ]
-  cellTillFactor <- cellTillFactor[, years, ]
-  cellWfactor    <- cellWfactor[, years, ]
+  .getCommonYears <- function(listOfYearVectors){
+    nullIndex         <- which(sapply(listOfYearVectors, is.null))
+    if(length(nullIndex) != 0) vcat(1, "There are objects with no years (NULL) provided.")
+    listOfYearVectors <- listOfYearVectors[-which(sapply(listOfYearVectors, is.null))]
+    commonYears       <- Reduce(intersect, listOfYearVectors)
+    if(length(commonYears) == 0) vcat(0, "There are no common years objects provided.")
+    return(commonYears)
+  }
+
+  years <- .getCommonYears(list(getYears(cellTempFactor),
+                                getYears(cellTillFactor),
+                                getYears(cellWfactor)))
+
+  if(!is.null(getYears(cellTempFactor))) cellTempFactor <- cellTempFactor[, years, ]
+  if(!is.null(getYears(cellTillFactor))) cellTillFactor <- cellTillFactor[, years, ]
+  if(!is.null(getYears(cellWfactor)))    cellWfactor    <- cellWfactor[, years, ]
 
   activeDecay    <-  param[, , "kfaca"] * cellWfactor * cellTempFactor * cellTillFactor *
     (param[, , "k3par1"] +  param[, , "k3par2"] * cellSandFrac)
   slowDecay      <- param[, , "kfacs"] * cellWfactor * cellTempFactor * cellTillFactor
   passiveDecay   <- param[, , "kfacp"] * cellWfactor * cellTempFactor
 
-  decay <- magpiesort(mbind(.clean(activeDecay,  "active",  "sub"),
-                            .clean(slowDecay,    "slow",    "sub"),
-                            .clean(passiveDecay, "passive", "sub")))
+  #different dimensions *kotz* -> passive hat keinee tillage dim
+  decay <-
+    magpiesort(
+      mbind(
+        .clean(activeDecay,  "active",  "sub"),
+        .clean(slowDecay,    "slow",    "sub"),
+        magpie_expand(.clean(passiveDecay, "passive", "sub"),
+                      collapseDim(.clean(activeDecay, "active", "sub")[, , "rainfed"], keepdim = 3.3))))
 
   return(list(x      = decay,
               weight = NULL,
