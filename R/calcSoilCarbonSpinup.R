@@ -33,10 +33,10 @@ calcSoilCarbonSpinup <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                                            getItems(decay, dim = 3),
                                            paste, sep = "."))
   soilCarbonInit        <- new.magpie(getItems(decay, dim = 1), spinupStart, names)
-  soilCarbonInit[, , "actualstate.crop"]    <- soilCarbonSteadyState[, 1, "natveg"]
-  soilCarbonInit[, , "actualstate.natveg"]  <- soilCarbonSteadyState[, 1, "natveg"]
-  soilCarbonInit[, , "naturalstate.crop"]   <- soilCarbonSteadyState[, 1, "natveg"]
-  soilCarbonInit[, , "naturalstate.natveg"] <- soilCarbonSteadyState[, 1, "natveg"]
+  soilCarbonInit[, ,  "actualstate"][, , "crop"]   <- soilCarbonSteadyState[, 1, "natveg"]
+  soilCarbonInit[, ,  "actualstate"][, , "natveg"] <- soilCarbonSteadyState[, 1, "natveg"]
+  soilCarbonInit[, , "naturalstate"][, , "crop"]   <- soilCarbonSteadyState[, 1, "natveg"]
+  soilCarbonInit[, , "naturalstate"][, , "natveg"] <- soilCarbonSteadyState[, 1, "natveg"]
 
   for (i in 1:((modelStart - 1 - spinupStart) / recyclingLength)) {
 
