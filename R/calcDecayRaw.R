@@ -97,8 +97,10 @@ calcDecayRaw <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   # harmonize years
   .getCommonYears <- function(listOfYearVectors){
     nullIndex         <- which(sapply(listOfYearVectors, is.null))
-    if(length(nullIndex) != 0) vcat(1, "There are objects with no years (NULL) provided.")
-    listOfYearVectors <- listOfYearVectors[-which(sapply(listOfYearVectors, is.null))]
+    if(length(nullIndex) != 0) {
+      vcat(1, "There are objects with no years (NULL) provided.")
+      listOfYearVectors <- listOfYearVectors[-nullIndex]
+    }
     commonYears       <- Reduce(intersect, listOfYearVectors)
     if(length(commonYears) == 0) vcat(0, "There are no common years objects provided.")
     return(commonYears)
@@ -117,14 +119,14 @@ calcDecayRaw <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   slowDecay      <- param[, , "kfacs"] * cellWfactor * cellTempFactor * cellTillFactor
   passiveDecay   <- param[, , "kfacp"] * cellWfactor * cellTempFactor
 
-  #different dimensions *kotz* -> passive hat keinee tillage dim
-  decay <-
-    magpiesort(
-      mbind(
-        .clean(activeDecay,  "active",  "sub"),
-        .clean(slowDecay,    "slow",    "sub"),
-        magpie_expand(.clean(passiveDecay, "passive", "sub"),
-                      collapseDim(.clean(activeDecay, "active", "sub")[, , "rainfed"], keepdim = 3.3))))
+  activeDecay  <- .clean(activeDecay,  "active",  "sub")
+  slowDecay    <- .clean(slowDecay,    "slow",    "sub")
+  passiveDecay <- .clean(passiveDecay, "passive", "sub")
+
+  if(length(getNames(passiveDecay)) != length(getNames(activeDecay))) {
+    passiveDecay <- magpie_expand(passiveDecay, collapseDim(activeDecay[, , "rainfed"], keepdim = 3.3))
+  }
+  decay <- magpiesort(mbind(activeDecay, slowDecay, passiveDecay))
 
   return(list(x      = decay,
               weight = NULL,
