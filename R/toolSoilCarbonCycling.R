@@ -16,9 +16,9 @@ toolSoilCarbonCycling <- function(soilCarbonInit, soilCarbonSteadyState, decay, 
   years         <- getYears(soilCarbonSteadyState, as.integer = TRUE)
   landuseChange <- toolLanduseChange(landuse)
 
-  # correct SteadyStates for bo cropland -> no cropland soil
+  # correct SteadyStates for no cropland -> no cropland soil
   noCropCells           <- which(landuse[, years, "crop"] == 0)
-  for (sub in getNames(soilCarbonSteadyState, dim = 2)) {
+  for (sub in getItems(soilCarbonSteadyState, dim = "pool")) {
     soilCarbonSteadyState[, , "crop"][, , sub][noCropCells] <- 0  # Clear cells with no Cropland
   }
 
