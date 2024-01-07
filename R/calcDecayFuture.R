@@ -45,7 +45,7 @@ calcDecayFuture <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   }
 
   weight <- calcOutput("SoilCarbon", aggregate = FALSE, years= "y1995",
-                       lpjmlNatveg = lpjmlNatveg, climatetype = climatetype)
+                       lpjmlNatveg = lpjmlNatveg, climatetype = cfg$baselineHist)
 
  return(list(x      = out,
              weight = weight,
