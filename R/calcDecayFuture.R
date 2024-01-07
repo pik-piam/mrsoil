@@ -44,8 +44,8 @@ calcDecayFuture <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                                   ref_year = cfg$refYearGcm, method = "limited")
   }
 
-  weight <- calcOutput("SoilCarbon", aggregate = FALSE, years= "y1995",
-                       lpjmlNatveg = lpjmlNatveg, climatetype = cfg$baselineHist)
+  weight <- collapseDim(calcOutput("SoilCarbon", aggregate = FALSE, years = "y1995",
+                        lpjmlNatveg = lpjmlNatveg, climatetype = cfg$baselineHist), dim = 3)
 
  return(list(x      = out,
              weight = weight,
