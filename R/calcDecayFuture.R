@@ -25,10 +25,6 @@
 
 calcDecayFuture <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                             climatetype = "GSWP3-W5E5:historical") {
-  # only new mode on
-  # - magpieInput
-  # + harminzation and
-  # weightingen (weight total carbon stocks)
 
   # Create settings for LPJmL/GCM from version and climatetype argument
   cfg   <- toolClimateInputVersion(lpjmlVersion = lpjmlNatveg,
@@ -47,9 +43,9 @@ calcDecayFuture <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
     out <- toolHarmonize2Baseline(decayClimateScen, out,
                                   ref_year = cfg$refYearGcm, method = "limited")
   }
-  # weightening
-  # weight <- calcOutput("SoilCarbon", aggregate = FALSE) #nolint
-  weight <- NULL
+
+  weight <- calcOutput("SoilCarbon", aggregate = FALSE, years= "y1995",
+                       lpjmlNatveg = lpjmlNatveg, climatetype = climatetype)
 
  return(list(x      = out,
              weight = weight,
