@@ -124,7 +124,9 @@ calcDecayRaw <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   passiveDecay <- .clean(passiveDecay, "passive", "sub")
 
   if(length(getNames(passiveDecay)) != length(getNames(activeDecay))) {
-    passiveDecay <- magpie_expand(passiveDecay, collapseDim(activeDecay[, , "rainfed"], keepdim = 3.3))
+    passiveDecay <- dimOrder(magpie_expand(passiveDecay,
+                                           collapseDim(activeDecay[, , "rainfed"], keepdim = 3.3)),
+                             perm = c(2,3,1), dim = 3)
   }
   decay <- magpiesort(mbind(activeDecay, slowDecay, passiveDecay))
 

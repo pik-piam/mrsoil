@@ -46,6 +46,12 @@ calcDecayFuture <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
 
   weight <- collapseDim(calcOutput("SoilCarbon", aggregate = FALSE, years = "y1995",
                         lpjmlNatveg = lpjmlNatveg, climatetype = cfg$baselineHist))
+  weight <- mbind(add_dimension(collapseDim(weight[, , "crop"] + 10^(-10)),
+                                dim = 3.2,  add = "tillage", nm = "fulltill"),
+                  add_dimension(collapseDim(weight[, , "crop"] + 10^(-10)),
+                                dim = 3.2,  add = "tillage", nm = "reducedtill"),
+                  add_dimension(collapseDim(weight[, , "natveg"] + 10^(-10)),
+                                dim = 3.2,  add = "tillage", nm = "notill"))
 
  return(list(x      = out,
              weight = weight,
