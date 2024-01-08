@@ -1,7 +1,7 @@
 #' @title calcParamManure
 #' @description Bring all parameter settings (lignin, nitrogen) for residues together
 #'
-#' @param source      "IPCC"          for IPCC Guideline values
+#' @param input      "IPCC" for IPCC Guideline values
 #' @return List of magpie object with results on global level, unit and description.
 #' @author Kristine Karstens
 #'
@@ -9,12 +9,11 @@
 #' \dontrun{
 #' calcOutput("ParamManure")
 #' }
-
-calcParamManure <- function(source = "IPCC") {
+calcParamManure <- function(input = "IPCC") {
 
   kli  <- magpiesets::findset("kli")
   c2dm <- 0.45
-  if(grepl("IPCC", source)){
+  if (grepl("IPCC", input)) {
 
     param              <- readSource("IPCC", subtype = "manure_table5p5c", convert = FALSE)
 
@@ -26,7 +25,7 @@ calcParamManure <- function(source = "IPCC") {
     out[, , "LC"]  <- param[, , "LC_dm"] / c2dm / 100
 
   } else {
-    stop("'source' unknown.")
+    stop("'input' unknown.")
   }
 
   return(list(x            = out,

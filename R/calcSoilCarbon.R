@@ -39,6 +39,8 @@ calcSoilCarbon <- function(output      = "actualstate",
                                decay,
                                landuse)[, , output]
 
+  getSets(out, fulldim = FALSE)[1] <- "x.y.iso"
+
   return(list(x            = out,
               weight       = NULL,
               unit         = "Mt C",

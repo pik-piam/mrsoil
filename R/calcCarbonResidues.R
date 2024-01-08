@@ -17,8 +17,10 @@ calcCarbonResidues <- function() {
   kcr2kres             <- toolGetMapping("mappingCrop2Residue.csv", type = "sectoral", where = "mrcommons")
   residueBiomassBg     <- toolAggregate(residueBiomass, rel = kcr2kres, from = "kcr",
                                         to = "kres", dim = 3.2)[, , "bg"][, , "c"]
-  callResFB            <- function() calcOutput("ResFieldBalancePast", cellular = TRUE,
-                                                products = "kres", aggregate = FALSE)
+  callResFB            <- function() {
+    calcOutput("ResFieldBalancePast", cellular = TRUE,
+               products = "kres", aggregate = FALSE)
+  }
   residueRecyclingAg   <- add_dimension(collapseNames(callResFB()[, , "recycle"][, , "c"]),
                                         dim = 3.1, add = "residues", nm = "ag")
 
@@ -30,7 +32,7 @@ calcCarbonResidues <- function() {
   ## Cut high input values at 10 tC/ha
   residueRecycling     <- toolConditionalReplace(residueRecycling, conditions = "> 10", replaceby = 10)
   # Load parameters for lignin and nitrogen and aggregate them to kres
-  param                <- calcOutput("ParamResidues", aggregate = FALSE, source = "IPCC+woody")
+  param                <- calcOutput("ParamResidues", aggregate = FALSE, input = "IPCC+woody")
   weight               <- collapseNames(dimSums(residueBiomass, dim = "residues"))
   param                <- toolAggregate(param,  weight = weight, rel = kcr2kres, from = "kcr", to = "kres", dim = 3.1)
 
@@ -41,6 +43,7 @@ calcCarbonResidues <- function() {
 
   out[, , "c"]            <- residueRecycling
   out[, , c("LC", "NC")]  <- param
+  getSets(out, fulldim = FALSE)[1] <- "x.y.iso"
 
   return(list(x            = out,
               weight       = NULL,

@@ -4,10 +4,10 @@
 \alias{calcParamManure}
 \title{calcParamManure}
 \usage{
-calcParamManure(source = "IPCC")
+calcParamManure(input = "IPCC")
 }
 \arguments{
-\item{source}{"IPCC"          for IPCC Guideline values}
+\item{input}{"IPCC" for IPCC Guideline values}
 }
 \value{
 List of magpie object with results on global level, unit and description.

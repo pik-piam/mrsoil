@@ -5,17 +5,18 @@
 #' @return List of magpie object with results on cellular level
 #' @author Kristine Karstens
 
-toolLanduseChange <- function(landuse){
+toolLanduseChange <- function(landuse) {
 
   years         <- getYears(landuse, as.integer = TRUE)
-  LanduseChange <- landuse[,years[2:length(years)],] - setYears(landuse[,years[2:length(years)]-1,], years[2:length(years)])
-  LanduseChange <- mbind(add_dimension(LanduseChange, dim=3.1, add="change", nm="reduction"),
-                         add_dimension(LanduseChange, dim=3.1, add="change", nm="expansion"))
+  landuseChange <-
+    landuse[, years[2:length(years)], ] -
+    setYears(landuse[, years[2:length(years)] - 1, ], years[2:length(years)])
+  landuseChange <- mbind(add_dimension(landuseChange, dim = 3.1, add = "change", nm = "reduction"),
+                         add_dimension(landuseChange, dim = 3.1, add = "change", nm = "expansion"))
 
-  LanduseChange[,,"reduction"][LanduseChange[,,"reduction"]>0] <- 0
-  LanduseChange[,,"reduction"]                                 <- (-1)*LanduseChange[,,"reduction"]
-  LanduseChange[,,"expansion"][LanduseChange[,,"expansion"]<0] <- 0
+  landuseChange[, , "reduction"][landuseChange[, , "reduction"] > 0] <- 0
+  landuseChange[, , "reduction"]                                 <- (-1) * landuseChange[, , "reduction"]
+  landuseChange[, , "expansion"][landuseChange[, , "expansion"] < 0] <- 0
 
-  return(LanduseChange)
+  return(landuseChange)
 }
-

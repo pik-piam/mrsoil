@@ -27,13 +27,13 @@ calcCarbonLitter <-  function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
 
   # load and convert LPjmL data
   litfallc     <- calcOutput("LPJmL_new", version = lpjmlNatveg, climatetype = climatetype, stage = stage,
-                              subtype = "alitterfallc", aggregate = FALSE, )
+                             subtype = "alitterfallc", aggregate = FALSE, )
   litburnc     <- calcOutput("LPJmL_new", version = lpjmlNatveg, climatetype = climatetype, stage = stage,
-                              subtype = "alitterburnc", aggregate = FALSE)
+                             subtype = "alitterburnc", aggregate = FALSE)
   litfallcWood <- calcOutput("LPJmL_new", version = lpjmlNatveg, climatetype = climatetype, stage = stage,
-                              subtype = "alitterfallc_wood", aggregate = FALSE)
+                             subtype = "alitterfallc_wood", aggregate = FALSE)
   litburncWood <- calcOutput("LPJmL_new", version = lpjmlNatveg, climatetype = climatetype, stage = stage,
-                              subtype = "alitterburnc_wood", aggregate = FALSE)
+                             subtype = "alitterburnc_wood", aggregate = FALSE)
 
   litfallc     <- toolConditionalReplace(litfallc - litburnc,         "<0", 0)
   litfallcWood <- toolConditionalReplace(litfallcWood - litburncWood, "<0", 0)
@@ -61,7 +61,7 @@ calcCarbonLitter <-  function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                     climatetype = ifelse(fixFpc, "GSWP3-W5E5:historical", climatetype),
                     stage       = ifelse(fixFpc & (mode != "historicalSpinup"), "smoothed", stage),
                     subtype = "fpc", aggregate = FALSE)[, , "fraction natural vegetation", invert = TRUE]
-  if(fixFpc) fpc <- toolFillYears(fpc, years = getYears(out))
+  if (fixFpc) fpc <- toolFillYears(fpc, years = getYears(out))
 
   woodyPfts <- getNames(fpc[, , "grass", invert = TRUE, pmatch = TRUE])
   treeFrac  <- dimSums(fpc[, , woodyPfts], dim = 3)
@@ -69,7 +69,7 @@ calcCarbonLitter <-  function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   # Use turnover parameters per pft to calculate leaf fraction in soft tissue litter
   # (soft tissue = fine roots + leaves)
   lpjmlPar       <- readSource("LPJmL_par", subtype = "pft_lpjml4",
-                                convert = FALSE)[, , "sapwood", invert = TRUE, pmatch = TRUE]
+                               convert = FALSE)[, , "sapwood", invert = TRUE, pmatch = TRUE]
   leafFrac   <- collapseDim(lpjmlPar[, , "turnover_root"] / dimSums(lpjmlPar, dim = 3.2))
 
   # Load data from Brovkin et al. on leaf parameters (lignin and nitrogen concentration (per dry matter))
@@ -112,6 +112,9 @@ calcCarbonLitter <-  function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
 
   weight <- calcOutput("LanduseInitialisation", aggregate = FALSE, cellular = TRUE, years = "y1995")
   weight <- collapseDim(dimSums(weight[, , "crop", invert = TRUE], dim = 3))
+
+  getSets(out,    fulldim = FALSE)[1] <- "x.y.iso"
+  getSets(weight, fulldim = FALSE)[1] <- "x.y.iso"
 
   return(list(x            = out,
               weight       = weight,

@@ -26,7 +26,7 @@ calcCarbonManure <- function() {
   # Cut high input values at 10 tC/ha
   manureInput        <- toolConditionalReplace(manureInput, conditions = "> 10", replaceby = 10)
   # Load parameters for lignin and nitrogen
-  param              <- calcOutput("ParamManure",  source = "IPCC", aggregate = FALSE)
+  param              <- calcOutput("ParamManure",  input = "IPCC", aggregate = FALSE)
 
   kli          <- findset("kli")
   attributes   <- c("c", "LC", "NC")
@@ -36,6 +36,7 @@ calcCarbonManure <- function() {
 
   out[, , "c"]            <- manureInput
   out[, , c("NC", "LC")]  <- param
+  getSets(out, fulldim = FALSE)[1] <- "x.y.iso"
 
   return(list(x            = out,
               weight       = NULL,

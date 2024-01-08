@@ -19,8 +19,7 @@
 toolCarbonInputMultiplier <- function(inputProp, soilParam, f4act2slo, f2struc2act) {
 
   coords <- FALSE
-  if(any(hasCoords(inputProp) | hasCoords(soilParam) |
-         hasCoords(f4act2slo) | hasCoords(f2struc2act))) {
+  if (any(hasCoords(inputProp) | hasCoords(soilParam) | hasCoords(f4act2slo) | hasCoords(f2struc2act))) {
     coords <- TRUE
   }
   # empirical parameter to estimate metabolic fraction of residue input (intercept)
@@ -94,12 +93,14 @@ toolCarbonInputMultiplier <- function(inputProp, soilParam, f4act2slo, f2struc2a
     slowIn * soilParam[, , "f6"]
   passiveIn <- collapseNames(passiveIn)
 
-  .prepareOut <- function(x, nm){add_dimension(collapseNames(x), dim = 3.1, add = "pool", nm = nm)}
+  .prepareOut <- function(x, nm) {
+    add_dimension(collapseNames(x), dim = 3.1, add = "pool", nm = nm)
+  }
   out <-  mbind(.prepareOut(activeIn,  nm = "active"),
                 .prepareOut(slowIn,    nm = "slow"),
                 .prepareOut(passiveIn, nm =  "passive"))
 
-  if(coords) getSets(out, fulldim = FALSE)[1] <- "x.y.iso"
+  if (coords) getSets(out, fulldim = FALSE)[1] <- "x.y.iso"
 
   return(out)
 }

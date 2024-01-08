@@ -23,6 +23,8 @@ calcLanduse <- function(period = "states_1900to2010", output = "total") {
     landuse <- toolLanduseChange(calcOutput("Landuse", period = period, aggregate = FALSE))
   }
 
+  getSets(landuse, fulldim = FALSE)[1] <- "x.y.iso"
+
   return(list(x      = landuse,
               weight = NULL,
               unit   = "Mha",

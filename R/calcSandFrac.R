@@ -31,6 +31,8 @@ calcSandFrac <- function() {
   getNames(sandfrac0to30) <- "sandfrac0to30"
   getYears(sandfrac0to30) <- NULL
 
+  getSets(sandfrac0to30, fulldim = FALSE)[1] <- "x.y.iso"
+
   return(list(x            = sandfrac0to30,
               weight       = NULL,
               unit         = "",

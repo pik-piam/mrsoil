@@ -14,7 +14,7 @@ Read parameter files from Brovkin Paper (doi:10.5194/bg-9-565-2012)
 }
 \examples{
 \dontrun{
-  readSource("Brovkin", convert = FALSE)
+readSource("Brovkin", convert = FALSE)
 }
 
 }

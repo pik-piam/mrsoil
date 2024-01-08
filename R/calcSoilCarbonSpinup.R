@@ -52,6 +52,8 @@ calcSoilCarbonSpinup <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
     soilCarbonInit <- tmp[, tail(tmpYears, 1), c("actualstate", "naturalstate")]
   }
 
+  getSets(soilCarbonInit, fulldim = FALSE)[1] <- "x.y.iso"
+
   return(list(x            = soilCarbonInit,
               weight       = NULL,
               unit         = "Mt C",

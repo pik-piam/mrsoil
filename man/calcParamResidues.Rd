@@ -4,10 +4,10 @@
 \alias{calcParamResidues}
 \title{calcParamResidues}
 \usage{
-calcParamResidues(source = "IPCC+woody")
+calcParamResidues(input = "IPCC+woody")
 }
 \arguments{
-\item{source}{"IPCC"          for IPCC Guideline values
+\item{input}{"IPCC"          for IPCC Guideline values
 "IPCC+woody"    for IPCC Guideline values + Feedipedia for woody}
 }
 \value{

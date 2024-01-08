@@ -6,12 +6,12 @@
 #' @author Kristine Karstens
 #' @examples
 #' \dontrun{
-#'   readSource("Brovkin", convert = FALSE)
+#' readSource("Brovkin", convert = FALSE)
 #' }
 #'
 #' @importFrom utils read.csv
 
-readBrovkin <- function(){
+readBrovkin <- function() {
 
   out <- as.magpie(read.csv("table1_litter_decomposition_parameters.csv"))
 

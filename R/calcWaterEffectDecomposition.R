@@ -101,6 +101,8 @@ calcWaterEffectDecomposition <- function(irrigation  = "mixedirrig",
     stop("Irrigation setting is unknown. Please use: 'mixedirrig','rainfed' or 'irrigated'.")
   }
 
+  getSets(cellWfactor, fulldim = FALSE)[1] <- "x.y.iso"
+
   return(list(x            = cellWfactor,
               weight       = NULL, # only cellular level supported
               unit         = "",

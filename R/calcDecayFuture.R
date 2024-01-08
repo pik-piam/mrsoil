@@ -25,7 +25,6 @@
 
 calcDecayFuture <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                             climatetype = "GSWP3-W5E5:historical") {
-
   # Create settings for LPJmL/GCM from version and climatetype argument
   cfg   <- toolClimateInputVersion(lpjmlVersion = lpjmlNatveg,
                                    climatetype  = climatetype)
@@ -45,7 +44,7 @@ calcDecayFuture <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   }
 
   weight <- collapseDim(calcOutput("SoilCarbon", aggregate = FALSE, years = "y1995",
-                        lpjmlNatveg = lpjmlNatveg, climatetype = cfg$baselineHist))
+                                   lpjmlNatveg = lpjmlNatveg, climatetype = cfg$baselineHist))
   weight <- mbind(add_dimension(collapseDim(weight[, , "crop"] + 10^(-10)),
                                 dim = 3.2,  add = "tillage", nm = "fulltill"),
                   add_dimension(collapseDim(weight[, , "crop"] + 10^(-10)),
@@ -53,9 +52,11 @@ calcDecayFuture <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                   add_dimension(collapseDim(weight[, , "natveg"] + 10^(-10)),
                                 dim = 3.2,  add = "tillage", nm = "notill"))
 
- return(list(x      = out,
-             weight = weight,
-             unit   = "per yr",
-             description  = "Decay rate for all SOC sub-pool per year",
-             isocountries = FALSE))
+  getSets(out,    fulldim = FALSE)[1] <- "x.y.iso"
+  getSets(weight, fulldim = FALSE)[1] <- "x.y.iso"
+  return(list(x      = out,
+              weight = weight,
+              unit   = "per yr",
+              description  = "Decay rate for all SOC sub-pool per year",
+              isocountries = FALSE))
 }

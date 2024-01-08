@@ -1,8 +1,8 @@
 #' @title calcParamResidues
 #' @description Bring all parameter settings (lignin, nitrogen) for residues together
 #'
-#' @param source      "IPCC"          for IPCC Guideline values
-#'                    "IPCC+woody"    for IPCC Guideline values + Feedipedia for woody
+#' @param input      "IPCC"          for IPCC Guideline values
+#'                   "IPCC+woody"    for IPCC Guideline values + Feedipedia for woody
 #' @return List of magpie object with results on global level, unit and description.
 #' @author Kristine Karstens
 #'
@@ -10,13 +10,11 @@
 #' \dontrun{
 #' calcOutput("ParamResidues")
 #' }
-
-calcParamResidues <- function(source = "IPCC+woody") {
+calcParamResidues <- function(input = "IPCC+woody") {
 
   kcr  <- magpiesets::findset("kcr")
   c2dm <- 0.45
-  if(grepl("IPCC", source)){
-
+  if (grepl("IPCC", input)) {
     # Load IPCC parameters and create mapping
     param     <- readSource("IPCC", subtype = "residues_table5p5b", convert = FALSE)
     generic   <- "Generic value for crops not indicated below"
@@ -44,20 +42,20 @@ calcParamResidues <- function(source = "IPCC+woody") {
     names        <- as.vector(outer(kcr, c("NC", "LC"), paste, sep = "."))
     out          <- new.magpie("GLO", NULL, names, fill = 0,
                                sets = c("region", "year", "kcr", "attributes"))
-    for(k in kcr) {
+    for (k in kcr) {
       # Take mean value over all categories and divide by carbon density
-      out[ , , k] <- as.vector(dimSums(param[ , , kcr2T5p5B[[k]]], dim = 3.1)  / c2dm / length(kcr2T5p5B[[k]]))
+      out[, , k] <- as.vector(dimSums(param[, , kcr2T5p5B[[k]]], dim = 3.1)  / c2dm / length(kcr2T5p5B[[k]]))
     }
 
-    if(source == "IPCC+woody"){
+    if (input == "IPCC+woody") {
       # Assume higher lignin content of residue for crop trees
       woodyTypes <- c("betr", "oilpalm")
-      LCwoody    <- 0.145 / c2dm # 0.145 lignin content from feedipedia.org (mean value of oil palm residues)
-      out[,, "LC"][,, woodyTypes] <- LCwoody
+      lcWoody    <- 0.145 / c2dm # 0.145 lignin content from feedipedia.org (mean value of oil palm residues)
+      out[, , "LC"][, , woodyTypes] <- lcWoody
     }
 
   } else {
-    stop("'source' unknown.")
+    stop("'input' unknown.")
   }
 
   return(list(x            = out,

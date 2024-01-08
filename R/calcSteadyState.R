@@ -70,7 +70,7 @@ calcSteadyState <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                             mode = "historicalSpinup", aggregate = FALSE)
 
   steadyState <- magpiesort(collapseNames(toolConditionalReplace(alpha / decay, "is.na()", 0)))
-
+  getSets(steadyState, fulldim = FALSE)[1] <- "x.y.iso"
   ###############################################################
 
   return(list(x      = steadyState,

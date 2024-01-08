@@ -26,10 +26,10 @@ calcCarbonInputMultiplier <- function() {
   inputProp <- NULL
   # get lignin to c and nitrogen to c values for all residues classes
   inputProp   <- mbind(inputProp,
-                       calcOutput("ParamResidues", source = "IPCC+woody", aggregate = FALSE))
+                       calcOutput("ParamResidues", input = "IPCC+woody", aggregate = FALSE))
   # get lignin to c and nitrogen to c values for all manure classes
   inputProp   <- mbind(inputProp,
-                       calcOutput("ParamManure", source = "IPCC", aggregate = FALSE))
+                       calcOutput("ParamManure", input = "IPCC", aggregate = FALSE))
   # get lignin to c and nitrogen to c values for generic input classes
   param     <- readSource("IPCC", subtype = "residues_table5p5b", convert = FALSE)
   generic   <- "Generic value for crops not indicated below"
@@ -48,6 +48,9 @@ calcCarbonInputMultiplier <- function() {
   weight <- mbind(dimSums(weight, dim = 3.1),
                   setNames(dimSums(weight, dim = 3), "generic"),
                   collapseNames(calcOutput("CarbonManure", aggregate = FALSE)[, "y1995", "c"]))
+
+  getSets(out,    fulldim = FALSE)[1] <- "x.y.iso"
+  getSets(weight, fulldim = FALSE)[1] <- "x.y.iso"
 
   return(list(x            = out,
               weight       = weight,

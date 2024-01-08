@@ -41,6 +41,8 @@ calcTempEffectDecomposition <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93d
   cellTmonthFactor  <- ifelse(cellTemp > 45, 0, cellTmonthFactor)
   cellTfactor       <- dimSums(cellTmonthFactor, dim = 3) / 12
 
+  getSets(cellTfactor, fulldim = FALSE)[1] <- "x.y.iso"
+
   return(list(x            = cellTfactor,
               weight       = NULL, # only cellular level supported
               unit         = "",

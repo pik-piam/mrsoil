@@ -17,7 +17,7 @@ Read parameter files from LPJmL model
 }
 \examples{
 \dontrun{
-  readSource("LPJmL_par", subtype="pft_lpjml4")
+readSource("LPJmL_par", subtype = "pft_lpjml4")
 }
 
 }

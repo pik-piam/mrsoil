@@ -7,12 +7,12 @@
 #' @author Kristine Karstens
 #' @examples
 #' \dontrun{
-#'   readSource("LPJmL_par", subtype="pft_lpjml4")
+#' readSource("LPJmL_par", subtype = "pft_lpjml4")
 #' }
 #'
 #' @importFrom jsonlite fromJSON
 
-readLPJmL_par <- function(subtype = "pft_lpjml4"){
+readLPJmL_par <- function(subtype = "pft_lpjml4") { #nolint:object_name_linter
 
   files <- c(pft_lpjml4        = "pft_lpjml4.js",
              pft_lpjml5        = "pft_lpjml5.js")
@@ -20,7 +20,7 @@ readLPJmL_par <- function(subtype = "pft_lpjml4"){
   file   <- toolSubtypeSelect(subtype, files)
   pftpar <- jsonlite::fromJSON(file)
   pftpar <- do.call(data.frame, subset(pftpar, pftpar$cultivation_type == 0,
-                                select = c("name", "turnover")))
+                                       select = c("name", "turnover")))
   names(pftpar) <- gsub("\\.", "_", names(pftpar))
   out    <- as.magpie(pftpar)
 
