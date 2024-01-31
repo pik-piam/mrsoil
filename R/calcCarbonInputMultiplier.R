@@ -38,7 +38,7 @@ calcCarbonInputMultiplier <- function() {
                      setNames(param[, , generic] / c2dm,
                               paste0("generic.", gsub("_dm", "", getNames(param, dim = 2)))))
 
-  # calculate carbon input multipliers
+  # calculate carbon input multipliers for crop-related inputs
   out <- toolCarbonInputMultiplier(inputProp   = inputProp,
                                    soilParam   = soilParam,
                                    f4act2slo   = f4act2slo,
@@ -48,6 +48,7 @@ calcCarbonInputMultiplier <- function() {
   weight <- mbind(dimSums(weight, dim = 3.1),
                   setNames(dimSums(weight, dim = 3), "generic"),
                   collapseNames(calcOutput("CarbonManure", aggregate = FALSE)[, "y1995", "c"]))
+  weight <- weight + 10^-10 # important for empty categories such as betr, begr
 
   getSets(out,    fulldim = FALSE)[1] <- "x.y.iso"
   getSets(weight, fulldim = FALSE)[1] <- "x.y.iso"
@@ -56,6 +57,6 @@ calcCarbonInputMultiplier <- function() {
               weight       = weight,
               unit         = "tC per ha",
               description  = "Carbon input multiplier in tonnes carbon per hectare/ tonnes carbon per hectare
-                              to all carbon subpools for different tillage and input types",
+                              to all carbon subpools for different tillage and input (manure and residue) types",
               isocountries = FALSE))
 }
