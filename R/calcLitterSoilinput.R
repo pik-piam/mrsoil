@@ -38,7 +38,7 @@ calcLitterSoilinput <-  function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   weight <- calcOutput("LanduseInitialisation", aggregate = FALSE, cellular = TRUE, years = "y1995")
   weight <- collapseDim(dimSums(weight[, , "crop", invert = TRUE], dim = 3))
 
-  getSets(out,    fulldim = FALSE)[1] <- "x.y.iso"
+  getSets(alpha,    fulldim = FALSE)[1] <- "x.y.iso"
   getSets(weight, fulldim = FALSE)[1] <- "x.y.iso"
 
   return(list(x            = alpha,
