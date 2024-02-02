@@ -39,7 +39,7 @@ calcCarbonResidues <- function() {
   attributes   <- c("c", "LC", "NC")
   names        <- as.vector(outer(unique(kcr2kres$kres), attributes, paste, sep = "."))
   out          <- new.magpie(getCells(residueRecycling), getYears(residueRecycling), names, fill = 0)
-  getSets(out)[3] <- c("inputs", "attributes")
+  getSets(out, fulldim = FALSE)[3] <- "inputs.attributes"
 
   out[, , "c"]            <- residueRecycling
   out[, , c("LC", "NC")]  <- param
