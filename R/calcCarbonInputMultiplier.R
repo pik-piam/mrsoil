@@ -51,13 +51,13 @@ calcCarbonInputMultiplier <- function(inputType = "kcr") {
 
   # get weights
   if (inputType %in% c("kcr", "generic")) {
-
     weight <- collapseNames(calcOutput("ResBiomass", cellular = TRUE, aggregate = FALSE)[, "y1995", "c"])
-    weight <- ifelse(inputType == "kcr",
-                     dimSums(weight, dim = 3.1),                             # for kcr
-                     setNames(dimSums(weight, dim = 3), "generic"))          # for 'generic'
+    if (inputType == "kcr") {
+      weight <- dimSums(weight, dim = 3.1)                       # for kcr
+    } else {
+      weight <- setNames(dimSums(weight, dim = 3), "generic")    # for 'generic'
+    }
   } else if (inputType == "kli") {
-
     weight <- collapseNames(calcOutput("CarbonManure", aggregate = FALSE)[, "y1995", "c"])
   } else {
     stop("inputType setting unknown.")

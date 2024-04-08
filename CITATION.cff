@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: If you use this software, please cite it using the metadata from this file.
 type: software
 title: 'mrsoil: MadRat Soil Organic Carbon Budget Library'
-version: 2.2.0
+version: 2.2.1
 date-released: '2024-04-08'
 abstract: This packages provides functions for soil organic carbon budget for mineral
   soils using the steady-state method (Tier 2) of the 2019 Refinement to the 2006
