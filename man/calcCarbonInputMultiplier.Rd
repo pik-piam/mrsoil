@@ -4,7 +4,10 @@
 \alias{calcCarbonInputMultiplier}
 \title{calcCarbonInputMulitplier}
 \usage{
-calcCarbonInputMultiplier()
+calcCarbonInputMultiplier(inputType = "kcr")
+}
+\arguments{
+\item{inputType}{switch between 'kcr' (default), or 'kli', 'generic'}
 }
 \value{
 magpie object on choosen resolution

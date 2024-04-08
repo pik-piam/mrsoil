@@ -40,6 +40,7 @@ calcSoilCarbon <- function(output      = "actualstate",
                                landuse)[, , output]
 
   getSets(out, fulldim = FALSE)[1] <- "x.y.iso"
+  out <- collapseDim(out)
 
   return(list(x            = out,
               weight       = NULL,
