@@ -43,7 +43,6 @@ calcSoilCarbon <- function(output      = "all",
 
 
     getSets(out, fulldim = FALSE)[1] <- "x.y.iso"
-    out <- collapseDim(out)
 
   } else if (output %in% c("actualstate", "interstate", "naturalstate")) {
 
@@ -60,6 +59,8 @@ calcSoilCarbon <- function(output      = "all",
   } else {
     stop("'output' unknown.")
   }
+
+  out <- collapseDim(out)
 
   return(list(x            = out,
               weight       = NULL,
