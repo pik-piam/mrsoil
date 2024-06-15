@@ -19,7 +19,7 @@ readSource("PorwolliksGriddedTillage")
 
 }
 \seealso{
-\code{\link[mrcommons]{readLPJmL}},
+\code{\link[mrlandcore]{readLPJmL_new}},
 \code{\link[lpjclass]{read.LPJ_input}}
 }
 \author{

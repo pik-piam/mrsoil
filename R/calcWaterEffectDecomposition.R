@@ -19,6 +19,7 @@
 #' }
 #'
 #' @importFrom magpiesets findset
+#' @importFrom mstools toolGetMappingCoord2Country
 
 calcWaterEffectDecomposition <- function(irrigation  = "mixedirrig",
                                          lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",

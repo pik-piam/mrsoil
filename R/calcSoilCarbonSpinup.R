@@ -56,7 +56,7 @@ calcSoilCarbonSpinup <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
 
   return(list(x            = soilCarbonInit,
               weight       = NULL,
-              unit         = "Mt C",
+              unit         = "tC per ha",
               min          = 0,
               description  = "Soil carbon stocks on croplands for starting of the modelling period",
               isocountries = FALSE)

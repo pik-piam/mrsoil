@@ -4,7 +4,7 @@
 #' @return List of magpie objects with results on cellular level, weight, unit and description.
 #' @author Kristine Karstens
 #' @seealso
-#' \code{\link[mrcommons]{readLPJmL}},
+#' \code{\link[mrlandcore]{readLPJmL_new}},
 #' \code{\link[lpjclass]{read.LPJ_input}}
 #' @examples
 #' \dontrun{

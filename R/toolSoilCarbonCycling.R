@@ -29,10 +29,12 @@ toolSoilCarbonCycling <- function(soilCarbonInit, soilCarbonSteadyState, decay, 
   # cut decay rates above 1
   decay[decay > 1]        <- 1
 
-  # Initialize outputs
+  # Initialize outputs (by binding 0. year with an object that runs over the full period of years.
+  # steadystate is here just a place holder for structure, so teh values are set to zero)
   soilCarbon             <- mbind(collapseDim(soilCarbonInit[, , "actualstate"],  dim = 3.1), soilCarbonSteadyState)
   soilCarbonNatural      <- mbind(collapseDim(soilCarbonInit[, , "naturalstate"], dim = 3.1), soilCarbonSteadyState)
-  soilCarbon[, years, ]    <- 0
+  soilCarbon[, years, ]           <- 0
+  soilCarbonNatural[, years, ]    <- 0
   soilCarbonTransfer     <- soilCarbonInter   <- soilCarbon
   soilCarbonTransfer[]   <- soilCarbonInter[] <- 0
 
@@ -55,10 +57,13 @@ toolSoilCarbonCycling <- function(soilCarbonInit, soilCarbonSteadyState, decay, 
                                     (soilCarbonSteadyState[, t, ] - soilCarbonInter[, t, ]) * decay[, t, ])
 
     # Calculate counterfactual potential natural vegetation stocks
-    soilCarbonNatural[, t, ]  <- (setYears(soilCarbonNatural[, t - 1, ], t) +
-                                    (soilCarbonSteadyState[, t, ] -
-                                       setYears(soilCarbonNatural[, t - 1, ], t)) * decay[, t, ])
-    soilCarbonNatural[, , "crop"]  <- 0
+    n <- "natveg"
+    soilCarbonNatural[, t, n]  <- (setYears(soilCarbonNatural[, t - 1, n], t) +
+                                     (soilCarbonSteadyState[, t, n] -
+                                        setYears(soilCarbonNatural[, t - 1, n], t)) * decay[, t, n])
+    # Set crop values to the natveg values to create an output object
+    # that calculates a full carbon stock of a natveg world, when multiplying with landuse information
+    soilCarbonNatural[, , "crop"]  <- soilCarbonNatural[, , n]
 
     print(t)
   }

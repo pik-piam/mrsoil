@@ -5,13 +5,13 @@
 \title{calcSoilCarbon}
 \usage{
 calcSoilCarbon(
-  output = "actualstate",
+  output = "all",
   lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   climatetype = "GSWP3-W5E5:historical"
 )
 }
 \arguments{
-\item{output}{"actualstate" (default), "carbontransfer", "interstate", "naturalstate"}
+\item{output}{"all" (default), "actualstate", "carbontransfer", "interstate", "naturalstate"}
 
 \item{lpjmlNatveg}{Switch between LPJmL natveg versionstop}
 

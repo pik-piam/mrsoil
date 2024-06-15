@@ -22,6 +22,7 @@
 #'
 #' @import madrat
 #' @import magclass
+#' @importFrom mstools toolSmooth toolHarmonize2Baseline
 
 calcDecayFuture <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
                             climatetype = "GSWP3-W5E5:historical") {
