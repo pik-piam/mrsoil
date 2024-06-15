@@ -48,14 +48,14 @@ calcSoilCarbon <- function(output      = "all",
   } else if (output %in% c("actualstate", "interstate", "naturalstate")) {
 
     out      <- calcOutput("SoilCarbon", aggregate = FALSE, output = "all",
-                           lpjmlNatveg = lpjmlNatveg, climatetype = climatetype)[, , "output"]
+                           lpjmlNatveg = lpjmlNatveg, climatetype = climatetype)[, , output]
     landuse  <- calcOutput("Landuse", aggregate = FALSE)[, getYears(out), ]
     out      <- out * landuse
 
   } else if (output == "carbontransfer") {
 
     out <- calcOutput("SoilCarbon", aggregate = FALSE, output = "all",
-                      lpjmlNatveg = lpjmlNatveg, climatetype = climatetype)[, , "output"]
+                      lpjmlNatveg = lpjmlNatveg, climatetype = climatetype)[, , output]
 
   } else {
     stop("'output' unknown.")
