@@ -36,7 +36,7 @@ calcWaterEffectDecomposition <- function(irrigation  = "mixedirrig",
     paramWslope     <- setYears(param[, , "wfacpar2"], NULL)
     paramWslope2    <- setYears(param[, , "wfacpar3"], NULL)
 
-    cellPrep   <- calcOutput("LPJmLClimateInput", climatetype  = climatetype,
+    cellPrep   <- calcOutput("LPJmLClimateInput_new", climatetype  = climatetype,
                              variable     = "precipitation:monthlySum",
                              stage        = stage,
                              lpjmlVersion = lpjmlNatveg,

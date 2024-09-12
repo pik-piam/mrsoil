@@ -28,7 +28,7 @@ calcTempEffectDecomposition <- function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93d
   paramTopt <- param[, , "topt"]
   paramTa   <- param[, , "ta"]
   paramTb   <- param[, , "tb"]
-  cellTemp  <- calcOutput("LPJmLClimateInput", climatetype  = climatetype,
+  cellTemp  <- calcOutput("LPJmLClimateInput_new", climatetype  = climatetype,
                           variable     = "temperature:monthlyMean",
                           stage        = stage,
                           lpjmlVersion = lpjmlNatveg,
