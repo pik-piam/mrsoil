@@ -34,7 +34,7 @@ calcCarbonResidues <- function() {
   # Load parameters for lignin and nitrogen and aggregate them to kres
   param                <- calcOutput("ParamResidues", aggregate = FALSE, input = "IPCC+woody")
   weight               <- collapseNames(dimSums(residueBiomass, dim = "residues"))
-  param                <- toolAggregate(param,  weight = weight, rel = kcr2kres, from = "kcr", to = "kres", dim = 3.1)
+  param                <- toolAggregate(param,  weight = weight + 10^(-10), rel = kcr2kres, from = "kcr", to = "kres", dim = 3.1)
 
   attributes   <- c("c", "LC", "NC")
   names        <- as.vector(outer(unique(kcr2kres$kres), attributes, paste, sep = "."))
