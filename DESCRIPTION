@@ -1,32 +1,38 @@
-Package: mrsoil
 Type: Package
+Package: mrsoil
 Title: MadRat Soil Organic Carbon Budget Library
 Version: 2.3.5
 Date: 2024-09-23
-Authors@R: c(person("Kristine", "Karstens", email = "karstens@pik-potsdam.de", role = c("aut","cre")),
-             person("Jan Philipp", "Dietrich", email = "dietrich@pik-potsdam.de", role = "aut"))
-Description: This packages provides functions for soil organic carbon budget for mineral soils using the steady-state method (Tier 2) of the 2019 Refinement to the 2006 IPP Guidelines for National Greenhouse Gas Inventories.
+Authors@R: c(
+    person("Kristine", "Karstens", , "karstens@pik-potsdam.de", role = c("aut", "cre")),
+    person("Jan Philipp", "Dietrich", , "dietrich@pik-potsdam.de", role = "aut")
+  )
+Description: This packages provides functions for soil organic carbon
+    budget for mineral soils using the steady-state method (Tier 2) of the
+    2019 Refinement to the 2006 IPP Guidelines for National Greenhouse Gas
+    Inventories.
+License: LGPL-3 | file LICENSE
+URL: https://github.com/pik-piam/mrsoil,
+    https://doi.org/10.5281/zenodo.4317933
+BugReports: https://github.com/pik-piam/mrsoil/issues
 Depends:
-    R(>= 2.10.0),
-    magclass(>= 5.15.4),
-    madrat(>= 1.86.0),
-    mrcommons(>= 0.11.9),
-    mrlandcore (>= 1.0.0),
-    mrdrivers(>= 1.0.0)
+    R (>= 2.10.0),
+    madrat (>= 1.86.0),
+    magclass (>= 5.15.4),
+    mrcommons (>= 0.11.9),
+    mrdrivers (>= 1.0.0),
+    mrlandcore (>= 1.0.0)
 Imports:
+    jsonlite,
+    lpjclass,
     magpiesets,
     mstools (>= 0.6.0),
     readxl,
-    lpjclass,
-    utils,
-    jsonlite
-License: LGPL-3 | file LICENSE
-URL: https://github.com/pik-piam/mrsoil, https://doi.org/10.5281/zenodo.4317933
-BugReports: https://github.com/pik-piam/mrsoil/issues
+    utils
+Suggests: 
+    covr,
+    ggplot2,
+    rmarkdown
 Encoding: UTF-8
 LazyData: no
 RoxygenNote: 7.3.2
-Suggests: 
-    rmarkdown,
-    ggplot2,
-    covr
