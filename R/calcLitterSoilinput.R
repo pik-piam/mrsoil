@@ -42,7 +42,7 @@ calcLitterSoilinput <-  function(lpjmlNatveg = "LPJmL4_for_MAgPIE_44ac93de",
   getSets(weight, fulldim = FALSE)[1] <- "x.y.iso"
 
   return(list(x            = alpha,
-              weight       = weight,
+              weight       = weight + 10^-10,
               unit         = "tC per ha",
               description  = paste0("Litter C input to the soil pools of the 3-pool-model for natural vegetation"),
               min          = 0,

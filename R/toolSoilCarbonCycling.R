@@ -64,8 +64,6 @@ toolSoilCarbonCycling <- function(soilCarbonInit, soilCarbonSteadyState, decay, 
     # Set crop values to the natveg values to create an output object
     # that calculates a full carbon stock of a natveg world, when multiplying with landuse information
     soilCarbonNatural[, , "crop"]  <- soilCarbonNatural[, , n]
-
-    print(t)
   }
   out <- mbind(add_dimension(soilCarbon,            dim = 3.1, add = "var", nm = "actualstate"),
                add_dimension(soilCarbonTransfer,    dim = 3.1, add = "var", nm = "carbontransfer"),
