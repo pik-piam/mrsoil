@@ -42,7 +42,7 @@ toolCarbonInputMultiplier <- function(inputProp, soilParam, f4act2slo, f2struc2a
   metabDOC <- collapseNames(toolConditionalReplace(paramMetabfracIntercept -
                                                      paramMetabfracSlope * lc2nc, "<0", 0))
   # correct for too big metabolic carbon input multiplier
-  metabDOC <- pmin(metabDOC, (1 - inputProp[, , "LC"]))
+  metabDOC <- pmin(metabDOC, collapseDim(1 - inputProp[, , "LC"]))
 
   ############################################################
   ########## structural dead organic carbon          #########
